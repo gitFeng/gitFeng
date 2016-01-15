@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/16/hello/" class="article-date">
+  <time datetime="2016-01-15T17:10:52.000Z" itemprop="datePublished">2016-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h2 id="EXPLAIN__u7684_u4F7F_u7528"><a href="#EXPLAIN__u7684_u4F7F_u7528" class="headerlink" title="EXPLAIN 的使用"></a>EXPLAIN 的使用</h2><p>以下说明运行表结构。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`iknow_team_user`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'id'</span>,</span><br><span class="line">  <span class="string">`teamId`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'teamId'</span>,</span><br><span class="line">  <span class="string">`uid`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'uid'</span>,</span><br><span class="line">  <span class="string">`username`</span> <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'username'</span>,</span><br><span class="line">  <span class="string">`joinTime`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">COMMENT</span> <span class="string">'joinTime`'</span>,</span><br><span class="line">  <span class="string">`uType`</span> <span class="built_in">smallint</span>(<span class="number">8</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span>,</span><br><span class="line">  <span class="string">`tagList`</span> <span class="built_in">varchar</span>(<span class="number">512</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span>,</span><br><span class="line">  <span class="string">`extPack`</span> <span class="built_in">varchar</span>(<span class="number">2000</span>) <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'json'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`ituid_tid`</span> (<span class="string">`uid`</span>,<span class="string">`teamId`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`ittid_utype`</span> (<span class="string">`teamId`</span>,<span class="string">`uType`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">452786</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=gbk <span class="keyword">COMMENT</span>=<span class="string">'team_user'</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="1-_EXPLAIN_tbl_name"><a href="#1-_EXPLAIN_tbl_name" class="headerlink" title="1. EXPLAIN tbl_name"></a>1. EXPLAIN tbl_name</h3><p>EXPLAIN tbl_name 是 DESCRIBE tbl_name 或 SHOW COLUMNS FROM tbl_name 的一个同义词。<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> iknow_team_user;</span></span><br><span class="line">+<span class="comment">----------+----------------------+------+-----+---------+----------------+</span></span><br><span class="line">| Fie      | Type                 | Null | Key | Default | Extra          |</span><br><span class="line">+<span class="comment">----------+----------------------+------+-----+---------+----------------+</span></span><br><span class="line">| id       | int(11) unsigned     | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| teamId   | int(11) unsigned     | NO   | MUL | NULL    |                |</span><br><span class="line">| uid      | int(11) unsigned     | NO   | MUL | NULL    |                |</span><br><span class="line">| username | varchar(32)          | NO   |     |         |                |</span><br><span class="line">| joinTime | int(11) unsigned     | NO   |     | 0       |                |</span><br><span class="line">| uType    | smallint(8) unsigned | NO   |     | 0       |                |</span><br><span class="line">| tagList  | varchar(512)         | NO   |     |         |                |</span><br><span class="line">| extPack  | varchar(2000)        | YES  |     |         |                |</span><br><span class="line">+<span class="comment">----------+----------------------+------+-----+---------+----------------+</span></span><br><span class="line">8 rows in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="2-_EXPLAIN__5BEXTENDED__7C_PARTITIONS_5D_SELECT_select_options"><a href="#2-_EXPLAIN__5BEXTENDED__7C_PARTITIONS_5D_SELECT_select_options" class="headerlink" title="2. EXPLAIN [EXTENDED | PARTITIONS] SELECT select_options"></a>2. EXPLAIN [EXTENDED | PARTITIONS] SELECT select_options</h3><p>当在一个SELECT语句前使用关键字EXPLAIN时,MYSQL会解释将如何运行该SELECT语句,它显示了表如何连接、连接的顺序等信息。<br>表以它们在处理查询过程中将被MySQL读入的顺序被列出,而不表示执行顺序,每行显示的是执行计划的每一个组成部分以及执行的次序,查询里的每张表对应输出结果集中的一行, 这里表的比较广泛,子查询、union结果集。。。也在此范围内。<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> <span class="keyword">id</span>&lt;<span class="number">100</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | range | PRIMARY       | PRIMARY | 4       | NULL |   73 | Using where |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="2-1_EXPLAIN_EXTENDED"><a href="#2-1_EXPLAIN_EXTENDED" class="headerlink" title="2.1 EXPLAIN EXTENDED"></a>2.1 EXPLAIN EXTENDED</h4><p>5.1 之后增加了一个额外的过滤列extended,它告知服务器把执行计划反编译成select语句, 可以通过show warnings看到这些生成的语句,通过查看这些语句可以知道查询优化器怎么转化查询语句。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">extended</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> <span class="keyword">id</span>&lt;<span class="number">100</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+----------+-------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+----------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | range | PRIMARY       | PRIMARY | 4       | NULL |   73 |   100.00 | Using where | </span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+----------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span>, <span class="number">1</span> <span class="keyword">warning</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">show</span> <span class="keyword">warnings</span>\<span class="keyword">G</span></span><br><span class="line">*************************** <span class="number">1.</span> <span class="keyword">row</span> ***************************</span><br><span class="line">  <span class="keyword">Level</span>: Note</span><br><span class="line">   Code: <span class="number">1003</span></span><br><span class="line">Message: <span class="keyword">select</span> <span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`id`</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`teamId`</span> <span class="keyword">AS</span> <span class="string">`teamId`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`uid`</span> <span class="keyword">AS</span> <span class="string">`uid`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`username`</span> <span class="keyword">AS</span> <span class="string">`username`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`joinTime`</span> <span class="keyword">AS</span> <span class="string">`joinTime`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`uType`</span> <span class="keyword">AS</span> <span class="string">`uType`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`tagList`</span> <span class="keyword">AS</span> <span class="string">`tagList`</span>,<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`extPack`</span> <span class="keyword">AS</span> <span class="string">`extPack`</span> <span class="keyword">from</span> <span class="string">`test`</span>.<span class="string">`iknow_team_user`</span> <span class="keyword">where</span> (<span class="string">`test`</span>.<span class="string">`iknow_team_user`</span>.<span class="string">`id`</span> &lt; <span class="number">100</span>)</span><br><span class="line"><span class="number">1</span> <span class="keyword">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2_EXPLAIN_PARTITIONS"><a href="#2-2_EXPLAIN_PARTITIONS" class="headerlink" title="2.2 EXPLAIN PARTITIONS"></a>2.2 EXPLAIN PARTITIONS</h4><p>如果使用了mysql的分区表,explain partitions 显示查询需要访问的数据分片信息。</p>
+<h3 id="3-__u91CD_u5199_u975Eselect_u67E5_u8BE2"><a href="#3-__u91CD_u5199_u975Eselect_u67E5_u8BE2" class="headerlink" title="3. 重写非select查询"></a>3. 重写非select查询</h3><p>explain只能解释select查询,无法解释存储过程、insert、delete、update等其他类似的语句,可以把非select语句转化为对等的 select 访问请求。</p>
+<h3 id="4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9"><a href="#4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9" class="headerlink" title="4. EXPLAIN 使用注意点"></a>4. EXPLAIN 使用注意点</h3><h4 id="4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C"><a href="#4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C" class="headerlink" title="4.1 并非所有的 explain 后面的 select 语句都不会执行"></a>4.1 并非所有的 explain 后面的 select 语句都不会执行</h4><p>from 子句中包含的子查询会执行,mysql 会执行这个子查询,并把结果集放入一个临时表中, 故谨慎在线上执行此类 explain 语句。</p>
+<h4 id="4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C"><a href="#4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C" class="headerlink" title="4.2 explain 只是一个近似"></a>4.2 explain 只是一个近似</h4><p>explain 只是一个近似,它大部分时候是一个很好的近似,但是有时候也会远离实际情况,一些显示出来的统计信息都是估算的,不精确。</p>
+<h2 id="EXPLAIN__u4E2D_u7684_u5217"><a href="#EXPLAIN__u4E2D_u7684_u5217" class="headerlink" title="EXPLAIN 中的列"></a>EXPLAIN 中的列</h2><p>首先进行如下约定:<br>简单查询 SIMPLE<br>复杂查询:简单子查询 SUBQUERY、衍生表&lt;derived2&gt;、union</p>
+<h3 id="1-_id__u5217"><a href="#1-_id__u5217" class="headerlink" title="1. id 列"></a>1. id 列</h3><p>表以它们在处理查询过程中将被 MySQL 读入的顺序被列出,而不表示执行顺序。查询里的 每张表对应输出结果集中的一行,使用 id 来标示出属于哪一行,id 大小顺序并不一定跟表 被 mysql 读入的数据一致。<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> u.username, (<span class="keyword">select</span> uid <span class="keyword">from</span> iknow_team_user <span class="keyword">limit</span> <span class="number">1</span>) uu <span class="keyword">from</span> (<span class="keyword">select</span> uid,username <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> uid=<span class="number">123</span>) u;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">| id | select_type | table           | type   | possible_keys | key       | key_len | ref  | rows   | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">|  1 | PRIMARY     | derived3        | system | NULL          | NULL      | NULL    | NULL |      1 |             | </span><br><span class="line">|  3 | DERIVED     | iknow_team_user | ref    | ituid_tid     | ituid_tid | 4       |      |      1 |             | </span><br><span class="line">|  2 | SUBQUERY    | iknow_team_user | index  | NULL          | ituid_tid | 8       | NULL | 414815 | Using index | </span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">3 rows in <span class="operator"><span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<p>以下几点需要注意:</p>
+<ol>
+<li><p>如果是子查询 SUBQUERY,id 越大优先级越高,越先被执行,如下:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> iknow_team_user.uid=(<span class="keyword">select</span> uid <span class="keyword">from</span> iknow_team_user <span class="keyword">as</span> tb <span class="keyword">where</span> tb.uid=(<span class="keyword">select</span> uid <span class="keyword">from</span> iknow_team_user <span class="keyword">as</span> tc <span class="keyword">where</span> tc.uid=<span class="number">1</span>));</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+--------------------------+</span></span><br><span class="line">| id | select_type | table           | type | possible_keys | key       | key_len | ref   | rows | Extra                    |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+--------------------------+</span></span><br><span class="line">|  1 | PRIMARY     | iknow_team_user | ref  | ituid_tid     | ituid_tid | 4       | const |    1 | Using where              |</span><br><span class="line">|  2 | SUBQUERY    | tb              | ref  | ituid_tid     | ituid_tid | 4       |       |    1 | Using where; Using index |</span><br><span class="line">|  3 | SUBQUERY    | tc              | ref  | ituid_tid     | ituid_tid | 4       |       |    1 | Using index              |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+--------------------------+</span></span><br><span class="line">3 rows in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>id 如果相同,可以认为是一组,从上而下执行;所有组中,id 值越大,优先级越高,越先 被执行,如下:</p>
+</li>
+<li>union 操作 id 为 null<br>union 输出结果集会多出一行,union 的结果集总是放在一个临时表中,如&lt;union1,2&gt;,再从这个临时表中获取结果。此行 id 为 null。<br>如下:<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> uid = <span class="number">1</span> <span class="keyword">union</span> <span class="keyword">select</span> * <span class="keyword">from</span>  iknow_team_user <span class="keyword">where</span> uid=<span class="number">1213</span>;</span></span><br><span class="line">+<span class="comment">----+--------------+-----------------+------+---------------+-----------+---------+-------+------+-------+</span></span><br><span class="line">| id | select_type  | table           | type | possible_keys | key       | key_len | ref   | rows | Extra |</span><br><span class="line">+<span class="comment">----+--------------+-----------------+------+---------------+-----------+---------+-------+------+-------+</span></span><br><span class="line">|  1 | PRIMARY      | iknow_team_user | ref  | ituid_tid     | ituid_tid | 4       | const |    1 |       |</span><br><span class="line">|  2 | UNION        | iknow_team_user | ref  | ituid_tid     | ituid_tid | 4       | const |    1 |       |</span><br><span class="line">| NULL | UNION RESULT | union1,2      | ALL  | NULL          | NULL      | NULL    | NULL  | NULL |       |</span><br><span class="line">+<span class="comment">----+--------------+-----------------+------+---------------+-----------+---------+-------+------+-------+</span></span><br><span class="line">3 rows in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="2-_select_type__u5217"><a href="#2-_select_type__u5217" class="headerlink" title="2. select type 列"></a>2. select type 列</h3><table>
+<thead>
+<tr>
+<th>val</th>
+<th>explain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SIMPLE</td>
+<td>简单 SELECT(不使用 UNION 或子查询)</td>
+</tr>
+<tr>
+<td>PRIMARY</td>
+<td>查询中包含任何复杂查询,最外层的的SELECT</td>
+</tr>
+<tr>
+<td>SUBQUERY</td>
+<td>在 select 或 where 中包含的子查询</td>
+</tr>
+<tr>
+<td>DERIVED</td>
+<td>FROM 子句的子查询;若 union 包含在 from 子句的子查询中,外层的 select被标记为 DERIVED</td>
+</tr>
+<tr>
+<td>UNION</td>
+<td>在 select 或 where 中包含的子查询</td>
+</tr>
+<tr>
+<td>UNION RESULT</td>
+<td>UNION结果</td>
+</tr>
+<tr>
+<td>DEPENDENT UNION</td>
+<td>UNION 中的第二个或后面的 SELECT 语句,取决于外面的查询 DEPENDENT SUBQUERY</td>
+</tr>
+<tr>
+<td>DEPENDENT SUBQUERY</td>
+<td>子查询中的第一个 SELECT,取决于外面的查询</td>
+</tr>
+</tbody>
+</table>
+<p>举例如下:</p>
+<h3 id="3-_type__u5217"><a href="#3-_type__u5217" class="headerlink" title="3. type 列"></a>3. type 列</h3><p>即访问类型,可以理解为 mysql 在表里找出所需要行的方式 以下的访问类型,性能从最差到最好:</p>
+<h4 id="3-_1-_All"><a href="#3-_1-_All" class="headerlink" title="3. 1. All"></a>3. 1. All</h4><p>全表扫描,mysql 必须扫描从头到尾扫描整张表,找到所需要的行<br>例外:查询条件中使用了 limit，extra 列中显示使用了 distinct 或 not exists 等限定词<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> tagList!=<span class="string">''</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">| id | select_type | table           | type | possible_keys | key  | key_len | ref  | rows | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | ALL  | NULL          | NULL | NULL    | NULL |    1 | Using where | </span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-_2-_index"><a href="#3-_2-_index" class="headerlink" title="3. 2. index"></a>3. 2. index</h4><p>和全表扫描一样也是做遍历,不同的是它是做全索引遍历,按照索引的次序进行遍历<br>优点:避免排序<br>如果在 extra 中看到 using index 说明使用了覆盖索引<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> iknow_team_user <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | index | NULL          | PRIMARY | 4       | NULL |    1 | Using index |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-_3-_range"><a href="#3-_3-_range" class="headerlink" title="3. 3. range"></a>3. 3. range</h4><p>有限制的索引扫描,比全索引扫描好一些,不用遍历全部索引,常见的:&gt; &lt; in or<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> <span class="keyword">id</span> &lt; <span class="number">5</span> <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | Extra                        |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | range | PRIMARY       | PRIMARY | 4       | NULL |    1 | Using where; Using temporary |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-_4-_ref"><a href="#3-_4-_ref" class="headerlink" title="3. 4. ref"></a>3. 4. ref</h4><p>非唯一性索引扫描,访问非唯一索引,或唯一索引的前缀时返回匹配这个单独值的所有行<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> uid=<span class="number">1</span> <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+-----------------+</span></span><br><span class="line">| id | select_type | table           | type | possible_keys | key       | key_len | ref   | rows | Extra           |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+-----------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | ref  | ituid_tid     | ituid_tid | 4       | const |    1 | Using temporary |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+-----------+---------+-------+------+-----------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-_5-_eq_ref"><a href="#3-_5-_eq_ref" class="headerlink" title="3. 5. eq_ref"></a>3. 5. eq_ref</h4><p>唯一性索引扫描,主键或唯一索引扫描中常见</p>
+<h4 id="3-_6-_const_2Csystem"><a href="#3-_6-_const_2Csystem" class="headerlink" title="3. 6. const,system"></a>3. 6. const,system</h4><p>当 mysql 对查询的某部分进行了优化,并转话为一个常量时使用这种访问类型 system 是 const 类型的特例,当查询的表中只有一行时为 system<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> teamId=<span class="number">1</span> <span class="keyword">and</span> uid=<span class="number">1</span> <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+-----------------------+-----------+---------+-------------+------+-------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys         | key       | key_len | ref         | rows | Extra |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+-----------------------+-----------+---------+-------------+------+-------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | const | ituid_tid,ittid_utype | ituid_tid | 8       | const,const |    1 |       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+-----------------------+-----------+---------+-------------+------+-------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-_7-_NULL"><a href="#3-_7-_NULL" class="headerlink" title="3. 7. NULL"></a>3. 7. NULL</h4><p>mysql 能够在查询过程中分解查询语句,甚至在执行环节无需再访问表或者索引 举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">min</span>(<span class="keyword">id</span>) <span class="keyword">from</span> iknow_team_user <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+------+---------+------+------+------------------------------+</span></span><br><span class="line">| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra                        |</span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+------+---------+------+------+------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | NULL  | NULL | NULL          | NULL | NULL    | NULL | NULL | <span class="operator"><span class="keyword">Select</span> <span class="keyword">tables</span> optimized away |</span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+------+---------+------+------+------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="keyword">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
+<p>神奇!! !table、type、key 列都为 NULL</p>
+<h3 id="4-_possible_keys__u5217__u4E0E_key__u5217"><a href="#4-_possible_keys__u5217__u4E0E_key__u5217" class="headerlink" title="4. possible_keys 列 与 key 列"></a>4. possible_keys 列 与 key 列</h3><p>possible_keys 列表明该查询可能使用哪些索引,但一个查询仅能使用到一个索引,key 列显示了 mysql 使用了哪一个索引来优化对该表的访问。但若查询使用了覆盖索引,则仅出现在<br>key列中,举例如下:</p>
+<h3 id="5-_key_len__u5217"><a href="#5-_key_len__u5217" class="headerlink" title="5. key_len 列"></a>5. key_len 列</h3><p>显示了 mysql 在索引中使用的字节数,key_len是根据表定义算出来的,和具体数据无关。<br>如上图举例,uid、doc_id各四个字节,故 key_len为8</p>
+<h3 id="6-_ref__u5217"><a href="#6-_ref__u5217" class="headerlink" title="6. ref 列"></a>6. ref 列</h3><p>表示表的连接匹配条件,即哪些列或者常量被用于查找索引列上的值,举例如下:</p>
+<h3 id="7-_rows__u5217"><a href="#7-_rows__u5217" class="headerlink" title="7. rows 列"></a>7. rows 列</h3><p>表示 mysql 根据表统计信息及索引使用情况,估算的要找出结果需要读取的记录行数</p>
+<h3 id="8-_Extra__u5217"><a href="#8-_Extra__u5217" class="headerlink" title="8. Extra 列"></a>8. Extra 列</h3><p>Extra 列有多种取值,介绍如下四种</p>
+<ul>
+<li>using index<br>表明在 select 操作中使用了覆盖索引</li>
+<li>using where<br>表示 mysql 存储引擎收到结果后再进行过滤,举例如下:</li>
+<li>using temporary<br>表示 mysql 需要使用临时表来存储结果集,排序、分组常见,如下:</li>
+<li>using filesort<br>mysql 中无法利用索引完成的排序成为 filesort,如下<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> teamId <span class="keyword">from</span> iknow_team_user <span class="keyword">group</span> <span class="keyword">by</span> tagList <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+---------------------------------+</span></span><br><span class="line">| id | select_type | table           | type | possible_keys | key  | key_len | ref  | rows | Extra                           |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+---------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | ALL  | NULL          | NULL | NULL    | NULL |    1 | Using temporary; Using filesort |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+---------------------------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/16/hello/" data-id="cijfxz39y00016zmjyzw3xhg5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/16/hello-world/" class="article-date">
+  <time datetime="2016-01-15T16:51:09.000Z" itemprop="datePublished">2016-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/16/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start"><a href="#Quick_Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create_a_new_post"><a href="#Create_a_new_post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server"><a href="#Run_server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files"><a href="#Generate_static_files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites"><a href="#Deploy_to_remote_sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/16/hello-world/" data-id="cijfxz38y00006zmjlb5882fo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/01/16/hello/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/16/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
