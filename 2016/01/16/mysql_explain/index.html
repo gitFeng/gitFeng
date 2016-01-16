@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>EXPLAIN 的使用 | gitfeng-blog</title>
+  <title>MySQL_explain 的使用 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [trou">
+  <meta name="description" content="介绍 mysql-explain 命令的使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="EXPLAIN 的使用">
-<meta property="og:url" content="http://gitfeng.github.io/2016/01/16/hello/index.html">
+<meta property="og:title" content="MySQL_explain 的使用">
+<meta property="og:url" content="http://gitfeng.github.io/2016/01/16/mysql_explain/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [trou">
-<meta property="og:updated_time" content="2016-01-16T07:19:31.000Z">
+<meta property="og:description" content="介绍 mysql-explain 命令的使用">
+<meta property="og:updated_time" content="2016-01-16T10:02:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="EXPLAIN 的使用">
-<meta name="twitter:description" content="Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [trou">
+<meta name="twitter:title" content="MySQL_explain 的使用">
+<meta name="twitter:description" content="介绍 mysql-explain 命令的使用">
   
     <link rel="alternative" href="/atom.xml" title="gitfeng-blog" type="application/atom+xml">
   
@@ -138,7 +138,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a>
+                        <a href="/tags/git/" style="font-size: 20px;">git</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/markdown/" style="font-size: 20px;">markdown</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a>
                     </div>
                 </section>
                 
@@ -212,11 +212,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_explain" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/16/hello/" class="article-date">
-      <time datetime="2016-01-16T07:11:00.000Z" itemprop="datePublished">2016-01-16</time>
+      <a href="/2016/01/16/mysql_explain/" class="article-date">
+      <time datetime="2016-01-16T10:02:46.000Z" itemprop="datePublished">2016-01-16</time>
 </a>
     </div>
   
@@ -229,7 +229,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      EXPLAIN 的使用
+      MySQL_explain 的使用
     </h1>
   
 
@@ -238,13 +238,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/应用/">应用</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/markdown/">markdown</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -347,13 +347,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/01/16/hello/">EXPLAIN 的使用</a></p>
+        <p><span>本文标题:</span><a href="/2016/01/16/mysql_explain/">MySQL_explain 的使用</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 gitfeng 的个人博客">gitfeng</a></p>
-        <p><span>发布时间:</span>2016年01月16日 - 15时11分</p>
-        <p><span>最后更新:</span>2016年01月16日 - 15时19分</p>
+        <p><span>发布时间:</span>2016年01月16日 - 18时02分</p>
+        <p><span>最后更新:</span>2016年01月16日 - 18时02分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/16/hello/" title="EXPLAIN 的使用">http://gitfeng.github.io/2016/01/16/hello/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://gitfeng.github.io/2016/01/16/hello/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/16/mysql_explain/" title="MySQL_explain 的使用">http://gitfeng.github.io/2016/01/16/mysql_explain/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://gitfeng.github.io/2016/01/16/mysql_explain/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -367,11 +367,17 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/16/hello-world/">
-                    Hello Hexo
+                <a href="/2016/01/16/github_hexo/">
+                    GitHub+hexo 搭建个人博客
                 </a>
             </div>
         
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/16/FirstPage/">
+                    Hello Hexo
+                </a>
+            </div>
         
     </nav>
 
@@ -444,7 +450,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/16/hello/" data-title="EXPLAIN 的使用" data-url="http://gitfeng.github.io/2016/01/16/hello/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/16/mysql_explain/" data-title="MySQL_explain 的使用" data-url="http://gitfeng.github.io/2016/01/16/mysql_explain/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -468,7 +474,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/16/hello-world/" title="上一篇: Hello Hexo">
+            <a href="/2016/01/16/github_hexo/" title="上一篇: GitHub+hexo 搭建个人博客">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -476,11 +482,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2016/01/16/FirstPage/" title="下一篇: Hello Hexo">
+                <i class="fa fa-angle-right"></i>
+            </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hello-world/">Hello Hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hello/">EXPLAIN 的使用</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
