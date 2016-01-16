@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL_JOIN | gitfeng-blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="mysql join, 介绍各种连接的概念与区别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL_JOIN">
+<meta property="og:url" content="http://gitfeng.github.io/2016/01/16/mysql_join/index.html">
+<meta property="og:site_name" content="gitfeng-blog">
+<meta property="og:description" content="mysql join, 介绍各种连接的概念与区别">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-aaacb5c3721bedd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-032932a4450df8f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-b85e825c6ef40893.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-4d140ff92721f7f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-fda1fc31dcbd3650.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-0dde6d19d7191fdf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-01-16T14:59:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL_JOIN">
+<meta name="twitter:description" content="mysql join, 介绍各种连接的概念与区别">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">gitfeng</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">来自 github 的 blog</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">gitfeng</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">gitfeng</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-mysql_join" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/16/mysql_join/" class="article-date">
+      <time datetime="2016-01-16T14:59:30.000Z" itemprop="datePublished">2016-01-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL_JOIN
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>[TOC]</p>
+<h2 id="u8FDE_u63A5_u7684_u6982_u5FF5"><a href="#u8FDE_u63A5_u7684_u6982_u5FF5" class="headerlink" title="连接的概念"></a>连接的概念</h2><p>连接分为条件连接、等值连接和自然连接三种。</p>
+<ul>
+<li>条件连接就是在多个表的笛卡尔积中选取满足条件的行的连接，例如  select * from A,B where A.a &gt; A.b  之类的有条件的查询。</li>
+<li>等值连接就是特殊的条件连接，当条件为某字段=某字段时，即为等值连接。如SELECT ename,sal,dname FROM emp,dept WHERE emp.deptno=dept.deptno;</li>
+<li>自然连接是一种特殊的等值连接，他要求多个表有相同的属性字段，然后条件为相同的属性字段值相等，最后再将表中重复的属性字段去掉，即为自然连接。如A中a,b,c字段，B中有c,d字段，则select * from A natural join B  相当于 select A.a,A.b,A.c,B.d from A.c = B.c  。</li>
+</ul>
+<p>Join操作基本分为3大类：外连接(细分为：左连接、右连接、全连接)、自然连接、内连接<br>Join操作的共性：第一步均为将所有参与操作的表进行了一个笛卡儿积，然后才依据各连接条件进行记录的筛选</p>
+<h2 id="u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A"><a href="#u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A" class="headerlink" title="内连接与等值连接的区别："></a>内连接与等值连接的区别：</h2><p>内连接：两个表（或连接）中某一数据项相等的连接称为内连接。等值连接一般用where字句设置条件，内连接一般用on字句设置条件，但内连接与等值连接效果是相同的。<br>内连接与等值连接其实是一回事情（等效）。<br>经常有人会问到select<a href="http://a.id/" target="_blank" rel="external">a.id</a>,<a href="http://b.name/" target="_blank" rel="external">b.name</a>from a,b where<a href="http://a.id/" target="_blank" rel="external">a.id</a>=b.pid  与<br>select<a href="http://a.id/" target="_blank" rel="external">a.id</a>,<a href="http://b.name/" target="_blank" rel="external">b.name</a>from a inner join b on<a href="http://a.id/" target="_blank" rel="external">a.id</a>=b.pid   有什么区别，哪个效率更高一些。<br>实际上一回事情了。只是内连接是由SQL 1999规则定的书写方式。两个说的是一码事。</p>
+<h2 id="u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A"><a href="#u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A" class="headerlink" title="内连接与外连接的结果集区别："></a>内连接与外连接的结果集区别：</h2><p>假设我们有两张表。<br>Table A是左边的表。<br>Table B是右边的表。<br>其各有四条记录，其中有两条记录是相同的，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Pirate</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Rutabaga</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Monkey</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Pirate</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Ninja</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Darth Vader</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Spaghetti</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Ninja</td>
+</tr>
+</tbody>
+</table>
+<p>下面让我们来看看不同的Join会产生什么样的结果。</p>
+<h2 id="u4E0D_u540C_u7684_join__u7ED3_u679C"><a href="#u4E0D_u540C_u7684_join__u7ED3_u679C" class="headerlink" title="不同的 join 结果"></a>不同的 join 结果</h2><h3 id="Inner_join__3D_3D_A_26amp_3BB"><a href="#Inner_join__3D_3D_A_26amp_3BB" class="headerlink" title="Inner join  == A&amp;B"></a>Inner join  == A&amp;B</h3><p>产生的结果集中，是A和B的交集<br>SELECT * FROM TableA INNER JOIN TableB ON TableA.name = TableB.name</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Pirate</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Pirate</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Ninja</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Ninja</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://upload-images.jianshu.io/upload_images/250876-aaacb5c3721bedd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="Full_outer_join__3D_3D_A__7C_7C_B"><a href="#Full_outer_join__3D_3D_A__7C_7C_B" class="headerlink" title="Full outer join == A || B"></a>Full outer join == A || B</h3><p>SELECT * FROM TableA FULL OUTER JOIN TableB ON TableA.name = TableB.name</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Pirate</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Pirate</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Monkey</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Ninja</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Ninja</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Spaghetti</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Rutabaga</td>
+</tr>
+<tr>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Darth Vader</td>
+</tr>
+</tbody>
+</table>
+<p>产生A和B的并集。但是需要注意的是，对于没有匹配的记录，则会以null做为值。<br><img src="http://upload-images.jianshu.io/upload_images/250876-032932a4450df8f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="Left_outer_join__3D_A"><a href="#Left_outer_join__3D_A" class="headerlink" title="Left outer join = A"></a>Left outer join = A</h3><p>产生表A的完全集，而B表中匹配的则有值，没有匹配的则以null值取代。<br>SELECT * FROM TableA LEFT OUTER JOIN TableB ON TableA.name = TableB.name</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Pirate</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Pirate</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Monkey</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Ninja</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Ninja</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Spaghetti</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://upload-images.jianshu.io/upload_images/250876-b85e825c6ef40893.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="A-B"><a href="#A-B" class="headerlink" title="A-B"></a>A-B</h3><p>SELECT * FROM TableA LEFT OUTER JOIN TableB ON TableA.name = TableB.name WHERE TableB.id IS null</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Monkey</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Spaghetti</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+</tbody>
+</table>
+<p>产生在A表中有而在B表中没有的集合。<br><img src="http://upload-images.jianshu.io/upload_images/250876-4d140ff92721f7f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6"><a href="#A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6" class="headerlink" title="A表和B表都没有出现的数据集"></a>A表和B表都没有出现的数据集</h3><p>SELECT * FROM TableA FULL OUTER JOIN TableB ON TableA.name = TableB.name WHERE TableA.id IS null OR TableB.id IS null</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:left">id</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Monkey</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">Spaghetti</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+</tr>
+<tr>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Rutabaga</td>
+</tr>
+<tr>
+<td style="text-align:left">null</td>
+<td style="text-align:left">null</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Darth Vader</td>
+</tr>
+</tbody>
+</table>
+<p>产生A表和B表都没有出现的数据集。<br><img src="http://upload-images.jianshu.io/upload_images/250876-fda1fc31dcbd3650.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>还需要注意的是我们还有一个是“交差集” cross join, 这种Join没有办法用文式图表示，因为其就是把表A和表B的数据进行一个N<em>M的组合，即笛卡尔积。表达式如下：<br>SELECT </em> FROM TableA <strong>CROSS JOIN</strong> TableB<br>这个笛卡尔乘积会产生 4 x 4 = 16 条记录，一般来说，我们很少用到这个语法。但是我们得小心，如果不是使用嵌套的select语句，一般系统都会产生笛卡尔乘积然再做过滤。这是对于性能来说是非常危险的，尤其是表很大的时候。<br><img src="http://upload-images.jianshu.io/upload_images/250876-0dde6d19d7191fdf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/01/16/mysql_join/">MySQL_JOIN</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 gitfeng 的个人博客">gitfeng</a></p>
+        <p><span>发布时间:</span>2016年01月16日 - 22时59分</p>
+        <p><span>最后更新:</span>2016年01月16日 - 22时59分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/16/mysql_join/" title="MySQL_JOIN">http://gitfeng.github.io/2016/01/16/mysql_join/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://gitfeng.github.io/2016/01/16/mysql_join/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/16/mysql_query_optimize/">
+                    MySQL_查询优化
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u8FDE_u63A5_u7684_u6982_u5FF5"><span class="toc-number">1.</span> <span class="toc-text">连接的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A"><span class="toc-number">2.</span> <span class="toc-text">内连接与等值连接的区别：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A"><span class="toc-number">3.</span> <span class="toc-text">内连接与外连接的结果集区别：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E0D_u540C_u7684_join__u7ED3_u679C"><span class="toc-number">4.</span> <span class="toc-text">不同的 join 结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inner_join__3D_3D_A_26amp_3BB"><span class="toc-number">4.1.</span> <span class="toc-text">Inner join  == A&B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Full_outer_join__3D_3D_A__7C_7C_B"><span class="toc-number">4.2.</span> <span class="toc-text">Full outer join == A || B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Left_outer_join__3D_A"><span class="toc-number">4.3.</span> <span class="toc-text">Left outer join = A</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-B"><span class="toc-number">4.4.</span> <span class="toc-text">A-B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6"><span class="toc-number">4.5.</span> <span class="toc-text">A表和B表都没有出现的数据集</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/01/16/mysql_join/" data-title="MySQL_JOIN" data-url="http://gitfeng.github.io/2016/01/16/mysql_join/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"http://gitfeng.duoshuo.com"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/16/mysql_query_optimize/" title="下一篇: MySQL_查询优化">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 gitfeng
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <style>
+        body {
+          background: lightgray;
+        }
+        #container .left-col {
+          background: white;
+        }
+        .article-inner {
+          background: white;
+          margin-bottom: 1em;
+        }
+        .post-nav-button {
+          background: #ececec;
+        }
+        #header .header-nav .social #GitHub {
+          background-color: #bfd3ec;
+        }
+        #post-nav-button a {
+          background: rgba(215, 216, 215, .2);
+        }
+        .post-list {
+          background: white;
+        }
+    </style>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
