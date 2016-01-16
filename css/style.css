@@ -246,7 +246,7 @@ a {
 }
 #container .left-col {
   background: rgba(255,255,255,0.85);
-  width: 300px;
+  width: 240px;
   position: fixed;
   opacity: 1;
   -webkit-transition: all 0.2s ease-in;
@@ -276,7 +276,7 @@ a {
   right: 0;
   min-height: 100%;
   background: rgba(255,255,255,0.8);
-  left: 300px;
+  left: 240px;
   width: auto;
 }
 @media screen and (max-width: 800px) {
@@ -716,8 +716,8 @@ a {
   min-height: 84px;
   max-height: 140px;
   overflow: auto;
-  margin-left: -12px;
-  text-align: center;
+  margin-left: -2px;
+  text-align: left;
   display: -webkit-box;
   -webkit-box-orient: horizontal;
   -webkit-box-pack: center;
@@ -725,6 +725,7 @@ a {
 }
 #header .header-menu li {
   cursor: default;
+  list-style: disc;
 }
 #header .header-menu li a {
   font-size: 14px;
@@ -1008,8 +1009,11 @@ a {
   opacity: 1;
 }
 #post-nav-button {
-  left: 300px;
+  left: 240px;
   top: 61.8%;
+  background-color: #b3b3b3;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 #post-nav-button a {
   border-bottom-color: transparent;
@@ -1583,8 +1587,8 @@ li:hover {
 #tocButton {
   position: fixed;
   border: none;
-  left: 220px;
-  top: 382px;
+  left: 170px;
+  top: 310px;
   background: none;
   font-size: 0.9em;
   font-weight: bold;
@@ -1599,12 +1603,12 @@ li:hover {
 }
 .toc-article {
   position: fixed;
-  width: 230px;
-  top: 378px;
+  width: 210px;
+  top: 300px;
   bottom: 1em;
   left: 0;
   margin-left: 0em;
-  padding: 6px 10px 10px 50px;
+  padding: 6px 10px 6px 18px;
   -webkit-border-radius: 2.8%;
   border-radius: 2.8%;
   overflow: auto;
@@ -1633,6 +1637,7 @@ li:hover {
 #toc .toc-title {
   font-weight: bold;
   color: #808080;
+  text-align: center;
 }
 #toc .toc {
   padding: 0.7em;
@@ -2322,8 +2327,7 @@ pre .javascript .function {
   }
 }
 .switch-btn {
-  margin-left: 74px;
-  margin-top: 23px;
+  margin: 0px auto;
   position: relative;
   width: 70px;
   text-align: center;
