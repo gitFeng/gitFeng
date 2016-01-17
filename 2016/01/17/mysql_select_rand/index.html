@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_select_rand/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
-<meta property="og:updated_time" content="2016-01-17T14:58:00.000Z">
+<meta property="og:updated_time" content="2016-01-17T14:59:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_查询优化-2/2">
 <meta name="twitter:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/17/mysql_select_rand/" class="article-date">
-      <time datetime="2016-01-17T14:58:00.000Z" itemprop="datePublished">2016-01-17</time>
+      <time datetime="2016-01-17T14:59:53.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -265,10 +265,8 @@
 <th></th>
 <th>大分页，带WHERE</th>
 <th>大分页，不带WHERE</th>
-<th>大分页平均提升比例</th>
 <th>小分页，带WHERE</th>
 <th>小分页，不带WHERE</th>
-<th>总体平均提升比例</th>
 </tr>
 </thead>
 <tbody>
@@ -276,19 +274,15 @@
 <td>子查询优化</td>
 <td>28.20%</td>
 <td>10.60%</td>
-<td>19.40%</td>
 <td>24.90%</td>
 <td>554.40%</td>
-<td>154.53%</td>
 </tr>
 <tr>
 <td>INNER JOIN优化</td>
 <td>30.80%</td>
 <td>30.20%</td>
-<td>30.50%</td>
 <td>156.50%</td>
 <td>11.70%</td>
-<td>57.30%</td>
 </tr>
 </tbody>
 </table>
