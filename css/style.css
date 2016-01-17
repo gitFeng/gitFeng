@@ -713,7 +713,7 @@ a {
   cursor: pointer;
   text-transform: uppercase;
   float: none;
-  min-height: 100px;
+  min-height: 20px;
   max-height: 200px;
   overflow: auto;
   margin-left: -2px;
