@@ -708,13 +708,13 @@ a {
 }
 #header .header-menu {
   font-weight: 550;
-  line-height: 28px;
+  line-height: 20px;
   font-family: inherit;
   cursor: pointer;
   text-transform: uppercase;
   float: none;
-  min-height: 84px;
-  max-height: 140px;
+  min-height: 100px;
+  max-height: 200px;
   overflow: auto;
   margin-left: -2px;
   text-align: left;
