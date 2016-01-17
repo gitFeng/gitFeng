@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>有用的网站 | gitfeng-blog</title>
+  <title>MySQL_查询优化-2/2 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="有用 url 存档">
+  <meta name="description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
 <meta property="og:type" content="article">
-<meta property="og:title" content="有用的网站">
-<meta property="og:url" content="http://ffeng.wang/2016/01/17/useful/index.html">
+<meta property="og:title" content="MySQL_查询优化-2/2">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_select_rand/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="有用 url 存档">
-<meta property="og:updated_time" content="2016-01-17T06:23:32.000Z">
+<meta property="og:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
+<meta property="og:updated_time" content="2016-01-17T14:58:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="有用的网站">
-<meta name="twitter:description" content="有用 url 存档">
+<meta name="twitter:title" content="MySQL_查询优化-2/2">
+<meta name="twitter:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
   
   
     <link rel="icon" href="/favicon.png">
@@ -200,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-useful" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_select_rand" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/17/useful/" class="article-date">
-      <time datetime="2016-01-17T06:23:32.000Z" itemprop="datePublished">2016-01-17</time>
+      <a href="/2016/01/17/mysql_select_rand/" class="article-date">
+      <time datetime="2016-01-17T14:58:00.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -217,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      有用的网站
+      MySQL_查询优化-2/2
     </h1>
   
 
@@ -226,13 +226,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/随笔/">随笔</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -242,11 +242,56 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><ul>
-<li>ourmysql <a href="http://ourmysql.com/" target="_blank" rel="external">http://ourmysql.com/</a></li>
-<li>mysql-percona  <a href="https://www.percona.com/blog/" target="_blank" rel="external">https://www.percona.com/blog/</a></li>
-<li>mysqlpub   <a href="http://www.mysqlpub.com/" target="_blank" rel="external">http://www.mysqlpub.com/</a></li>
+        <h2 id="u968F_u673A_u7ED3_u679C_u83B7_u53D6"><a href="#u968F_u673A_u7ED3_u679C_u83B7_u53D6" class="headerlink" title="随机结果获取"></a>随机结果获取</h2><p>ref: <a href="http://imysql.com/2014/07/04/mysql-optimization-case-rand-optimize.shtml" target="_blank" rel="external">参考链接</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">RAND</span>() <span class="keyword">LIMIT</span> <span class="keyword">n</span>;</span></span><br></pre></td></tr></table></figure>
+<p>改造成下面这个：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> t1 <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> <span class="keyword">RAND</span>() * (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> <span class="keyword">table</span>) <span class="keyword">AS</span> nid) t2 <span class="keyword">ON</span> t1.<span class="keyword">id</span> &gt;</span><br><span class="line">t2.nid <span class="keyword">LIMIT</span> <span class="keyword">n</span>;</span></span><br></pre></td></tr></table></figure>
+<p>如果想要达到完全随机，还可以改成下面这种写法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> t1 <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> <span class="keyword">round</span>(<span class="keyword">RAND</span>() * (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> <span class="keyword">table</span>)) <span class="keyword">AS</span> nid <span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="keyword">n</span>) t2 <span class="keyword">ON</span> t1.<span class="keyword">id</span> = t2.nid;</span></span><br></pre></td></tr></table></figure>
+<h2 id="u5927_u6570_u636E_u7FFB_u9875"><a href="#u5927_u6570_u636E_u7FFB_u9875" class="headerlink" title="大数据翻页"></a>大数据翻页</h2><h3 id="u4E0D_u5E26_where__u7684_u4F18_u5316"><a href="#u4E0D_u5E26_where__u7684_u4F18_u5316" class="headerlink" title="不带 where 的优化"></a>不带 where 的优化</h3><p>思路：</p>
+<ul>
+<li>消去limit $pn, $rn 的第一个参数， 即变成 limit $rn;</li>
+<li>条件转成主键索引</li>
 </ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> <span class="keyword">id</span> &gt; <span class="number">99</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">id</span> <span class="keyword">asc</span> <span class="keyword">limit</span> $page_size ;</span></span><br></pre></td></tr></table></figure>
+<h3 id="u5E26_where__u7684_u4F18_u5316"><a href="#u5E26_where__u7684_u4F18_u5316" class="headerlink" title="带 where 的优化"></a>带 where 的优化</h3><p>ref: <a href="http://imysql.com/2014/07/26/mysql-optimization-case-paging-optimize.shtml" target="_blank" rel="external">参考链接</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935500</span>, <span class="number">100</span></span></span><br></pre></td></tr></table></figure>
+<p>子查询优化：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; ( <span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935510</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="number">10</span>) <span class="keyword">t</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>left-join 优化：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; ( <span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935510</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="number">10</span>) <span class="keyword">t</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>两种优化方式效果统计：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>大分页，带WHERE</th>
+<th>大分页，不带WHERE</th>
+<th>大分页平均提升比例</th>
+<th>小分页，带WHERE</th>
+<th>小分页，不带WHERE</th>
+<th>总体平均提升比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子查询优化</td>
+<td>28.20%</td>
+<td>10.60%</td>
+<td>19.40%</td>
+<td>24.90%</td>
+<td>554.40%</td>
+<td>154.53%</td>
+</tr>
+<tr>
+<td>INNER JOIN优化</td>
+<td>30.80%</td>
+<td>30.20%</td>
+<td>30.50%</td>
+<td>156.50%</td>
+<td>11.70%</td>
+<td>57.30%</td>
+</tr>
+</tbody>
+</table>
 
       
     </div>
@@ -264,16 +309,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/17/mysql_explain/">
-                    MySQL_explain 的使用
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/mysql_join/">
-                    MySQL_JOIN
+                <a href="/2016/01/17/mysql_query_optimize/">
+                    MySQL_查询优化-1/2
                 </a>
             </div>
         
@@ -285,7 +324,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql"><span class="toc-number">1.</span> <span class="toc-text">mysql</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u968F_u673A_u7ED3_u679C_u83B7_u53D6"><span class="toc-number">1.</span> <span class="toc-text">随机结果获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5927_u6570_u636E_u7FFB_u9875"><span class="toc-number">2.</span> <span class="toc-text">大数据翻页</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E0D_u5E26_where__u7684_u4F18_u5316"><span class="toc-number">2.1.</span> <span class="toc-text">不带 where 的优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5E26_where__u7684_u4F18_u5316"><span class="toc-number">2.2.</span> <span class="toc-text">带 where 的优化</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -349,7 +388,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/useful/" data-title="有用的网站" data-url="http://ffeng.wang/2016/01/17/useful/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/mysql_select_rand/" data-title="MySQL_查询优化-2/2" data-url="http://ffeng.wang/2016/01/17/mysql_select_rand/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -373,15 +412,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/17/mysql_explain/" title="上一篇: MySQL_explain 的使用">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/mysql_join/" title="下一篇: MySQL_JOIN">
+            <a href="/2016/01/17/mysql_query_optimize/" title="下一篇: MySQL_查询优化-1/2">
                 <i class="fa fa-angle-right"></i>
             </a>
         

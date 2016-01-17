@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_explain/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="介绍 mysql-explain 命令的使用">
-<meta property="og:updated_time" content="2016-01-17T04:10:11.000Z">
+<meta property="og:updated_time" content="2016-01-17T14:17:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_explain 的使用">
 <meta name="twitter:description" content="介绍 mysql-explain 命令的使用">
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/17/mysql_explain/" class="article-date">
-      <time datetime="2016-01-17T04:10:11.000Z" itemprop="datePublished">2016-01-17</time>
+      <time datetime="2016-01-17T14:17:48.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -252,6 +252,36 @@
 <h3 id="4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9"><a href="#4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9" class="headerlink" title="4. EXPLAIN 使用注意点"></a>4. EXPLAIN 使用注意点</h3><h4 id="4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C"><a href="#4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C" class="headerlink" title="4.1 并非所有的 explain 后面的 select 语句都不会执行"></a>4.1 并非所有的 explain 后面的 select 语句都不会执行</h4><p>from 子句中包含的子查询会执行,mysql 会执行这个子查询,并把结果集放入一个临时表中, 故谨慎在线上执行此类 explain 语句。</p>
 <h4 id="4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C"><a href="#4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C" class="headerlink" title="4.2 explain 只是一个近似"></a>4.2 explain 只是一个近似</h4><p>explain 只是一个近似,它大部分时候是一个很好的近似,但是有时候也会远离实际情况,一些显示出来的统计信息都是估算的,不精确。</p>
 <h2 id="EXPLAIN__u4E2D_u7684_u5217"><a href="#EXPLAIN__u4E2D_u7684_u5217" class="headerlink" title="EXPLAIN 中的列"></a>EXPLAIN 中的列</h2><p>首先进行如下约定:<br>简单查询 SIMPLE<br>复杂查询:简单子查询 SUBQUERY、衍生表&lt;derived2&gt;、union</p>
+<h3 id="u91CD_u70B9_u5173_u6CE8_u7684_u7ED3_u679C_u5B57_u6BB5"><a href="#u91CD_u70B9_u5173_u6CE8_u7684_u7ED3_u679C_u5B57_u6BB5" class="headerlink" title="重点关注的结果字段"></a>重点关注的结果字段</h3><table>
+<thead>
+<tr>
+<th>列名</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>本次查询表联接类型，从这里可以看到本次查询大概的效率</td>
+</tr>
+<tr>
+<td>key</td>
+<td>最终选择的索引，如果没有索引的话，本次查询效率通常很差</td>
+</tr>
+<tr>
+<td>key_len</td>
+<td>本次查询用于结果过滤的索引实际长度，参见另一篇分享（FAQ系列-解读EXPLAIN执行计划中的key_len）</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>预计需要扫描的记录数，预计需要扫描的记录数越小越好</td>
+</tr>
+<tr>
+<td>Extra</td>
+<td>额外附加信息，主要确认是否出现 Using filesort、Using temporary 这两种情况</td>
+</tr>
+</tbody>
+</table>
 <h3 id="1-_id__u5217"><a href="#1-_id__u5217" class="headerlink" title="1. id 列"></a>1. id 列</h3><p>表以它们在处理查询过程中将被 MySQL 读入的顺序被列出,而不表示执行顺序。查询里的 每张表对应输出结果集中的一行,使用 id 来标示出属于哪一行,id 大小顺序并不一定跟表 被 mysql 读入的数据一致。<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> u.username, (<span class="keyword">select</span> uid <span class="keyword">from</span> iknow_team_user <span class="keyword">limit</span> <span class="number">1</span>) uu <span class="keyword">from</span> (<span class="keyword">select</span> uid,username <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> uid=<span class="number">123</span>) u;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">| id | select_type | table           | type   | possible_keys | key       | key_len | ref  | rows   | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">|  1 | PRIMARY     | derived3        | system | NULL          | NULL      | NULL    | NULL |      1 |             | </span><br><span class="line">|  3 | DERIVED     | iknow_team_user | ref    | ituid_tid     | ituid_tid | 4       |      |      1 |             | </span><br><span class="line">|  2 | SUBQUERY    | iknow_team_user | index  | NULL          | ituid_tid | 8       | NULL | 414815 | Using index | </span><br><span class="line">+<span class="comment">----+-------------+-----------------+--------+---------------+-----------+---------+------+--------+-------------+</span></span><br><span class="line">3 rows in <span class="operator"><span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure></p>
 <p>以下几点需要注意:</p>
 <ol>
@@ -306,7 +336,66 @@
 </tbody>
 </table>
 <p>举例如下:</p>
-<h3 id="3-_type__u5217"><a href="#3-_type__u5217" class="headerlink" title="3. type 列"></a>3. type 列</h3><p>即访问类型,可以理解为 mysql 在表里找出所需要行的方式 以下的访问类型,性能从最差到最好:</p>
+<h3 id="3-_type__u5217"><a href="#3-_type__u5217" class="headerlink" title="3. type 列"></a>3. type 列</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALL</td>
+<td>执行full table scan，这事最差的一种方式</td>
+</tr>
+<tr>
+<td>index</td>
+<td>执行full index scan，并且可以通过索引完成结果扫描并且直接从索引中取的想要的结果数据，也就是可以避免回表，比ALL略好，因为索引文件通常比全部数据要来的小</td>
+</tr>
+<tr>
+<td>range</td>
+<td>利用索引进行范围查询，比index略好</td>
+</tr>
+<tr>
+<td>index_subquery</td>
+<td>子查询中可以用到索引</td>
+</tr>
+<tr>
+<td>unique_subquery</td>
+<td>子查询中可以用到唯一索引，效率比 index_subquery 更高些</td>
+</tr>
+<tr>
+<td>index_merge</td>
+<td>可以利用index merge特性用到多个索引，提高查询效率</td>
+</tr>
+<tr>
+<td>ref_or_null</td>
+<td>表连接类型是ref，但进行扫描的索引列中可能包含NULL值</td>
+</tr>
+<tr>
+<td>fulltext</td>
+<td>全文检索</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>基于索引的等值查询，或者表间等值连接</td>
+</tr>
+<tr>
+<td>eq_ref</td>
+<td>表连接时基于主键或非NULL的唯一索引完成扫描，比ref略好</td>
+</tr>
+<tr>
+<td>const</td>
+<td>基于主键或唯一索引唯一值查询，最多返回一条结果，比eq_ref略好</td>
+</tr>
+<tr>
+<td>system</td>
+<td>查询对象表只有一行数据，这是最好的情况</td>
+</tr>
+</tbody>
+</table>
+<p>上面几种情况，从上到下一次是最差到最好。</p>
+<p>即访问类型,可以理解为 mysql 在表里找出所需要行的方式 以下的访问类型,性能从最差到最好。</p>
 <h4 id="3-_1-_All"><a href="#3-_1-_All" class="headerlink" title="3. 1. All"></a>3. 1. All</h4><p>全表扫描,mysql 必须扫描从头到尾扫描整张表,找到所需要的行<br>例外:查询条件中使用了 limit，extra 列中显示使用了 distinct 或 not exists 等限定词<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> tagList!=<span class="string">''</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">| id | select_type | table           | type | possible_keys | key  | key_len | ref  | rows | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | ALL  | NULL          | NULL | NULL    | NULL |    1 | Using where | </span><br><span class="line">+<span class="comment">----+-------------+-----------------+------+---------------+------+---------+------+------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.01</span> sec)</span></span><br></pre></td></tr></table></figure></p>
 <h4 id="3-_2-_index"><a href="#3-_2-_index" class="headerlink" title="3. 2. index"></a>3. 2. index</h4><p>和全表扫描一样也是做遍历,不同的是它是做全索引遍历,按照索引的次序进行遍历<br>优点:避免排序<br>如果在 extra 中看到 using index 说明使用了覆盖索引<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> iknow_team_user <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | index | NULL          | PRIMARY | 4       | NULL |    1 | Using index |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+-------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
 <h4 id="3-_3-_range"><a href="#3-_3-_range" class="headerlink" title="3. 3. range"></a>3. 3. range</h4><p>有限制的索引扫描,比全索引扫描好一些,不用遍历全部索引,常见的:&gt; &lt; in or<br>举例如下:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> iknow_team_user <span class="keyword">where</span> <span class="keyword">id</span> &lt; <span class="number">5</span> <span class="keyword">limit</span> <span class="number">10</span>;</span></span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">| id | select_type | table           | type  | possible_keys | key     | key_len | ref  | rows | Extra                        |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">|  1 | SIMPLE      | iknow_team_user | range | PRIMARY       | PRIMARY | 4       | NULL |    1 | Using where; Using temporary |</span><br><span class="line">+<span class="comment">----+-------------+-----------------+-------+---------------+---------+---------+------+------+------------------------------+</span></span><br><span class="line">1 row in <span class="operator"><span class="keyword">set</span> (<span class="number">0.00</span> sec)</span></span><br></pre></td></tr></table></figure></p>
@@ -319,7 +408,41 @@
 <h3 id="5-_key_len__u5217"><a href="#5-_key_len__u5217" class="headerlink" title="5. key_len 列"></a>5. key_len 列</h3><p>显示了 mysql 在索引中使用的字节数,key_len是根据表定义算出来的,和具体数据无关。<br>如上图举例,uid、doc_id各四个字节,故 key_len为8</p>
 <h3 id="6-_ref__u5217"><a href="#6-_ref__u5217" class="headerlink" title="6. ref 列"></a>6. ref 列</h3><p>表示表的连接匹配条件,即哪些列或者常量被用于查找索引列上的值,举例如下:</p>
 <h3 id="7-_rows__u5217"><a href="#7-_rows__u5217" class="headerlink" title="7. rows 列"></a>7. rows 列</h3><p>表示 mysql 根据表统计信息及索引使用情况,估算的要找出结果需要读取的记录行数</p>
-<h3 id="8-_Extra__u5217"><a href="#8-_Extra__u5217" class="headerlink" title="8. Extra 列"></a>8. Extra 列</h3><p>Extra 列有多种取值,介绍如下四种</p>
+<h3 id="8-_Extra__u5217"><a href="#8-_Extra__u5217" class="headerlink" title="8. Extra 列"></a>8. Extra 列</h3><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Using filesort</td>
+<td>将用外部排序而不是按照索引顺序排列结果，数据较少时从内存排序，否则需要在磁盘完成排序，代价非常高，需要添加合适的索引</td>
+</tr>
+<tr>
+<td>Using temporary</td>
+<td>需要创建一个临时表来存储结果，这通常发生在对没有索引的列进行GROUP BY时，或者ORDER BY里的列不都在索引里，需要添加合适的索引</td>
+</tr>
+<tr>
+<td>Using index</td>
+<td>表示MySQL使用覆盖索引避免全表扫描，不需要再到表中进行二次查找数据，这是比较好的结果之一。注意不要和type中的index类型混淆</td>
+</tr>
+<tr>
+<td>Using where</td>
+<td>通常是进行了全表/全索引扫描后再用WHERE子句完成结果过滤，需要添加合适的索引</td>
+</tr>
+<tr>
+<td>Impossible WHERE</td>
+<td>对Where子句判断的结果总是false而不能选择任何数据，例如where 1=0，无需过多关注</td>
+</tr>
+<tr>
+<td>Select tables optimized away</td>
+<td>使用某些聚合函数来访问存在索引的某个字段时，优化器会通过索引直接一次定位到所需要的数据行完成整个查询，例如MIN()\MAX()，这种也是比较好的结果之一</td>
+</tr>
+</tbody>
+</table>
+<p>Extra 列有多种取值,介绍如下四种</p>
 <ul>
 <li>using index<br>表明在 select 操作中使用了覆盖索引</li>
 <li>using where<br>表示 mysql 存储引擎收到结果后再进行过滤,举例如下:</li>
@@ -345,15 +468,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/17/mysql_join/">
-                    MySQL_JOIN
+                <a href="/2016/01/17/mysql_query_optimize/">
+                    MySQL_查询优化-1/2
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/mysql_concurrency/">
-                    MySQL_并发控制
+                <a href="/2016/01/17/useful/">
+                    有用的网站
                 </a>
             </div>
         
@@ -365,7 +488,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPLAIN__u7684_u4F7F_u7528"><span class="toc-number">1.</span> <span class="toc-text">EXPLAIN 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_EXPLAIN_tbl_name"><span class="toc-number">1.1.</span> <span class="toc-text">1. EXPLAIN tbl_name</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_EXPLAIN__5BEXTENDED__7C_PARTITIONS_5D_SELECT_select_options"><span class="toc-number">1.2.</span> <span class="toc-text">2. EXPLAIN [EXTENDED | PARTITIONS] SELECT select_options</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1_EXPLAIN_EXTENDED"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 EXPLAIN EXTENDED</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2_EXPLAIN_PARTITIONS"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 EXPLAIN PARTITIONS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-__u91CD_u5199_u975Eselect_u67E5_u8BE2"><span class="toc-number">1.3.</span> <span class="toc-text">3. 重写非select查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9"><span class="toc-number">1.4.</span> <span class="toc-text">4. EXPLAIN 使用注意点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 并非所有的 explain 后面的 select 语句都不会执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 explain 只是一个近似</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPLAIN__u4E2D_u7684_u5217"><span class="toc-number">2.</span> <span class="toc-text">EXPLAIN 中的列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_id__u5217"><span class="toc-number">2.1.</span> <span class="toc-text">1. id 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_select_type__u5217"><span class="toc-number">2.2.</span> <span class="toc-text">2. select type 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_type__u5217"><span class="toc-number">2.3.</span> <span class="toc-text">3. type 列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_1-_All"><span class="toc-number">2.3.1.</span> <span class="toc-text">3. 1. All</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_2-_index"><span class="toc-number">2.3.2.</span> <span class="toc-text">3. 2. index</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_3-_range"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. 3. range</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_4-_ref"><span class="toc-number">2.3.4.</span> <span class="toc-text">3. 4. ref</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_5-_eq_ref"><span class="toc-number">2.3.5.</span> <span class="toc-text">3. 5. eq_ref</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_6-_const_2Csystem"><span class="toc-number">2.3.6.</span> <span class="toc-text">3. 6. const,system</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_7-_NULL"><span class="toc-number">2.3.7.</span> <span class="toc-text">3. 7. NULL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_possible_keys__u5217__u4E0E_key__u5217"><span class="toc-number">2.4.</span> <span class="toc-text">4. possible_keys 列 与 key 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-_key_len__u5217"><span class="toc-number">2.5.</span> <span class="toc-text">5. key_len 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-_ref__u5217"><span class="toc-number">2.6.</span> <span class="toc-text">6. ref 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-_rows__u5217"><span class="toc-number">2.7.</span> <span class="toc-text">7. rows 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-_Extra__u5217"><span class="toc-number">2.8.</span> <span class="toc-text">8. Extra 列</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPLAIN__u7684_u4F7F_u7528"><span class="toc-number">1.</span> <span class="toc-text">EXPLAIN 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_EXPLAIN_tbl_name"><span class="toc-number">1.1.</span> <span class="toc-text">1. EXPLAIN tbl_name</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_EXPLAIN__5BEXTENDED__7C_PARTITIONS_5D_SELECT_select_options"><span class="toc-number">1.2.</span> <span class="toc-text">2. EXPLAIN [EXTENDED | PARTITIONS] SELECT select_options</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1_EXPLAIN_EXTENDED"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 EXPLAIN EXTENDED</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2_EXPLAIN_PARTITIONS"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 EXPLAIN PARTITIONS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-__u91CD_u5199_u975Eselect_u67E5_u8BE2"><span class="toc-number">1.3.</span> <span class="toc-text">3. 重写非select查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_EXPLAIN__u4F7F_u7528_u6CE8_u610F_u70B9"><span class="toc-number">1.4.</span> <span class="toc-text">4. EXPLAIN 使用注意点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1__u5E76_u975E_u6240_u6709_u7684_explain__u540E_u9762_u7684_select__u8BED_u53E5_u90FD_u4E0D_u4F1A_u6267_u884C"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 并非所有的 explain 后面的 select 语句都不会执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2_explain__u53EA_u662F_u4E00_u4E2A_u8FD1_u4F3C"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 explain 只是一个近似</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPLAIN__u4E2D_u7684_u5217"><span class="toc-number">2.</span> <span class="toc-text">EXPLAIN 中的列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u91CD_u70B9_u5173_u6CE8_u7684_u7ED3_u679C_u5B57_u6BB5"><span class="toc-number">2.1.</span> <span class="toc-text">重点关注的结果字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_id__u5217"><span class="toc-number">2.2.</span> <span class="toc-text">1. id 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_select_type__u5217"><span class="toc-number">2.3.</span> <span class="toc-text">2. select type 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_type__u5217"><span class="toc-number">2.4.</span> <span class="toc-text">3. type 列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_1-_All"><span class="toc-number">2.4.1.</span> <span class="toc-text">3. 1. All</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_2-_index"><span class="toc-number">2.4.2.</span> <span class="toc-text">3. 2. index</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_3-_range"><span class="toc-number">2.4.3.</span> <span class="toc-text">3. 3. range</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_4-_ref"><span class="toc-number">2.4.4.</span> <span class="toc-text">3. 4. ref</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_5-_eq_ref"><span class="toc-number">2.4.5.</span> <span class="toc-text">3. 5. eq_ref</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_6-_const_2Csystem"><span class="toc-number">2.4.6.</span> <span class="toc-text">3. 6. const,system</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_7-_NULL"><span class="toc-number">2.4.7.</span> <span class="toc-text">3. 7. NULL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_possible_keys__u5217__u4E0E_key__u5217"><span class="toc-number">2.5.</span> <span class="toc-text">4. possible_keys 列 与 key 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-_key_len__u5217"><span class="toc-number">2.6.</span> <span class="toc-text">5. key_len 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-_ref__u5217"><span class="toc-number">2.7.</span> <span class="toc-text">6. ref 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-_rows__u5217"><span class="toc-number">2.8.</span> <span class="toc-text">7. rows 列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-_Extra__u5217"><span class="toc-number">2.9.</span> <span class="toc-text">8. Extra 列</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -453,7 +576,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/17/mysql_join/" title="上一篇: MySQL_JOIN">
+            <a href="/2016/01/17/mysql_query_optimize/" title="上一篇: MySQL_查询优化-1/2">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -461,13 +584,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/mysql_concurrency/" title="下一篇: MySQL_并发控制">
+            <a href="/2016/01/17/useful/" title="下一篇: 有用的网站">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_select_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_query_optimize/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
