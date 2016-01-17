@@ -8,10 +8,10 @@
   <meta name="description" content="GitHub+Hexo 搭建免费的个人博客，这里介绍下基本操作包括 github、hexo配置，但不包括 hexo主题设置">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GitHub+hexo 搭建个人博客">
-<meta property="og:url" content="http://gitfeng.github.io/2016/01/17/github_hexo/index.html">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/github_hexo/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="GitHub+Hexo 搭建免费的个人博客，这里介绍下基本操作包括 github、hexo配置，但不包括 hexo主题设置">
-<meta property="og:updated_time" content="2016-01-16T16:04:22.000Z">
+<meta property="og:updated_time" content="2016-01-17T04:10:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GitHub+hexo 搭建个人博客">
 <meta name="twitter:description" content="GitHub+Hexo 搭建免费的个人博客，这里介绍下基本操作包括 github、hexo配置，但不包括 hexo主题设置">
@@ -200,7 +200,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/17/github_hexo/" class="article-date">
-      <time datetime="2016-01-16T16:04:22.000Z" itemprop="datePublished">2016-01-17</time>
+      <time datetime="2016-01-17T04:10:11.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -324,15 +324,20 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
 <p>即可将本地 hexo 博客内容发布到 github平台上。<br>往后我们要做的就是用自己的域名指向 github。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yaml&#35821;&#27861;&#35201;&#27714;&#20005;&#26684;&#65292;&#27880;&#24847;&#31354;&#26684;&#12290;&#24314;&#35758;&#25226;github&#22320;&#22336;&#37027;&#26465;&#35821;&#21477;&#37325;&#26032;&#25163;&#20889;&#19968;&#36941;&#65292;&#20882;&#21495;&#21518;&#38754;&#35201;&#26377;&#19968;&#20010;&#31354;&#26684;&#12290;&#10;&#37197;&#32622;&#37027;&#37324;&#30340;&#20882;&#21495;&#21518;&#38754;&#26159;&#26377;&#19968;&#20010;&#21322;&#35282;&#30340;&#31354;&#26684;&#30340;.&#22914;&#26524;&#20013;&#38388;&#26377;&#31354;&#26684;&#29992;&#20998;&#21495;&#24341;&#29992;&#19968;&#19979;</span><br></pre></td></tr></table></figure>
-<h2 id="blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD"><a href="#blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD" class="headerlink" title="blog 系统更多功能"></a>blog 系统更多功能</h2><h3 id="u7ED1_u5B9A_u57DF_u540D"><a href="#u7ED1_u5B9A_u57DF_u540D" class="headerlink" title="绑定域名"></a>绑定域名</h3><p>这里介绍万网购买域名的绑定规则</p>
-<ol>
+<h2 id="blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD"><a href="#blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD" class="headerlink" title="blog 系统更多功能"></a>blog 系统更多功能</h2><h3 id="u7ED1_u5B9A_u57DF_u540D"><a href="#u7ED1_u5B9A_u57DF_u540D" class="headerlink" title="绑定域名"></a>绑定域名</h3><p>这里介绍万网购买域名的绑定规则, 有两种，</p>
+<ul>
+<li>配一级域名 如 www.baidu.com , 这个验证通过</li>
+<li>配二级域名 如 zhidao.baidu.com ，尚未验证</li>
+</ul>
+<h4 id="u914D_u7F6E_u6B65_u9AA4"><a href="#u914D_u7F6E_u6B65_u9AA4" class="headerlink" title="配置步骤"></a>配置步骤</h4><ol>
 <li>在万网搜索喜欢的域名购买</li>
-<li>执行命令<br> ping {name}.github.io<br> 获取 ip 地址</li>
+<li>如果配一级域名，则直接配域名与192.30.252.153，192.30.252.154 ip的绑定，如果执行二级域名，执行命令<br> ping {name}.github.io<br> 获取 ip 地址</li>
 <li>购买完成后，在万网提供的域名解析配置页面配置域名解析到 第2步中获得的 ip 地址</li>
 <li>可通过ping {域名} 判断域名解析是否生效，此过程需要等10分钟~2小时</li>
 <li>在 GitHub 的代码仓库根目录下加 CNAME 文件，文件中只写自己申请的域名，域名不需要包括 <a href="http://www.的前缀" target="_blank" rel="external">http://www.的前缀</a></li>
 </ol>
 <p>可参考：<a href="http://jingyan.baidu.com/article/3c343ff70fb6e60d3779632f.html" target="_blank" rel="external">http://jingyan.baidu.com/article/3c343ff70fb6e60d3779632f.html</a></p>
+<h4 id="hexo__u4E0B_u4FDD_u6301_CNAME__u4E0D_u88AB_u6E05_u7406"><a href="#hexo__u4E0B_u4FDD_u6301_CNAME__u4E0D_u88AB_u6E05_u7406" class="headerlink" title="hexo 下保持 CNAME 不被清理"></a>hexo 下保持 CNAME 不被清理</h4><p>在 source目录下添加 CNAME 文件，下次发布即可直接带上。REAMDME.md 等文件也可类似处理</p>
 <h3 id="rss__u5B89_u88C5"><a href="#rss__u5B89_u88C5" class="headerlink" title="rss 安装"></a>rss 安装</h3><p>rss的安装非常简单 ，已经有人做好了插件，安装只需一步。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-feed</span><br></pre></td></tr></table></figure>
 <p>启动服务器，用浏览器打开 <a href="http://localhost:4000/atom.xml，" target="_blank" rel="external">http://localhost:4000/atom.xml，</a> 就可以看到RSS已经生效了。</p>
@@ -351,11 +356,11 @@
     <div class="copyright">
         <p><span>本文标题:</span><a href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 gitfeng 的个人博客">gitfeng</a></p>
-        <p><span>发布时间:</span>2016年01月17日 - 00时04分</p>
-        <p><span>最后更新:</span>2016年01月17日 - 00时04分</p>
+        <p><span>发布时间:</span>2016年01月17日 - 12时10分</p>
+        <p><span>最后更新:</span>2016年01月17日 - 12时10分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/17/github_hexo/" title="GitHub+hexo 搭建个人博客">http://gitfeng.github.io/2016/01/17/github_hexo/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://gitfeng.github.io/2016/01/17/github_hexo/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/17/github_hexo/" title="GitHub+hexo 搭建个人博客">http://ffeng.wang/2016/01/17/github_hexo/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://ffeng.wang/2016/01/17/github_hexo/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -368,10 +373,16 @@
 
     <nav id="article-nav">
         
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/17/hexo_theme/">
+                    hexo 配置及主题
+                </a>
+            </div>
+        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/16/mysql_join/">
-                    MySQL_JOIN
+                <a href="/2016/01/16/FirstPage/">
+                    Hello Hexo
                 </a>
             </div>
         
@@ -382,7 +393,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo"><span class="toc-number">1.</span> <span class="toc-text">hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">1.1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#npm__u955C_u50CF_u670D_u52A1_u5668_u8BBE_u7F6E"><span class="toc-number">1.1.1.</span> <span class="toc-text">npm 镜像服务器设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hexo__u5B89_u88C5"><span class="toc-number">1.1.2.</span> <span class="toc-text">hexo 安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blog__u5185_u5BB9_u7BA1_u7406"><span class="toc-number">2.</span> <span class="toc-text">blog 内容管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u65B0_u5EFA_blog"><span class="toc-number">2.1.</span> <span class="toc-text">新建 blog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u9875_u9762_u6253_u4E0D_u5F00"><span class="toc-number">2.2.</span> <span class="toc-text">页面打不开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u65B0_u5EFA_u6587_u7AE0"><span class="toc-number">2.3.</span> <span class="toc-text">新建文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5185_u5BB9_u9759_u6001_u5316_uFF1Amd_u6587_u4EF6-_26gt_3Bhtml"><span class="toc-number">2.4.</span> <span class="toc-text">内容静态化：md文件->html</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hexo_u5E38_u7528_u547D_u4EE4"><span class="toc-number">2.5.</span> <span class="toc-text">hexo常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#github"><span class="toc-number">3.</span> <span class="toc-text">github</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u6CE8_u518CGitHub"><span class="toc-number">3.1.</span> <span class="toc-text">注册GitHub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7533_u8BF7_u4EE3_u7801_repository"><span class="toc-number">3.2.</span> <span class="toc-text">申请代码 repository</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5C06blog_u90E8_u7F72_u5230_github"><span class="toc-number">3.3.</span> <span class="toc-text">将blog部署到 github</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD"><span class="toc-number">4.</span> <span class="toc-text">blog 系统更多功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u7ED1_u5B9A_u57DF_u540D"><span class="toc-number">4.1.</span> <span class="toc-text">绑定域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rss__u5B89_u88C5"><span class="toc-number">4.2.</span> <span class="toc-text">rss 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sitemap"><span class="toc-number">4.3.</span> <span class="toc-text">sitemap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u8BC4_u8BBA-duoshuo"><span class="toc-number">4.4.</span> <span class="toc-text">评论-duoshuo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u56FE_u7247_u5B58_u50A8_u670D_u52A1"><span class="toc-number">4.5.</span> <span class="toc-text">图片存储服务</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo"><span class="toc-number">1.</span> <span class="toc-text">hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5B89_u88C5"><span class="toc-number">1.1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#npm__u955C_u50CF_u670D_u52A1_u5668_u8BBE_u7F6E"><span class="toc-number">1.1.1.</span> <span class="toc-text">npm 镜像服务器设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hexo__u5B89_u88C5"><span class="toc-number">1.1.2.</span> <span class="toc-text">hexo 安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blog__u5185_u5BB9_u7BA1_u7406"><span class="toc-number">2.</span> <span class="toc-text">blog 内容管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u65B0_u5EFA_blog"><span class="toc-number">2.1.</span> <span class="toc-text">新建 blog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u9875_u9762_u6253_u4E0D_u5F00"><span class="toc-number">2.2.</span> <span class="toc-text">页面打不开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u65B0_u5EFA_u6587_u7AE0"><span class="toc-number">2.3.</span> <span class="toc-text">新建文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5185_u5BB9_u9759_u6001_u5316_uFF1Amd_u6587_u4EF6-_26gt_3Bhtml"><span class="toc-number">2.4.</span> <span class="toc-text">内容静态化：md文件->html</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hexo_u5E38_u7528_u547D_u4EE4"><span class="toc-number">2.5.</span> <span class="toc-text">hexo常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#github"><span class="toc-number">3.</span> <span class="toc-text">github</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u6CE8_u518CGitHub"><span class="toc-number">3.1.</span> <span class="toc-text">注册GitHub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7533_u8BF7_u4EE3_u7801_repository"><span class="toc-number">3.2.</span> <span class="toc-text">申请代码 repository</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5C06blog_u90E8_u7F72_u5230_github"><span class="toc-number">3.3.</span> <span class="toc-text">将blog部署到 github</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#blog__u7CFB_u7EDF_u66F4_u591A_u529F_u80FD"><span class="toc-number">4.</span> <span class="toc-text">blog 系统更多功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u7ED1_u5B9A_u57DF_u540D"><span class="toc-number">4.1.</span> <span class="toc-text">绑定域名</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u914D_u7F6E_u6B65_u9AA4"><span class="toc-number">4.1.1.</span> <span class="toc-text">配置步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hexo__u4E0B_u4FDD_u6301_CNAME__u4E0D_u88AB_u6E05_u7406"><span class="toc-number">4.1.2.</span> <span class="toc-text">hexo 下保持 CNAME 不被清理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rss__u5B89_u88C5"><span class="toc-number">4.2.</span> <span class="toc-text">rss 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sitemap"><span class="toc-number">4.3.</span> <span class="toc-text">sitemap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u8BC4_u8BBA-duoshuo"><span class="toc-number">4.4.</span> <span class="toc-text">评论-duoshuo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u56FE_u7247_u5B58_u50A8_u670D_u52A1"><span class="toc-number">4.5.</span> <span class="toc-text">图片存储服务</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -446,7 +457,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/github_hexo/" data-title="GitHub+hexo 搭建个人博客" data-url="http://gitfeng.github.io/2016/01/17/github_hexo/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/github_hexo/" data-title="GitHub+hexo 搭建个人博客" data-url="http://ffeng.wang/2016/01/17/github_hexo/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -470,19 +481,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2016/01/17/hexo_theme/" title="上一篇: hexo 配置及主题">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/16/mysql_join/" title="下一篇: MySQL_JOIN">
+            <a href="/2016/01/16/FirstPage/" title="下一篇: Hello Hexo">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");

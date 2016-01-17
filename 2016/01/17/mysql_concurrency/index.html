@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>hexo 配置及主题 | gitfeng-blog</title>
+  <title>MySQL_并发控制 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Hexo 主题及相关功能配置">
+  <meta name="description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo 配置及主题">
-<meta property="og:url" content="http://gitfeng.github.io/2016/01/16/hexo_theme/index.html">
+<meta property="og:title" content="MySQL_并发控制">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_concurrency/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="Hexo 主题及相关功能配置">
-<meta property="og:updated_time" content="2016-01-16T12:38:24.000Z">
+<meta property="og:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
+<meta property="og:updated_time" content="2016-01-17T04:10:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hexo 配置及主题">
-<meta name="twitter:description" content="Hexo 主题及相关功能配置">
+<meta name="twitter:title" content="MySQL_并发控制">
+<meta name="twitter:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
   
   
     <link rel="icon" href="/favicon.png">
@@ -196,11 +196,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-hexo_theme" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_concurrency" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/16/hexo_theme/" class="article-date">
-      <time datetime="2016-01-16T12:38:24.000Z" itemprop="datePublished">2016-01-16</time>
+      <a href="/2016/01/17/mysql_concurrency/" class="article-date">
+      <time datetime="2016-01-17T04:10:11.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -213,7 +213,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      hexo 配置及主题
+      MySQL_并发控制
     </h1>
   
 
@@ -222,13 +222,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/应用/">应用</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/markdown/">markdown</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -238,22 +238,74 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="u914D_u7F6E"><a href="#u914D_u7F6E" class="headerlink" title="配置"></a>配置</h2><p>rel：<a href="http://zipperary.com/2013/05/29/hexo-guide-3/" target="_blank" rel="external">http://zipperary.com/2013/05/29/hexo-guide-3/</a></p>
-<h2 id="u4E3B_u9898"><a href="#u4E3B_u9898" class="headerlink" title="主题"></a>主题</h2><h3 id="u54EA_u627E_u4E3B_u9898_uFF1F"><a href="#u54EA_u627E_u4E3B_u9898_uFF1F" class="headerlink" title="哪找主题？"></a>哪找主题？</h3><p>知乎 <a href="https://www.zhihu.com/question/24422335/answer/46357100" target="_blank" rel="external">https://www.zhihu.com/question/24422335/answer/46357100</a></p>
-<h3 id="u54EA_u4E9B_u4E3B_u9898_uFF1F"><a href="#u54EA_u4E9B_u4E3B_u9898_uFF1F" class="headerlink" title="哪些主题？"></a>哪些主题？</h3><ul>
-<li>NexT <a href="http://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">gitUrl</a> <a href="http://notes.iissnan.com" target="_blank" rel="external">deamonUrl</a></li>
-<li>yelee <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" rel="external">gitUrl</a> <a href="http://moxfive.xyz/" target="_blank" rel="external">deamonUrl</a></li>
+        <h2 id="u8BFB_u5199_u9501"><a href="#u8BFB_u5199_u9501" class="headerlink" title="读写锁"></a>读写锁</h2><p>读锁：共享锁，<br>写锁：排他锁，阻止其他的读锁和写锁行为</p>
+<h2 id="u9501_u7C92_u5EA6"><a href="#u9501_u7C92_u5EA6" class="headerlink" title="锁粒度"></a>锁粒度</h2><p>在锁机制存在的情况下，提高共享资源并发性的方法是让锁定对象更准确。尽量只锁定需要修改的数据部分。理想的情况下，精确锁定会修改的数据片段。<br>另一方面，加锁也需要消耗资源。锁的各种操作，包括获得锁、检查锁是否已解除、释放锁等，都会增加系统开销。如果锁的操作比较频繁，系统会花大量的时间来管理锁，如不是执行数据存储，则兄台那个的性能也会受到影响。<br>可见，锁管理的实现对性能指标存在着相互冲突的正反影响，将锁粒度固定在某个级别，可以实现锁管理的灵活性、系统消耗两方面的综合考虑。表锁、行级锁是比较常见、重要的锁策略。</p>
+<ul>
+<li><p>表锁<br>用户在对表进行写操作前，需获得写锁，如果是写锁是表锁，则会阻塞其他用户对该表的所有读写操作。<br>尽管存储引擎可以管理自己的锁，MySQL本身还是会使用各种有效的表锁来实现不同的目的。例如ALTER TABLE语句的执行会触发表锁，而忽略存储引擎的锁机制。</p>
+</li>
+<li><p>行级锁</p>
+</li>
 </ul>
-<h3 id="u4E3B_u9898_u5B89_u88C5"><a href="#u4E3B_u9898_u5B89_u88C5" class="headerlink" title="主题安装"></a>主题安装</h3><ol>
-<li><p>执行以下命令，安装主题到主题目录： ~/blog/themes</p>
-<p>| git clone <a href="https://github.com/MOxFIVE/hexo-theme-yelee.git" target="_blank" rel="external">https://github.com/MOxFIVE/hexo-theme-yelee.git</a> themes/yelee</p>
-</li>
-<li><p>修改 Hexo 根目录对应配置文件 _config.yml</p>
-<p>theme: yelee</p>
-</li>
-<li><p>配置完成后执行 hexo c &amp;&amp; hexo g重新发布新主题的内容</p>
-</li>
-</ol>
+<h2 id="u4E8B_u52A1"><a href="#u4E8B_u52A1" class="headerlink" title="事务"></a>事务</h2><p>一组原子性的操作。ACID概念。</p>
+<ul>
+<li>原子性(atomicity)：最小工作单元，要么都成功，要么都失败。</li>
+<li>一致性(consistency)：从一个一致性的状态转到另外一个一致性的状态，从原子性理解，事务的操作不会部分成功，部分失败，因此不会对系统数据造成不一致</li>
+<li>隔离性(isolation)：通常来说，事务在最终提交前，对其他事务是不可见的。事务执行的部分对数据的变更对其他事务屏蔽。</li>
+<li>持久性(durability)：一旦事务提交，所执行的修改会永久的保存到数据库中</li>
+</ul>
+<h2 id="u9694_u79BB_u7EA7_u522B"><a href="#u9694_u79BB_u7EA7_u522B" class="headerlink" title="隔离级别"></a>隔离级别</h2><p>SQL标准中定义了4中隔离级别，低级别的隔离可以执行更高的并发，系统的开销也更低。</p>
+<ul>
+<li>READ UNCOMMITTED（未提交读）该隔离级别下，事务中的修改，即使没有提交，对其他事务也都是可见的。因此，对于其他业务，可能会产生“<strong>脏读</strong>”（读取到部分修改的、事务未提交的数据），从而引起很多问题。同时从性能层面考虑，</li>
+<li>READ UNCOMMITED 和其他隔离级别也差不多，因此实际场景中一般很少使用。脏读：事务T1更新了一行记录的内容，但是并没有提交所做的修改。事务T2读取更新后的行，然后T1执行回滚操作，取消了刚才所做的修改。现在T2所读取的行就无效了</li>
+<li>READ COMMITTED（提交读）大多数据库的默认隔离级别，但MySQL不是。本隔离级别下，满足隔离的基本定义：事务在提交前所做的修改对其他业务不可见。该级别下，两次执行同样的查询，可能会得到不一样的结果，产生不可重复读的效果。<strong>不可重复读</strong>：事务T1读取一行记录，紧接着事务T2修改 了T1刚才读取的那一行记录。然后T1又再次读取这行记录，发现与刚才读取的结果不同。这就称为“不可重复”读，因为T1原来读取的那行记录已经发生了变化。</li>
+<li>REPEATABLE READ（可重复读）MySQL默认隔离级别。该隔离级别解决了不可重复读问题，但还是存在<strong>幻读</strong>。InnoDB 通过多版本并发控制（MVCC）解决幻读问题。幻读：事务T1读取一条指定的WHERE子句所返回的结果集。然后事务T2新插入 一行记录，这行记录恰好可以满足T1所使用的查询条件中的WHERE 子句的条件。然后T1又使用相同的查询再次对表进行检索，但是此时却看到了事务T2刚才插入的新行。这个新行就称为“幻像”，因为对T1来说这一行就像突然出现的一样。<br>SERIALIZE（可串行化）它强制事务串行执行。该隔离级别下，会对读取的每一行数据上都加上锁。因而对锁机制的管理比较耗系统资源。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读可能性</th>
+<th>不可重复读可能性</th>
+<th>幻读可能性</th>
+<th>加锁读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>READ UNCOMMITTED</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>READ COMMITTED</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>REPEATABLE READ</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>SERIALIZE</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u6B7B_u9501"><a href="#u6B7B_u9501" class="headerlink" title="死锁"></a>死锁</h2><h3 id="u5728_u4E8B_u52A1_u4E2D_u6DF7_u5408_u4F7F_u7528_u5B58_u50A8_u5F15_u64CE"><a href="#u5728_u4E8B_u52A1_u4E2D_u6DF7_u5408_u4F7F_u7528_u5B58_u50A8_u5F15_u64CE" class="headerlink" title="在事务中混合使用存储引擎"></a>在事务中混合使用存储引擎</h3><p>MySQL服务器层不管理事务，事务是由存储引擎实现的。所以在同一个事务中，使用多个存储引擎是不可靠的。</p>
+<p>具体为：在正常提交情况下不会有问题，但如果事务需要回滚，非事务型的表变更会无法撤销，从而导致数据库表数据不一致。</p>
+<h3 id="u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236"><a href="#u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236" class="headerlink" title="多版本并发控制"></a>多版本并发控制</h3><p>MVCC, 前面有提到。MySQL的大多数事务型存储引擎的实现都不是简单的行级锁。</p>
+<p>MVCC 的实现，是通过保存数据在某个时间点的快照实现的。即不管需要执行多长时间，每个事务看到的数据都是一致的。根据事务开始的时间不同，每个事务对同一张表，同一时刻看到的数据可能是不一样的。</p>
+<p>InnoDb 的 MVCC，是通过在每行记录后面保存两个隐藏的列来实现的。这两个列，一个保存了创建时间，一个保存行的过期时间（或删除时间）。当然存储的并不是实际的时间值，而是系统版本号。每开始一个新的事务，系统版本号都会自动增加。</p>
 
       
     </div>
@@ -262,13 +314,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/01/16/hexo_theme/">hexo 配置及主题</a></p>
+        <p><span>本文标题:</span><a href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 gitfeng 的个人博客">gitfeng</a></p>
-        <p><span>发布时间:</span>2016年01月16日 - 20时38分</p>
-        <p><span>最后更新:</span>2016年01月16日 - 20时38分</p>
+        <p><span>发布时间:</span>2016年01月17日 - 12时10分</p>
+        <p><span>最后更新:</span>2016年01月17日 - 12时10分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/16/hexo_theme/" title="hexo 配置及主题">http://gitfeng.github.io/2016/01/16/hexo_theme/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://gitfeng.github.io/2016/01/16/hexo_theme/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/17/mysql_concurrency/" title="MySQL_并发控制">http://ffeng.wang/2016/01/17/mysql_concurrency/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://ffeng.wang/2016/01/17/mysql_concurrency/　　作者: gitfeng" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -282,15 +334,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/16/mysql_explain/">
+                <a href="/2016/01/17/mysql_explain/">
                     MySQL_explain 的使用
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/16/FirstPage/">
-                    Hello Hexo
+                <a href="/2016/01/17/hexo_theme/">
+                    hexo 配置及主题
                 </a>
             </div>
         
@@ -301,7 +353,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u914D_u7F6E"><span class="toc-number">1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E3B_u9898"><span class="toc-number">2.</span> <span class="toc-text">主题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u54EA_u627E_u4E3B_u9898_uFF1F"><span class="toc-number">2.1.</span> <span class="toc-text">哪找主题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u54EA_u4E9B_u4E3B_u9898_uFF1F"><span class="toc-number">2.2.</span> <span class="toc-text">哪些主题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E3B_u9898_u5B89_u88C5"><span class="toc-number">2.3.</span> <span class="toc-text">主题安装</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BFB_u5199_u9501"><span class="toc-number">1.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9501_u7C92_u5EA6"><span class="toc-number">2.</span> <span class="toc-text">锁粒度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E8B_u52A1"><span class="toc-number">3.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9694_u79BB_u7EA7_u522B"><span class="toc-number">4.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6B7B_u9501"><span class="toc-number">5.</span> <span class="toc-text">死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5728_u4E8B_u52A1_u4E2D_u6DF7_u5408_u4F7F_u7528_u5B58_u50A8_u5F15_u64CE"><span class="toc-number">5.1.</span> <span class="toc-text">在事务中混合使用存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236"><span class="toc-number">5.2.</span> <span class="toc-text">多版本并发控制</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -365,7 +417,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/16/hexo_theme/" data-title="hexo 配置及主题" data-url="http://gitfeng.github.io/2016/01/16/hexo_theme/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/mysql_concurrency/" data-title="MySQL_并发控制" data-url="http://ffeng.wang/2016/01/17/mysql_concurrency/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -389,7 +441,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/16/mysql_explain/" title="上一篇: MySQL_explain 的使用">
+            <a href="/2016/01/17/mysql_explain/" title="上一篇: MySQL_explain 的使用">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -397,13 +449,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/16/FirstPage/" title="下一篇: Hello Hexo">
+            <a href="/2016/01/17/hexo_theme/" title="下一篇: hexo 配置及主题">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_query_optimize/">MySQL_查询优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
