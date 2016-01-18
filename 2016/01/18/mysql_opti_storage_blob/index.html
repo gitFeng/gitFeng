@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/18/mysql_opti_storage_blob/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="优化InnoDB表BLOB列的存储效率">
-<meta property="og:updated_time" content="2016-01-18T04:08:00.000Z">
+<meta property="og:updated_time" content="2016-01-18T04:09:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_存储优化-InnoDB表BLOB列">
 <meta name="twitter:description" content="优化InnoDB表BLOB列的存储效率">
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/18/mysql_opti_storage_blob/" class="article-date">
-      <time datetime="2016-01-18T04:08:00.000Z" itemprop="datePublished">2016-01-18</time>
+      <time datetime="2016-01-18T04:09:42.000Z" itemprop="datePublished">2016-01-18</time>
 </a>
     </div>
   
@@ -242,7 +242,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>ref<br>: <a href="http://imysql.com/2014/09/28/mysql-optimization-case-blob-stored-in-innodb-optimization.shtml" target="_blank" rel="external">优化InnoDB表BLOB列的存储效率</a></p>
+        <p>ref : <a href="http://imysql.com/2014/09/28/mysql-optimization-case-blob-stored-in-innodb-optimization.shtml" target="_blank" rel="external">优化InnoDB表BLOB列的存储效率</a></p>
 <h3 id="InnoDB_u5F15_u64CE_u5B58_u50A8_u683C_u5F0F_u7684_u51E0_u4E2A_u8981_u70B9_uFF1A"><a href="#InnoDB_u5F15_u64CE_u5B58_u50A8_u683C_u5F0F_u7684_u51E0_u4E2A_u8981_u70B9_uFF1A" class="headerlink" title="InnoDB引擎存储格式的几个要点："></a>InnoDB引擎存储格式的几个要点：</h3><ol>
 <li>InnoDB可以选择使用共享表空间或者是独立表空间方式，建议使用独立表空间，便于管理、维护。启用 innodb_file_per_table 选项，5.5以后可以在线动态修改生效，并且执行 ALTER TABLE xx ENGINE = InnoDB 将现有表转成独立表空间，早于5.5的版本，修改完这个选项后，需要重启才能生效；</li>
 <li>InnoDB的data page默认16KB，5.6版本以后，新增选项 innodb_page_size 可以修改，在5.6以前的版本，只能修改源码重新编译，但并不推荐修改这个配置，除非你非常清楚它有什么优缺点；</li>
