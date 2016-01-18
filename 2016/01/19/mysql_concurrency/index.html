@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/19/mysql_concurrency/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
-<meta property="og:updated_time" content="2016-01-18T16:11:09.000Z">
+<meta property="og:updated_time" content="2016-01-18T16:14:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_并发控制">
 <meta name="twitter:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
@@ -204,7 +204,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/19/mysql_concurrency/" class="article-date">
-      <time datetime="2016-01-18T16:11:09.000Z" itemprop="datePublished">2016-01-19</time>
+      <time datetime="2016-01-18T16:14:31.000Z" itemprop="datePublished">2016-01-19</time>
 </a>
     </div>
   
@@ -315,9 +315,9 @@
 <li>==操作一行记录时，有可能会加多个行锁在不同的B+Tree上。==</li>
 <li>==只有通过索引条件检索数据，InnoDB才使用行级锁，否则，InnoDB将使用表锁！==</li>
 </ul>
-<p>以下实例参考：<a href="http://book.51cto.com/art/200803/68127.htm" target="_blank" rel="external">http://book.51cto.com/art/200803/68127.htm</a></p>
+<p>以下实例参考：<a href="http://book.51cto.com/art/200803/68127.htm" target="_blank" rel="external">http://book.51cto.com/art/200803/68127.htm</a><br>1） 在不通过索引条件查询的时候，InnoDB确实使用的是表锁，而不是行锁。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table tab_no_index(id int,name varchar(<span class="number">10</span>)) engine=innodb;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.15</span> sec)</span><br><span class="line">mysql&gt; insert into tab_no_index values(<span class="number">1</span>,<span class="string">'1'</span>),(<span class="number">2</span>,<span class="string">'2'</span>),(<span class="number">3</span>,<span class="string">'3'</span>),(<span class="number">4</span>,<span class="string">'4'</span>);</span><br><span class="line">Query OK, <span class="number">4</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">Records: <span class="number">4</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>1） 在不通过索引条件查询的时候，InnoDB确实使用的是表锁，而不是行锁。如在上表的条件下执行</p>
+<p>如在上表执行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tab_no_index where id = 1 for update;</span><br></pre></td></tr></table></figure>
 <p>会产生表锁。</p>
 <p>2） 创建<code>tab_with_index</code>表，id字段有普通索引</p>
