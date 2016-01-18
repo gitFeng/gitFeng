@@ -8,10 +8,10 @@
   <meta name="description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL_并发控制">
-<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_concurrency/index.html">
+<meta property="og:url" content="http://ffeng.wang/2016/01/19/mysql_concurrency/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
-<meta property="og:updated_time" content="2016-01-17T04:10:11.000Z">
+<meta property="og:updated_time" content="2016-01-18T16:11:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_并发控制">
 <meta name="twitter:description" content="mysql并发控制，包括锁、事务、隔离、死锁等概念的介绍，主要参考《MySQL 高性能优化》">
@@ -203,8 +203,8 @@
       <div class="body-wrap"><article id="post-mysql_concurrency" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/17/mysql_concurrency/" class="article-date">
-      <time datetime="2016-01-17T04:10:11.000Z" itemprop="datePublished">2016-01-17</time>
+      <a href="/2016/01/19/mysql_concurrency/" class="article-date">
+      <time datetime="2016-01-18T16:11:09.000Z" itemprop="datePublished">2016-01-19</time>
 </a>
     </div>
   
@@ -310,6 +310,39 @@
 <h3 id="u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236"><a href="#u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236" class="headerlink" title="多版本并发控制"></a>多版本并发控制</h3><p>MVCC, 前面有提到。MySQL的大多数事务型存储引擎的实现都不是简单的行级锁。</p>
 <p>MVCC 的实现，是通过保存数据在某个时间点的快照实现的。即不管需要执行多长时间，每个事务看到的数据都是一致的。根据事务开始的时间不同，每个事务对同一张表，同一时刻看到的数据可能是不一样的。</p>
 <p>InnoDb 的 MVCC，是通过在每行记录后面保存两个隐藏的列来实现的。这两个列，一个保存了创建时间，一个保存行的过期时间（或删除时间）。当然存储的并不是实际的时间值，而是系统版本号。每开始一个新的事务，系统版本号都会自动增加。</p>
+<h2 id="u9501_u7684_u8BF4_u660E"><a href="#u9501_u7684_u8BF4_u660E" class="headerlink" title="锁的说明"></a>锁的说明</h2><h3 id="u884C_u7EA7_u9501"><a href="#u884C_u7EA7_u9501" class="headerlink" title="行级锁"></a>行级锁</h3><p>行级锁是针对索引生效的，并非存储数据。每个B+Tree上的行锁，也可以理解为每个Index上的行锁。</p>
+<ul>
+<li>==操作一行记录时，有可能会加多个行锁在不同的B+Tree上。==</li>
+<li>==只有通过索引条件检索数据，InnoDB才使用行级锁，否则，InnoDB将使用表锁！==</li>
+</ul>
+<p>以下实例参考：<a href="http://book.51cto.com/art/200803/68127.htm" target="_blank" rel="external">http://book.51cto.com/art/200803/68127.htm</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table tab_no_index(id int,name varchar(<span class="number">10</span>)) engine=innodb;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.15</span> sec)</span><br><span class="line">mysql&gt; insert into tab_no_index values(<span class="number">1</span>,<span class="string">'1'</span>),(<span class="number">2</span>,<span class="string">'2'</span>),(<span class="number">3</span>,<span class="string">'3'</span>),(<span class="number">4</span>,<span class="string">'4'</span>);</span><br><span class="line">Query OK, <span class="number">4</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">Records: <span class="number">4</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>1） 在不通过索引条件查询的时候，InnoDB确实使用的是表锁，而不是行锁。如在上表的条件下执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tab_no_index where id = 1 for update;</span><br></pre></td></tr></table></figure>
+<p>会产生表锁。</p>
+<p>2） 创建<code>tab_with_index</code>表，id字段有普通索引</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table tab_with_index(id int,name varchar(<span class="number">10</span>)) engine=innodb;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.15</span> sec)</span><br><span class="line">mysql&gt; alter table tab_with_index add index id(id);</span><br><span class="line">Query OK, <span class="number">4</span> rows affected (<span class="number">0.24</span> sec)</span><br><span class="line">Records: <span class="number">4</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>在上表执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> tab_no_index <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span></span><br></pre></td></tr></table></figure>
+<p>产生行锁。</p>
+<p>3） 由于MySQL的行锁是针对索引加的锁，不是针对记录加的锁，所以虽然是访问不同行的记录，但是如果是使用相同的索引键，是会出现锁冲突的。应用设计的时候要注意这一点。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from tab_with_index <span class="built_in">where</span> id = <span class="number">1</span> and name = <span class="string">'1'</span> <span class="keyword">for</span> update;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from tab_with_index <span class="built_in">where</span> id = <span class="number">1</span> and name = <span class="string">'4'</span> <span class="keyword">for</span> update;</span><br></pre></td></tr></table></figure>
+<p>上述两条 sql 虽然不是操作同一条记录，但是由于 index(id=1)产生了锁，因此还是会出现锁等待情况。</p>
+<p>4） 当表有多个索引的时候，不同的事务可以使用不同的索引锁定不同的行，另外，不论是使用主键索引、唯一索引或普通索引，InnoDB都会使用行锁来对数据加锁。可以理解为所有索引树都会加锁。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table tab_with_index add index name(name);</span><br><span class="line">Query OK, <span class="number">5</span> rows affected (<span class="number">0.23</span> sec)</span><br><span class="line">Records: <span class="number">5</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from tab_with_index <span class="built_in">where</span> id = <span class="number">1</span> <span class="keyword">for</span> update;</span><br><span class="line">+------+------+</span><br><span class="line">| id   | name |</span><br><span class="line">+------+------+</span><br><span class="line">| <span class="number">1</span>    | <span class="number">1</span>    |</span><br><span class="line">| <span class="number">1</span>    | <span class="number">4</span>    |</span><br><span class="line">+------+------+</span><br><span class="line"><span class="number">2</span> rows <span class="keyword">in</span> <span class="built_in">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Session_2使用name的索引访问记录，因为记录没有被索引，所以可以获得锁</span></span><br><span class="line">mysql&gt; select * from tab_with_index <span class="built_in">where</span> name = <span class="string">'2'</span> <span class="keyword">for</span> update;</span><br><span class="line">+------+------+</span><br><span class="line">| id   | name |</span><br><span class="line">+------+------+</span><br><span class="line">| <span class="number">2</span>    | <span class="number">2</span>    |</span><br><span class="line">+------+------+</span><br><span class="line"><span class="number">1</span> row <span class="keyword">in</span> <span class="built_in">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"><span class="comment">#由于访问的记录已经被session_1锁定，所以等待获得锁</span></span><br><span class="line">mysql&gt; select * from tab_with_index <span class="built_in">where</span> name = <span class="string">'4'</span> <span class="keyword">for</span> update;</span><br></pre></td></tr></table></figure>
+<p>5）即便在条件中使用了索引字段，但是否使用索引来检索数据是由MySQL通过判断不同执行计划的代价来决定的，如果MySQL认为全表扫描效率更高，比如对一些很小的表，它就不会使用索引，这种情况下InnoDB将使用表锁，而不是行锁。因此，在分析锁冲突时，别忘了检查SQL的执行计划，以确认是否真正使用了索引。</p>
+<p>6）检索值的数据类型与索引字段不同，虽然MySQL能够进行数据类型转换，但却不会使用索引，从而导致InnoDB使用表锁。</p>
+<h3 id="select_for_update"><a href="#select_for_update" class="headerlink" title="select for update"></a>select for update</h3><p>mysql中使用select for update的必须针对InnoDb，并且是在事务中，才能起作用。select的条件不一样，采用的是行级锁还是表级锁也不一样。<br>由于 InnoDB 预设是 Row-Level Lock，所以只有「明确」的指定主键，MySQL 才会执行 Row lock (只锁住被选取的资料例) ，否则 MySQL 将会执行 Table Lock (将整个资料表单给锁住)。<br>举个例子:<br>假设有个表单 products ，裡面有 id 跟 name 二个栏位，id 是主键。</p>
+<ul>
+<li>例1 (明确指定主键，并且有此条记录，row lock):<br>SELECT * FROM products WHERE id=’3’ FOR UPDATE;</li>
+<li>例2 (明确指定主键，若查无此条记录，无 lock):<br>SELECT * FROM products WHERE id=’-1’ FOR UPDATE;</li>
+<li>例3 (无主键，table lock):<br>SELECT * FROM products WHERE name=’Mouse’ FOR UPDATE;</li>
+<li>例4 (主键不明确，table lock):<br>SELECT * FROM products WHERE id&lt;&gt;’3’ FOR UPDATE;</li>
+<li>例5 (主键不明确，table lock):<br>SELECT * FROM products WHERE id LIKE ‘3’ FOR UPDATE;</li>
+</ul>
 
       
     </div>
@@ -327,16 +360,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/17/mysql_explain/">
-                    MySQL_explain 的使用
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/mysql_join/">
-                    MySQL_JOIN
+                <a href="/2016/01/18/chrome_plugin/">
+                    常用 chrome 插件
                 </a>
             </div>
         
@@ -348,7 +375,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BFB_u5199_u9501"><span class="toc-number">1.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9501_u7C92_u5EA6"><span class="toc-number">2.</span> <span class="toc-text">锁粒度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E8B_u52A1"><span class="toc-number">3.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9694_u79BB_u7EA7_u522B"><span class="toc-number">4.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6B7B_u9501"><span class="toc-number">5.</span> <span class="toc-text">死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5728_u4E8B_u52A1_u4E2D_u6DF7_u5408_u4F7F_u7528_u5B58_u50A8_u5F15_u64CE"><span class="toc-number">5.1.</span> <span class="toc-text">在事务中混合使用存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236"><span class="toc-number">5.2.</span> <span class="toc-text">多版本并发控制</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u8BFB_u5199_u9501"><span class="toc-number">1.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9501_u7C92_u5EA6"><span class="toc-number">2.</span> <span class="toc-text">锁粒度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E8B_u52A1"><span class="toc-number">3.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9694_u79BB_u7EA7_u522B"><span class="toc-number">4.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6B7B_u9501"><span class="toc-number">5.</span> <span class="toc-text">死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5728_u4E8B_u52A1_u4E2D_u6DF7_u5408_u4F7F_u7528_u5B58_u50A8_u5F15_u64CE"><span class="toc-number">5.1.</span> <span class="toc-text">在事务中混合使用存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u591A_u7248_u672C_u5E76_u53D1_u63A7_u5236"><span class="toc-number">5.2.</span> <span class="toc-text">多版本并发控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9501_u7684_u8BF4_u660E"><span class="toc-number">6.</span> <span class="toc-text">锁的说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u884C_u7EA7_u9501"><span class="toc-number">6.1.</span> <span class="toc-text">行级锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#select_for_update"><span class="toc-number">6.2.</span> <span class="toc-text">select for update</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -412,7 +439,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/mysql_concurrency/" data-title="MySQL_并发控制" data-url="http://ffeng.wang/2016/01/17/mysql_concurrency/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/19/mysql_concurrency/" data-title="MySQL_并发控制" data-url="http://ffeng.wang/2016/01/19/mysql_concurrency/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -436,21 +463,19 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/17/mysql_explain/" title="上一篇: MySQL_explain 的使用">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/mysql_join/" title="下一篇: MySQL_JOIN">
+            <a href="/2016/01/18/chrome_plugin/" title="下一篇: 常用 chrome 插件">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
