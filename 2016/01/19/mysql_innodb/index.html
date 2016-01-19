@@ -11,8 +11,8 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/19/mysql_innodb/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="mysql innoDB 的特性">
-<meta property="og:image" content="http://www.linuxidc.com/upload/2014_10/141026200115181.png">
-<meta property="og:updated_time" content="2016-01-19T04:41:24.000Z">
+<meta property="og:image" content="http://7xq67w.com1.z0.glb.clouddn.com/mysql%2Fmysql_btree.png">
+<meta property="og:updated_time" content="2016-01-19T05:51:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL_innoDB">
 <meta name="twitter:description" content="mysql innoDB 的特性">
@@ -205,7 +205,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/19/mysql_innodb/" class="article-date">
-      <time datetime="2016-01-19T04:41:24.000Z" itemprop="datePublished">2016-01-19</time>
+      <time datetime="2016-01-19T05:51:16.000Z" itemprop="datePublished">2016-01-19</time>
 </a>
     </div>
   
@@ -244,23 +244,18 @@
       
           
         <h3 id="u805A_u96C6_u7D22_u5F15-_u8F85_u52A9_u7D22_u5F15"><a href="#u805A_u96C6_u7D22_u5F15-_u8F85_u52A9_u7D22_u5F15" class="headerlink" title="聚集索引-辅助索引"></a>聚集索引-辅助索引</h3><ul>
-<li><p>主键（聚集索引）- cluster Index<br>数据本身是按照主键以B+树的形式存储的，聚集索引的叶子节点存放了表的所有记录。<br>如果没有主键，存储引擎会自动创建一个6字节的列作为主键。</p>
-</li>
-<li><p>辅助索引 - secondary Index<br>根据索引键创建的一棵B+树，叶子节点仅存放索引键值和该索引键值指向的主键。<br>通过辅助索引查找数据时，当找到辅助索引的叶子节点后，很可能还需要根据主键值查找聚集索引得到数据。这种查找方式称为书签查找（bookmark lookup）</p>
-</li>
+<li>主键（聚集索引）- cluster Index<br>数据本身是按照主键以B+树的形式存储的，聚集索引的叶子节点存放了表的所有记录。<br>如果没有主键，存储引擎会自动创建一个6字节的列作为主键。</li>
+<li>辅助索引 - secondary Index<br>根据索引键创建的一棵B+树，叶子节点仅存放索引键值和该索引键值指向的主键。<br>通过辅助索引查找数据时，当找到辅助索引的叶子节点后，很可能还需要根据主键值查找聚集索引得到数据。这种查找方式称为书签查找（bookmark lookup）</li>
 </ul>
 <h3 id="B+__u6811_u7D22_u5F15"><a href="#B+__u6811_u7D22_u5F15" class="headerlink" title="B+ 树索引"></a>B+ 树索引</h3><p>B+树索引在数据库中的一个特点就是高扇出性。在innodb存储引擎中，每个页的大小为<strong>16K</strong>，因此，在数据库中，B+树的高度一般都在<strong>2~4层</strong>，查找某一键值最多只需要2到4次IO。</p>
 <p>由于辅助索引的叶子节点不包含行记录的所有数据，那么每个页可以存放更多的键值，<br>因此其高度一般小于聚集索引。</p>
 <p>真实数据库中的B+树应该是非常扁平的，可以通过向表中顺序插入足够数据的方式来验证InnoDB中的B+树到底有多扁平：</p>
 <ul>
-<li><p>每个叶子节点存储了468行数据，每个非叶子节点存储了大约1200个键值，这是一棵平衡的1200路搜索树！</p>
-</li>
-<li><p>对于一个22.1G容量的表，也只需要高度为3的B+树就能存储了，这个容量大概能满足很多应用的需要了。如果把高度增大到4，则B+树的存储容量立刻增大到25.9T之巨！</p>
-</li>
-<li><p>对于一个22.1G容量的表，B+树的高度是3，如果要把非叶节点全部加载到内存也只需要少于18.8M的内存（如何得出的这个结论？因为对于高度为2的树，1203个叶子节点也只需要18.8M空间，而22.1G从良表的高度是3，非叶节点1204个。同时我们假设叶子节点的尺寸是大于非叶节点的，因为叶子节点存储了行数据而非叶节点只有键和少量数据。），只使用如此少的内存就可以保证只需要一次磁盘IO操作就检索出所需的数据，效率是非常之高的。</p>
-</li>
+<li>每个叶子节点存储了468行数据，每个非叶子节点存储了大约1200个键值，这是一棵平衡的1200路搜索树！</li>
+<li>对于一个22.1G容量的表，也只需要高度为3的B+树就能存储了，这个容量大概能满足很多应用的需要了。如果把高度增大到4，则B+树的存储容量立刻增大到25.9T之巨！</li>
+<li>对于一个22.1G容量的表，B+树的高度是3，如果要把非叶节点全部加载到内存也只需要少于18.8M的内存（如何得出的这个结论？因为对于高度为2的树，1203个叶子节点也只需要18.8M空间，而22.1G从良表的高度是3，非叶节点1204个。同时我们假设叶子节点的尺寸是大于非叶节点的，因为叶子节点存储了行数据而非叶节点只有键和少量数据。），只使用如此少的内存就可以保证只需要一次磁盘IO操作就检索出所需的数据，效率是非常之高的。</li>
 </ul>
-<p><img src="http://www.linuxidc.com/upload/2014_10/141026200115181.png" alt=""></p>
+<p><img src="http://7xq67w.com1.z0.glb.clouddn.com/mysql%2Fmysql_btree.png" alt=""><br><a href="http://www.linuxidc.com/upload/2014_10/141026200115181.png" target="_blank" rel="external">http://www.linuxidc.com/upload/2014_10/141026200115181.png</a></p>
 <p>数据参考：<a href="http://www.linuxidc.com/Linux/2014-10/108487.htm" target="_blank" rel="external">http://www.linuxidc.com/Linux/2014-10/108487.htm</a></p>
 
       
@@ -278,6 +273,12 @@
 
 
     <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/19/mysql_join/">
+                    MySQL_JOIN
+                </a>
+            </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
@@ -382,7 +383,9 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2016/01/19/mysql_join/" title="上一篇: MySQL_JOIN">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
@@ -394,7 +397,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
