@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MySQL_5.7部分新特性 | gitfeng-blog</title>
+  <title>MySQL_写入优化 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mysql 5.7中一些有意思的新特性">
+  <meta name="description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL_5.7部分新特性">
-<meta property="og:url" content="http://ffeng.wang/2016/01/19/mysql_5.7_new/index.html">
+<meta property="og:title" content="MySQL_写入优化">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_opti_write/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="mysql 5.7中一些有意思的新特性">
-<meta property="og:updated_time" content="2016-01-19T04:00:24.000Z">
+<meta property="og:description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
+<meta property="og:updated_time" content="2016-01-19T06:04:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL_5.7部分新特性">
-<meta name="twitter:description" content="mysql 5.7中一些有意思的新特性">
+<meta name="twitter:title" content="MySQL_写入优化">
+<meta name="twitter:description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -200,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-mysql_5.7_new" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_opti_write" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/19/mysql_5.7_new/" class="article-date">
-      <time datetime="2016-01-19T04:00:24.000Z" itemprop="datePublished">2016-01-19</time>
+      <a href="/2016/01/17/mysql_opti_write/" class="article-date">
+      <time datetime="2016-01-17T07:31:00.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -217,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL_5.7部分新特性
+      MySQL_写入优化
     </h1>
   
 
@@ -242,19 +242,25 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09"><a href="#MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09" class="headerlink" title="MRR优化（Multi-Range Read）"></a>MRR优化（Multi-Range Read）</h3><p>MRR优化的目的是减少磁盘的随机访问。适用于range、ref和eq_ref类型。<br>优势：</p>
-<ul>
-<li>使得数据访问变的较为顺序。在查询辅助索引时，先对查到的结果按照主键进行排序，并按照主键排序的顺序进行书签查找。</li>
-<li>减少缓冲池中页被替换的次数。</li>
-<li>批量处理对键值的查询操作。</li>
+        <p>ref: <a href="http://imysql.com/2014/09/24/mysql-optimization-case-how-index-and-commit-rate-affect-innodb-insert.shtml" target="_blank" rel="external">参考链接</a></p>
+<h2 id="u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><a href="#u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD" class="headerlink" title="索引对写入速度的影响"></a>索引对写入速度的影响</h2><ul>
+<li>如果有自增列做主键，相对完全没索引的情况，写入速度约提升 3.11%；</li>
+<li>如果有自增列做主键，并且二级索引，相对完全没索引的情况，写入速度约降低 27.37%；</li>
 </ul>
-<p>联合索引(a,b)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> a&gt;=<span class="number">1000</span> <span class="keyword">and</span> a&lt;<span class="number">2000</span> <span class="keyword">and</span> b=<span class="number">1000</span>;</span></span><br></pre></td></tr></table></figure>
-<p>如果用了MRR优化，那么优化器会先对查询条件进行拆分，然后再进行数据的查询。<br>拆分成（1000,1000），（1001,1000）… （1999,1000）</p>
-<h3 id="ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09"><a href="#ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09" class="headerlink" title="ICP优化（Index Condition Pushdown）"></a>ICP优化（Index Condition Pushdown）</h3><p>有联合索引（group,last_name,first_name）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> <span class="keyword">group</span>=’<span class="number">1234</span>’ <span class="keyword">and</span> lastname <span class="keyword">like</span> ‘%ch%’ <span class="keyword">and</span> first_name <span class="keyword">like</span> ‘%zhao%’;</span></span><br></pre></td></tr></table></figure>
-<p>该sql只能通过联合索引的group来定位到所有符合条件的行所在的主键，必须取出所有group=’1234’的行记录然后过滤lastname like ‘%ch%’ and first_name like ‘%zhao%’</p>
-<p>如果开启ICP优化，在存储引擎层就可以过滤lastname like ‘%ch%’ and first_name like ‘%zhao%’，然后使用过滤后的索引得到对应的主键，减少了大量无效的IO操作。</p>
+<p>因此，InnoDB表最好总是有一个自增列做主键。</p>
+<h2 id="u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><a href="#u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD" class="headerlink" title="提交频率对写入速度的影响"></a>提交频率对写入速度的影响</h2><p>以表中只有自增列做主键的场景，一次写入数据30万行数据为例：</p>
+<ul>
+<li>等待全部数据写入完成后，最后再执行commit提交的效率最高；</li>
+<li>每10万行提交一次，相对一次性提交，约慢了1.17%；</li>
+<li>每1万行提交一次，相对一次性提交，约慢了3.01%；</li>
+<li>每1千行提交一次，相对一次性提交，约慢了23.38%；</li>
+<li>每100行提交一次，相对一次性提交，约慢了24.44%；</li>
+<li>每10行提交一次，相对一次性提交，约慢了92.78%；</li>
+<li>每行提交一次，相对一次性提交，约慢了546.78%，也就是慢了5倍；</li>
+</ul>
+<p>因此，最好是等待所有事务结束后再批量提交，而不是每执行完一个SQL就提交一次。</p>
+<p>曾经有一次对比测试mysqldump启用extended-insert和未启用导出的SQL脚本，后者比前者慢了不止5倍。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#37325;&#35201;&#65306;&#36825;&#20010;&#24314;&#35758;&#24182;&#19981;&#26159;&#32477;&#23545;&#25104;&#31435;&#30340;&#65292;&#35201;&#30475;&#20855;&#20307;&#30340;&#22330;&#26223;&#12290;&#22914;&#26524;&#26159;&#19968;&#20010;&#39640;&#24182;&#21457;&#30340;&#22312;&#32447;&#19994;&#21153;&#65292;&#23601;&#38656;&#35201;&#23613;&#24555;&#25552;&#20132;&#20107;&#21153;&#65292;&#36991;&#20813;&#38145;&#33539;&#22260;&#34987;&#25193;&#22823;&#12290;&#20294;&#22914;&#26524;&#26159;&#22312;&#38750;&#39640;&#24182;&#21457;&#30340;&#19994;&#21153;&#22330;&#26223;&#65292;&#23588;&#20854;&#26159;&#20570;&#25968;&#25454;&#25209;&#37327;&#23548;&#20837;&#30340;&#22330;&#26223;&#19979;&#65292;&#23601;&#24314;&#35758;&#37319;&#29992;&#25209;&#37327;&#25552;&#20132;&#30340;&#26041;&#24335;&#12290;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -273,15 +279,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/19/mysql_innodb/">
-                    MySQL_innoDB
+                <a href="/2016/01/17/php_traverse_file/">
+                    php_遍历文件内容
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/19/mysql_concurrency/">
-                    MySQL_并发控制
+                <a href="/2016/01/17/mysql_opti_storage_blob/">
+                    MySQL_存储优化-InnoDB表BLOB列
                 </a>
             </div>
         
@@ -293,7 +299,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09"><span class="toc-number">1.</span> <span class="toc-text">MRR优化（Multi-Range Read）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09"><span class="toc-number">2.</span> <span class="toc-text">ICP优化（Index Condition Pushdown）</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><span class="toc-number">1.</span> <span class="toc-text">索引对写入速度的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><span class="toc-number">2.</span> <span class="toc-text">提交频率对写入速度的影响</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -357,7 +363,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/19/mysql_5.7_new/" data-title="MySQL_5.7部分新特性" data-url="http://ffeng.wang/2016/01/19/mysql_5.7_new/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/mysql_opti_write/" data-title="MySQL_写入优化" data-url="http://ffeng.wang/2016/01/17/mysql_opti_write/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -381,7 +387,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/19/mysql_innodb/" title="上一篇: MySQL_innoDB">
+            <a href="/2016/01/17/php_traverse_file/" title="上一篇: php_遍历文件内容">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -389,13 +395,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/19/mysql_concurrency/" title="下一篇: MySQL_并发控制">
+            <a href="/2016/01/17/mysql_opti_storage_blob/" title="下一篇: MySQL_存储优化-InnoDB表BLOB列">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/17/hexo_theme/">hexo 配置及主题</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");

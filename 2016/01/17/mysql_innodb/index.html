@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MySQL_写入优化 | gitfeng-blog</title>
+  <title>MySQL_innoDB | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
+  <meta name="description" content="mysql innoDB 的特性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL_写入优化">
-<meta property="og:url" content="http://ffeng.wang/2016/01/18/mysql_opti_write/index.html">
+<meta property="og:title" content="MySQL_innoDB">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_innodb/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
-<meta property="og:updated_time" content="2016-01-18T04:27:36.000Z">
+<meta property="og:description" content="mysql innoDB 的特性">
+<meta property="og:image" content="http://7xq67w.com1.z0.glb.clouddn.com/mysql%2Fmysql_btree.png">
+<meta property="og:updated_time" content="2016-01-19T06:03:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL_写入优化">
-<meta name="twitter:description" content="索引、提交频率对InnoDB表写入速度的影响，了解有哪些需要注意的">
+<meta name="twitter:title" content="MySQL_innoDB">
+<meta name="twitter:description" content="mysql innoDB 的特性">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -200,11 +201,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-mysql_opti_write" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_innodb" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/18/mysql_opti_write/" class="article-date">
-      <time datetime="2016-01-18T04:27:36.000Z" itemprop="datePublished">2016-01-18</time>
+      <a href="/2016/01/17/mysql_innodb/" class="article-date">
+      <time datetime="2016-01-17T06:51:00.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -217,7 +218,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL_写入优化
+      MySQL_innoDB
     </h1>
   
 
@@ -242,25 +243,20 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>ref: <a href="http://imysql.com/2014/09/24/mysql-optimization-case-how-index-and-commit-rate-affect-innodb-insert.shtml" target="_blank" rel="external">参考链接</a></p>
-<h2 id="u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><a href="#u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD" class="headerlink" title="索引对写入速度的影响"></a>索引对写入速度的影响</h2><ul>
-<li>如果有自增列做主键，相对完全没索引的情况，写入速度约提升 3.11%；</li>
-<li>如果有自增列做主键，并且二级索引，相对完全没索引的情况，写入速度约降低 27.37%；</li>
+        <h3 id="u805A_u96C6_u7D22_u5F15-_u8F85_u52A9_u7D22_u5F15"><a href="#u805A_u96C6_u7D22_u5F15-_u8F85_u52A9_u7D22_u5F15" class="headerlink" title="聚集索引-辅助索引"></a>聚集索引-辅助索引</h3><ul>
+<li>主键（聚集索引）- cluster Index<br>数据本身是按照主键以B+树的形式存储的，聚集索引的叶子节点存放了表的所有记录。<br>如果没有主键，存储引擎会自动创建一个6字节的列作为主键。</li>
+<li>辅助索引 - secondary Index<br>根据索引键创建的一棵B+树，叶子节点仅存放索引键值和该索引键值指向的主键。<br>通过辅助索引查找数据时，当找到辅助索引的叶子节点后，很可能还需要根据主键值查找聚集索引得到数据。这种查找方式称为书签查找（bookmark lookup）</li>
 </ul>
-<p>因此，InnoDB表最好总是有一个自增列做主键。</p>
-<h2 id="u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><a href="#u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD" class="headerlink" title="提交频率对写入速度的影响"></a>提交频率对写入速度的影响</h2><p>以表中只有自增列做主键的场景，一次写入数据30万行数据为例：</p>
+<h3 id="B+__u6811_u7D22_u5F15"><a href="#B+__u6811_u7D22_u5F15" class="headerlink" title="B+ 树索引"></a>B+ 树索引</h3><p>B+树索引在数据库中的一个特点就是高扇出性。在innodb存储引擎中，每个页的大小为<strong>16K</strong>，因此，在数据库中，B+树的高度一般都在<strong>2~4层</strong>，查找某一键值最多只需要2到4次IO。</p>
+<p>由于辅助索引的叶子节点不包含行记录的所有数据，那么每个页可以存放更多的键值，<br>因此其高度一般小于聚集索引。</p>
+<p>真实数据库中的B+树应该是非常扁平的，可以通过向表中顺序插入足够数据的方式来验证InnoDB中的B+树到底有多扁平：</p>
 <ul>
-<li>等待全部数据写入完成后，最后再执行commit提交的效率最高；</li>
-<li>每10万行提交一次，相对一次性提交，约慢了1.17%；</li>
-<li>每1万行提交一次，相对一次性提交，约慢了3.01%；</li>
-<li>每1千行提交一次，相对一次性提交，约慢了23.38%；</li>
-<li>每100行提交一次，相对一次性提交，约慢了24.44%；</li>
-<li>每10行提交一次，相对一次性提交，约慢了92.78%；</li>
-<li>每行提交一次，相对一次性提交，约慢了546.78%，也就是慢了5倍；</li>
+<li>每个叶子节点存储了468行数据，每个非叶子节点存储了大约1200个键值，这是一棵平衡的1200路搜索树！</li>
+<li>对于一个22.1G容量的表，也只需要高度为3的B+树就能存储了，这个容量大概能满足很多应用的需要了。如果把高度增大到4，则B+树的存储容量立刻增大到25.9T之巨！</li>
+<li>对于一个22.1G容量的表，B+树的高度是3，如果要把非叶节点全部加载到内存也只需要少于18.8M的内存（如何得出的这个结论？因为对于高度为2的树，1203个叶子节点也只需要18.8M空间，而22.1G从良表的高度是3，非叶节点1204个。同时我们假设叶子节点的尺寸是大于非叶节点的，因为叶子节点存储了行数据而非叶节点只有键和少量数据。），只使用如此少的内存就可以保证只需要一次磁盘IO操作就检索出所需的数据，效率是非常之高的。</li>
 </ul>
-<p>因此，最好是等待所有事务结束后再批量提交，而不是每执行完一个SQL就提交一次。</p>
-<p>曾经有一次对比测试mysqldump启用extended-insert和未启用导出的SQL脚本，后者比前者慢了不止5倍。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#37325;&#35201;&#65306;&#36825;&#20010;&#24314;&#35758;&#24182;&#19981;&#26159;&#32477;&#23545;&#25104;&#31435;&#30340;&#65292;&#35201;&#30475;&#20855;&#20307;&#30340;&#22330;&#26223;&#12290;&#22914;&#26524;&#26159;&#19968;&#20010;&#39640;&#24182;&#21457;&#30340;&#22312;&#32447;&#19994;&#21153;&#65292;&#23601;&#38656;&#35201;&#23613;&#24555;&#25552;&#20132;&#20107;&#21153;&#65292;&#36991;&#20813;&#38145;&#33539;&#22260;&#34987;&#25193;&#22823;&#12290;&#20294;&#22914;&#26524;&#26159;&#22312;&#38750;&#39640;&#24182;&#21457;&#30340;&#19994;&#21153;&#22330;&#26223;&#65292;&#23588;&#20854;&#26159;&#20570;&#25968;&#25454;&#25209;&#37327;&#23548;&#20837;&#30340;&#22330;&#26223;&#19979;&#65292;&#23601;&#24314;&#35758;&#37319;&#29992;&#25209;&#37327;&#25552;&#20132;&#30340;&#26041;&#24335;&#12290;</span><br></pre></td></tr></table></figure>
+<p><img src="http://7xq67w.com1.z0.glb.clouddn.com/mysql%2Fmysql_btree.png" alt=""><br><a href="http://www.linuxidc.com/upload/2014_10/141026200115181.png" target="_blank" rel="external">http://www.linuxidc.com/upload/2014_10/141026200115181.png</a></p>
+<p>数据参考：<a href="http://www.linuxidc.com/Linux/2014-10/108487.htm" target="_blank" rel="external">http://www.linuxidc.com/Linux/2014-10/108487.htm</a></p>
 
       
     </div>
@@ -279,15 +275,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/18/php_traverse_file/">
-                    php_遍历文件内容
+                <a href="/2016/01/17/mysql_join/">
+                    MySQL_JOIN
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/18/useful/">
-                    有用的网站
+                <a href="/2016/01/17/mysql_explain/">
+                    MySQL_explain 的使用
                 </a>
             </div>
         
@@ -299,7 +295,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7D22_u5F15_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><span class="toc-number">1.</span> <span class="toc-text">索引对写入速度的影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u63D0_u4EA4_u9891_u7387_u5BF9_u5199_u5165_u901F_u5EA6_u7684_u5F71_u54CD"><span class="toc-number">2.</span> <span class="toc-text">提交频率对写入速度的影响</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#u805A_u96C6_u7D22_u5F15-_u8F85_u52A9_u7D22_u5F15"><span class="toc-number">1.</span> <span class="toc-text">聚集索引-辅助索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B+__u6811_u7D22_u5F15"><span class="toc-number">2.</span> <span class="toc-text">B+ 树索引</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -363,7 +359,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/18/mysql_opti_write/" data-title="MySQL_写入优化" data-url="http://ffeng.wang/2016/01/18/mysql_opti_write/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/mysql_innodb/" data-title="MySQL_innoDB" data-url="http://ffeng.wang/2016/01/17/mysql_innodb/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -387,7 +383,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/18/php_traverse_file/" title="上一篇: php_遍历文件内容">
+            <a href="/2016/01/17/mysql_join/" title="上一篇: MySQL_JOIN">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -395,13 +391,13 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/18/useful/" title="下一篇: 有用的网站">
+            <a href="/2016/01/17/mysql_explain/" title="下一篇: MySQL_explain 的使用">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/19/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/hexo_theme/">hexo 配置及主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/17/hexo_theme/">hexo 配置及主题</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
