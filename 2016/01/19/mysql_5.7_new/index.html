@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MySQL_JOIN | gitfeng-blog</title>
+  <title>MySQL_5.7部分新特性 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mysql join, 介绍各种连接的概念与区别">
+  <meta name="description" content="mysql 5.7中一些有意思的新特性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL_JOIN">
-<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_join/index.html">
+<meta property="og:title" content="MySQL_5.7部分新特性">
+<meta property="og:url" content="http://ffeng.wang/2016/01/19/mysql_5.7_new/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="mysql join, 介绍各种连接的概念与区别">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-aaacb5c3721bedd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-032932a4450df8f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-b85e825c6ef40893.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-4d140ff92721f7f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-fda1fc31dcbd3650.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/250876-0dde6d19d7191fdf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-01-17T04:10:11.000Z">
+<meta property="og:description" content="mysql 5.7中一些有意思的新特性">
+<meta property="og:updated_time" content="2016-01-19T04:00:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL_JOIN">
-<meta name="twitter:description" content="mysql join, 介绍各种连接的概念与区别">
+<meta name="twitter:title" content="MySQL_5.7部分新特性">
+<meta name="twitter:description" content="mysql 5.7中一些有意思的新特性">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -206,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-mysql_join" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql_5.7_new" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/17/mysql_join/" class="article-date">
-      <time datetime="2016-01-17T04:10:11.000Z" itemprop="datePublished">2016-01-17</time>
+      <a href="/2016/01/19/mysql_5.7_new/" class="article-date">
+      <time datetime="2016-01-19T04:00:24.000Z" itemprop="datePublished">2016-01-19</time>
 </a>
     </div>
   
@@ -223,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL_JOIN
+      MySQL_5.7部分新特性
     </h1>
   
 
@@ -248,232 +242,19 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>[TOC]</p>
-<h2 id="u8FDE_u63A5_u7684_u6982_u5FF5"><a href="#u8FDE_u63A5_u7684_u6982_u5FF5" class="headerlink" title="连接的概念"></a>连接的概念</h2><p>连接分为条件连接、等值连接和自然连接三种。</p>
+        <h3 id="MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09"><a href="#MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09" class="headerlink" title="MRR优化（Multi-Range Read）"></a>MRR优化（Multi-Range Read）</h3><p>MRR优化的目的是减少磁盘的随机访问。适用于range、ref和eq_ref类型。<br>优势：</p>
 <ul>
-<li>条件连接就是在多个表的笛卡尔积中选取满足条件的行的连接，例如  select * from A,B where A.a &gt; A.b  之类的有条件的查询。</li>
-<li>等值连接就是特殊的条件连接，当条件为某字段=某字段时，即为等值连接。如SELECT ename,sal,dname FROM emp,dept WHERE emp.deptno=dept.deptno;</li>
-<li>自然连接是一种特殊的等值连接，他要求多个表有相同的属性字段，然后条件为相同的属性字段值相等，最后再将表中重复的属性字段去掉，即为自然连接。如A中a,b,c字段，B中有c,d字段，则select * from A natural join B  相当于 select A.a,A.b,A.c,B.d from A.c = B.c  。</li>
+<li>使得数据访问变的较为顺序。在查询辅助索引时，先对查到的结果按照主键进行排序，并按照主键排序的顺序进行书签查找。</li>
+<li>减少缓冲池中页被替换的次数。</li>
+<li>批量处理对键值的查询操作。</li>
 </ul>
-<p>Join操作基本分为3大类：外连接(细分为：左连接、右连接、全连接)、自然连接、内连接<br>Join操作的共性：第一步均为将所有参与操作的表进行了一个笛卡儿积，然后才依据各连接条件进行记录的筛选</p>
-<h2 id="u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A"><a href="#u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A" class="headerlink" title="内连接与等值连接的区别："></a>内连接与等值连接的区别：</h2><p>内连接：两个表（或连接）中某一数据项相等的连接称为内连接。等值连接一般用where字句设置条件，内连接一般用on字句设置条件，但内连接与等值连接效果是相同的。<br>内连接与等值连接其实是一回事情（等效）。<br>经常有人会问到select<a href="http://a.id/" target="_blank" rel="external">a.id</a>,<a href="http://b.name/" target="_blank" rel="external">b.name</a>from a,b where<a href="http://a.id/" target="_blank" rel="external">a.id</a>=b.pid  与<br>select<a href="http://a.id/" target="_blank" rel="external">a.id</a>,<a href="http://b.name/" target="_blank" rel="external">b.name</a>from a inner join b on<a href="http://a.id/" target="_blank" rel="external">a.id</a>=b.pid   有什么区别，哪个效率更高一些。<br>实际上一回事情了。只是内连接是由SQL 1999规则定的书写方式。两个说的是一码事。</p>
-<h2 id="u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A"><a href="#u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A" class="headerlink" title="内连接与外连接的结果集区别："></a>内连接与外连接的结果集区别：</h2><p>假设我们有两张表。<br>Table A是左边的表。<br>Table B是右边的表。<br>其各有四条记录，其中有两条记录是相同的，如下所示：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Pirate</td>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Rutabaga</td>
-</tr>
-<tr>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Monkey</td>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Pirate</td>
-</tr>
-<tr>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Ninja</td>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Darth Vader</td>
-</tr>
-<tr>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Spaghetti</td>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Ninja</td>
-</tr>
-</tbody>
-</table>
-<p>下面让我们来看看不同的Join会产生什么样的结果。</p>
-<h2 id="u4E0D_u540C_u7684_join__u7ED3_u679C"><a href="#u4E0D_u540C_u7684_join__u7ED3_u679C" class="headerlink" title="不同的 join 结果"></a>不同的 join 结果</h2><h3 id="Inner_join__3D_3D_A_26amp_3BB"><a href="#Inner_join__3D_3D_A_26amp_3BB" class="headerlink" title="Inner join  == A&amp;B"></a>Inner join  == A&amp;B</h3><p>产生的结果集中，是A和B的交集<br>SELECT * FROM TableA INNER JOIN TableB ON TableA.name = TableB.name</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Pirate</td>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Pirate</td>
-</tr>
-<tr>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Ninja</td>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Ninja</td>
-</tr>
-</tbody>
-</table>
-<p><img src="http://upload-images.jianshu.io/upload_images/250876-aaacb5c3721bedd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="Full_outer_join__3D_3D_A__7C_7C_B"><a href="#Full_outer_join__3D_3D_A__7C_7C_B" class="headerlink" title="Full outer join == A || B"></a>Full outer join == A || B</h3><p>SELECT * FROM TableA FULL OUTER JOIN TableB ON TableA.name = TableB.name</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Pirate</td>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Pirate</td>
-</tr>
-<tr>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Monkey</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Ninja</td>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Ninja</td>
-</tr>
-<tr>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Spaghetti</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Rutabaga</td>
-</tr>
-<tr>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Darth Vader</td>
-</tr>
-</tbody>
-</table>
-<p>产生A和B的并集。但是需要注意的是，对于没有匹配的记录，则会以null做为值。<br><img src="http://upload-images.jianshu.io/upload_images/250876-032932a4450df8f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="Left_outer_join__3D_A"><a href="#Left_outer_join__3D_A" class="headerlink" title="Left outer join = A"></a>Left outer join = A</h3><p>产生表A的完全集，而B表中匹配的则有值，没有匹配的则以null值取代。<br>SELECT * FROM TableA LEFT OUTER JOIN TableB ON TableA.name = TableB.name</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Pirate</td>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Pirate</td>
-</tr>
-<tr>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Monkey</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Ninja</td>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Ninja</td>
-</tr>
-<tr>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Spaghetti</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-</tbody>
-</table>
-<p><img src="http://upload-images.jianshu.io/upload_images/250876-b85e825c6ef40893.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="A-B"><a href="#A-B" class="headerlink" title="A-B"></a>A-B</h3><p>SELECT * FROM TableA LEFT OUTER JOIN TableB ON TableA.name = TableB.name WHERE TableB.id IS null</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Monkey</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Spaghetti</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-</tbody>
-</table>
-<p>产生在A表中有而在B表中没有的集合。<br><img src="http://upload-images.jianshu.io/upload_images/250876-4d140ff92721f7f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6"><a href="#A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6" class="headerlink" title="A表和B表都没有出现的数据集"></a>A表和B表都没有出现的数据集</h3><p>SELECT * FROM TableA FULL OUTER JOIN TableB ON TableA.name = TableB.name WHERE TableA.id IS null OR TableB.id IS null</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:left">id</th>
-<th style="text-align:left">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">2</td>
-<td style="text-align:left">Monkey</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">4</td>
-<td style="text-align:left">Spaghetti</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-</tr>
-<tr>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">1</td>
-<td style="text-align:left">Rutabaga</td>
-</tr>
-<tr>
-<td style="text-align:left">null</td>
-<td style="text-align:left">null</td>
-<td style="text-align:left">3</td>
-<td style="text-align:left">Darth Vader</td>
-</tr>
-</tbody>
-</table>
-<p>产生A表和B表都没有出现的数据集。<br><img src="http://upload-images.jianshu.io/upload_images/250876-fda1fc31dcbd3650.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>还需要注意的是我们还有一个是“交差集” cross join, 这种Join没有办法用文式图表示，因为其就是把表A和表B的数据进行一个N<em>M的组合，即笛卡尔积。表达式如下：<br>SELECT </em> FROM TableA <strong>CROSS JOIN</strong> TableB<br>这个笛卡尔乘积会产生 4 x 4 = 16 条记录，一般来说，我们很少用到这个语法。但是我们得小心，如果不是使用嵌套的select语句，一般系统都会产生笛卡尔乘积然再做过滤。这是对于性能来说是非常危险的，尤其是表很大的时候。<br><img src="http://upload-images.jianshu.io/upload_images/250876-0dde6d19d7191fdf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>联合索引(a,b)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> a&gt;=<span class="number">1000</span> <span class="keyword">and</span> a&lt;<span class="number">2000</span> <span class="keyword">and</span> b=<span class="number">1000</span>;</span></span><br></pre></td></tr></table></figure>
+<p>如果用了MRR优化，那么优化器会先对查询条件进行拆分，然后再进行数据的查询。<br>拆分成（1000,1000），（1001,1000）… （1999,1000）</p>
+<h3 id="ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09"><a href="#ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09" class="headerlink" title="ICP优化（Index Condition Pushdown）"></a>ICP优化（Index Condition Pushdown）</h3><p>有联合索引（group,last_name,first_name）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> <span class="keyword">group</span>=’<span class="number">1234</span>’ <span class="keyword">and</span> lastname <span class="keyword">like</span> ‘%ch%’ <span class="keyword">and</span> first_name <span class="keyword">like</span> ‘%zhao%’;</span></span><br></pre></td></tr></table></figure>
+<p>该sql只能通过联合索引的group来定位到所有符合条件的行所在的主键，必须取出所有group=’1234’的行记录然后过滤lastname like ‘%ch%’ and first_name like ‘%zhao%’</p>
+<p>如果开启ICP优化，在存储引擎层就可以过滤lastname like ‘%ch%’ and first_name like ‘%zhao%’，然后使用过滤后的索引得到对应的主键，减少了大量无效的IO操作。</p>
 
       
     </div>
@@ -492,15 +273,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/17/mysql_explain/">
-                    MySQL_explain 的使用
+                <a href="/2016/01/19/mysql_innodb/">
+                    MySQL_innoDB
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/16/FirstPage/">
-                    Hello Hexo
+                <a href="/2016/01/19/mysql_concurrency/">
+                    MySQL_并发控制
                 </a>
             </div>
         
@@ -512,7 +293,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u8FDE_u63A5_u7684_u6982_u5FF5"><span class="toc-number">1.</span> <span class="toc-text">连接的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u8FDE_u63A5_u4E0E_u7B49_u503C_u8FDE_u63A5_u7684_u533A_u522B_uFF1A"><span class="toc-number">2.</span> <span class="toc-text">内连接与等值连接的区别：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u8FDE_u63A5_u4E0E_u5916_u8FDE_u63A5_u7684_u7ED3_u679C_u96C6_u533A_u522B_uFF1A"><span class="toc-number">3.</span> <span class="toc-text">内连接与外连接的结果集区别：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4E0D_u540C_u7684_join__u7ED3_u679C"><span class="toc-number">4.</span> <span class="toc-text">不同的 join 结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inner_join__3D_3D_A_26amp_3BB"><span class="toc-number">4.1.</span> <span class="toc-text">Inner join  == A&B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Full_outer_join__3D_3D_A__7C_7C_B"><span class="toc-number">4.2.</span> <span class="toc-text">Full outer join == A || B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Left_outer_join__3D_A"><span class="toc-number">4.3.</span> <span class="toc-text">Left outer join = A</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A-B"><span class="toc-number">4.4.</span> <span class="toc-text">A-B</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A_u8868_u548CB_u8868_u90FD_u6CA1_u6709_u51FA_u73B0_u7684_u6570_u636E_u96C6"><span class="toc-number">4.5.</span> <span class="toc-text">A表和B表都没有出现的数据集</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MRR_u4F18_u5316_uFF08Multi-Range_Read_uFF09"><span class="toc-number">1.</span> <span class="toc-text">MRR优化（Multi-Range Read）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ICP_u4F18_u5316_uFF08Index_Condition_Pushdown_uFF09"><span class="toc-number">2.</span> <span class="toc-text">ICP优化（Index Condition Pushdown）</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -576,7 +357,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/mysql_join/" data-title="MySQL_JOIN" data-url="http://ffeng.wang/2016/01/17/mysql_join/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/19/mysql_5.7_new/" data-title="MySQL_5.7部分新特性" data-url="http://ffeng.wang/2016/01/19/mysql_5.7_new/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -600,7 +381,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/17/mysql_explain/" title="上一篇: MySQL_explain 的使用">
+            <a href="/2016/01/19/mysql_innodb/" title="上一篇: MySQL_innoDB">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -608,7 +389,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/16/FirstPage/" title="下一篇: Hello Hexo">
+            <a href="/2016/01/19/mysql_concurrency/" title="下一篇: MySQL_并发控制">
                 <i class="fa fa-angle-right"></i>
             </a>
         
