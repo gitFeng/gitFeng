@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>有用的网站 | gitfeng-blog</title>
+  <title>如何阅读 Redis 源码 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="有用 url 存档">
+  <meta name="description" content="较合理的 Redis 源码阅读顺序，希望可以给对 Redis 有兴趣并打算阅读 Redis 源码的朋友带来一点帮助。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="有用的网站">
-<meta property="og:url" content="http://ffeng.wang/2016/01/17/useful/index.html">
+<meta property="og:title" content="如何阅读 Redis 源码">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/redis_read_code/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="有用 url 存档">
-<meta property="og:updated_time" content="2016-01-20T04:16:26.000Z">
+<meta property="og:description" content="较合理的 Redis 源码阅读顺序，希望可以给对 Redis 有兴趣并打算阅读 Redis 源码的朋友带来一点帮助。">
+<meta property="og:updated_time" content="2016-01-28T07:16:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="有用的网站">
-<meta name="twitter:description" content="有用 url 存档">
+<meta name="twitter:title" content="如何阅读 Redis 源码">
+<meta name="twitter:description" content="较合理的 Redis 源码阅读顺序，希望可以给对 Redis 有兴趣并打算阅读 Redis 源码的朋友带来一点帮助。">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -200,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-useful" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-redis_read_code" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/17/useful/" class="article-date">
-      <time datetime="2016-01-17T08:20:01.000Z" itemprop="datePublished">2016-01-17</time>
+      <a href="/2016/01/17/redis_read_code/" class="article-date">
+      <time datetime="2016-01-17T07:01:00.000Z" itemprop="datePublished">2016-01-17</time>
 </a>
     </div>
   
@@ -217,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      有用的网站
+      如何阅读 Redis 源码
     </h1>
   
 
@@ -226,13 +226,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/随笔/">随笔</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -242,12 +242,237 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><ul>
-<li>ourmysql <a href="http://ourmysql.com/" target="_blank" rel="external">http://ourmysql.com/</a></li>
-<li>mysql-percona  <a href="https://www.percona.com/blog/" target="_blank" rel="external">https://www.percona.com/blog/</a></li>
-<li>mysqlpub <a href="http://www.mysqlpub.com/" target="_blank" rel="external">http://www.mysqlpub.com/</a></li>
-<li>mysql 中文参考手册 <a href="http://www.mysqlpub.com/onlinemanual/doc/refman/5.1/zh/index.html" target="_blank" rel="external">http://www.mysqlpub.com/onlinemanual/doc/refman/5.1/zh/index.html</a></li>
+        <p>ref: <a href="http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html" target="_blank" rel="external">http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html</a></p>
+<h2 id="u7B2C1_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7ED3_u6784_u5B9E_u73B0"><a href="#u7B2C1_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7ED3_u6784_u5B9E_u73B0" class="headerlink" title="第1步：阅读数据结构实现"></a>第1步：阅读数据结构实现</h2><p>刚开始阅读 Redis 源码的时候，最好从数据结构的相关文件开始读起，因为这些文件和 Redis 中的其他部分耦合最少，并且这些文件所实现的数据结构在大部分算法书上都可以了解到，所以从这些文件开始读是最轻松的、难度也是最低的。</p>
+<p>下表列出了 Redis 源码中， 各个数据结构的实现文件：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sds.h 和 sds.c</td>
+<td>Redis 的动态字符串实现。</td>
+</tr>
+<tr>
+<td>adlist.h 和 adlist.c</td>
+<td>Redis 的双端链表实现。</td>
+</tr>
+<tr>
+<td>dict.h 和 dict.c</td>
+<td>Redis 的字典实现。</td>
+</tr>
+<tr>
+<td>redis.h 中的 zskiplist 结构和 zskiplistNode 结构， 以及 t_zset.c 中所有以 zsl 开头的函数， 比如 zslCreate 、 zslInsert 、 zslDeleteNode ，等等。</td>
+<td>Redis 的跳跃表实现。</td>
+</tr>
+<tr>
+<td>hyperloglog.c 中的 hllhdr 结构， 以及所有以 hll 开头的函数。</td>
+<td>Redis 的 HyperLogLog 实现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u7B2C2_u6B65_uFF1A_u9605_u8BFB_u5185_u5B58_u7F16_u7801_u6570_u636E_u7ED3_u6784_u5B9E_u73B0"><a href="#u7B2C2_u6B65_uFF1A_u9605_u8BFB_u5185_u5B58_u7F16_u7801_u6570_u636E_u7ED3_u6784_u5B9E_u73B0" class="headerlink" title="第2步：阅读内存编码数据结构实现"></a>第2步：阅读内存编码数据结构实现</h2><p>在阅读完和数据结构有关的文件之后，接下来就应该阅读内存编码（encoding）数据结构了。</p>
+<p>和普通的数据结构一样，内存编码数据结构基本上是独立的，不和其他模块耦合，但是区别在于：</p>
+<ul>
+<li>上一步要读的数据结构， 比如双端链表、字典、HyperLogLog， 在算法书上或者相关的论文上都可以找到资料介绍。</li>
+<li>而内存编码数据结构却不容易找到相关的资料， 因为这些数据结构都是 Redis 为了节约内存而专门开发出来的， 换句话说， 这些数据结构都是特制（adhoc）的， 除了 Redis 源码中的文档之外， 基本上找不到其他资料来了解这些特制的数据结构。</li>
 </ul>
+<p>不过话又说回来，虽然内存编码数据结构是 Redis 特制的，但它们基本都和内存分配、指针操作、位操作这些底层的东西有关， 读者只要认真阅读源码中的文档， 并在有需要时， 画图来分析这些数据结构， 那么要完全理解这些内存编码数据结构的运作原理并不难， 当然这需要花一些功夫。</p>
+<p>下表展示了 Redis 源码中，各个内存编码数据结构的实现文件：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>intset.h 和 intset.c</td>
+<td>整数集合（intset）数据结构。</td>
+</tr>
+<tr>
+<td>ziplist.h 和 ziplist.c</td>
+<td>压缩列表（zip list）数据结构。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u7B2C3_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7C7B_u578B_u5B9E_u73B0"><a href="#u7B2C3_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7C7B_u578B_u5B9E_u73B0" class="headerlink" title="第3步：阅读数据类型实现"></a>第3步：阅读数据类型实现</h2><p>在完成以上两个阅读步骤之后，我们就读完了 Redis 六种不同类型的键（字符串、散列、列表、集合、有序集合、HyperLogLog）的所有底层实现结构了。</p>
+<p>接下来，为了知道 Redis 是如何通过以上提到的数据结构来实现不同类型的键，我们需要阅读实现各个数据类型的文件，以及 Redis 的对象系统文件，这些文件包括：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>object.c</td>
+<td>Redis 的对象（类型）系统实现。</td>
+</tr>
+<tr>
+<td>t_string.c</td>
+<td>字符串键的实现。</td>
+</tr>
+<tr>
+<td>t_list.c</td>
+<td>列表键的实现。</td>
+</tr>
+<tr>
+<td>t_hash.c</td>
+<td>散列键的实现。</td>
+</tr>
+<tr>
+<td>t_set.c</td>
+<td>集合键的实现。</td>
+</tr>
+<tr>
+<td>t_zset.c 中除 zsl 开头的函数之外的所有函数。</td>
+<td>有序集合键的实现。</td>
+</tr>
+<tr>
+<td>hyperloglog.c 中所有以 pf 开头的函数。</td>
+<td>HyperLogLog 键的实现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u7B2C4_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u5E93_u5B9E_u73B0_u76F8_u5173_u4EE3_u7801"><a href="#u7B2C4_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u5E93_u5B9E_u73B0_u76F8_u5173_u4EE3_u7801" class="headerlink" title="第4步：阅读数据库实现相关代码"></a>第4步：阅读数据库实现相关代码</h2><p>在读完了 Redis 使用所有底层数据结构，以及 Redis 是如何使用这些数据结构来实现不同类型的键之后， 我们就可以开始阅读 Redis 里面和数据库有关的代码了，它们分别是：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>redis.h</td>
+<td>文件中的 redisDb 结构， 以及 db.c 文件。    Redis 的数据库实现。</td>
+</tr>
+<tr>
+<td>notify.c</td>
+<td>Redis 的数据库通知功能实现代码。</td>
+</tr>
+<tr>
+<td>rdb.h 和 rdb.c</td>
+<td>Redis 的 RDB 持久化实现代码。</td>
+</tr>
+<tr>
+<td>aof.c</td>
+<td>Redis 的 AOF 持久化实现代码。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="u9009_u8BFB"><a href="#u9009_u8BFB" class="headerlink" title="选读"></a>选读</h3><p>Redis 有一些独立的功能模块， 这些模块可以在完成第 4 步之后阅读， 它们包括：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>redis.h 文件的 pubsubPattern 结构，以及 pubsub.c 文件。</td>
+<td>发布与订阅功能的实现。</td>
+</tr>
+<tr>
+<td>redis.h 文件的 multiState 结构以及 multiCmd 结构， multi.c 文件。</td>
+<td>事务功能的实现。</td>
+</tr>
+<tr>
+<td>sort.c</td>
+<td>SORT 命令的实现。</td>
+</tr>
+<tr>
+<td>bitops.c</td>
+<td>GETBIT 、 SETBIT 等二进制位操作命令的实现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u7B2C_5__u6B65_uFF1A_u9605_u8BFB_u5BA2_u6237_u7AEF_u548C_u670D_u52A1_u5668_u7684_u76F8_u5173_u4EE3_u7801"><a href="#u7B2C_5__u6B65_uFF1A_u9605_u8BFB_u5BA2_u6237_u7AEF_u548C_u670D_u52A1_u5668_u7684_u76F8_u5173_u4EE3_u7801" class="headerlink" title="第 5 步：阅读客户端和服务器的相关代码"></a>第 5 步：阅读客户端和服务器的相关代码</h2><p>在阅读完数据库实现代码，以及 RDB 和 AOF 两种持久化的代码之后，我们可以开始阅读客户端和 Redis 服务器本身的实现代码，和这些代码有关的文件是：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ae.c ，以及任意一个 ae_*.c 文件（取决于你所使用的多路复用库）</td>
+<td>Redis 的事件处理器实现（基于 Reactor 模式）。</td>
+</tr>
+<tr>
+<td>networking.c</td>
+<td>Redis 的网络连接库，负责发送命令回复和接受命令请求，同时也负责创建/销毁客户端，以及通信协议分析等工作。</td>
+</tr>
+<tr>
+<td>redis.h 和 redis.c 中和单机 Redis 服务器有关的部分。</td>
+<td>单机 Redis 服务器的实现。</td>
+</tr>
+</tbody>
+</table>
+<p>如果读者能完成以上 5 个阅读步骤的话，那么恭喜你，你已经了解了单机的 Redis 服务器是怎样处理命令请求和返回命令回复，以及是 Redis 怎样操作数据库的了，这是 Redis 最重要的部分，也是之后继续阅读多机功能的基础。</p>
+<h3 id="u9009_u8BFB-1"><a href="#u9009_u8BFB-1" class="headerlink" title="选读"></a>选读</h3><p>Redis 有一些独立的功能模块，这些模块可以在完成第 5 步之后阅读，它们包括：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scripting.c</td>
+<td>Lua 脚本功能的实现。</td>
+</tr>
+<tr>
+<td>slowlog.c</td>
+<td>慢查询功能的实现。</td>
+</tr>
+<tr>
+<td>monitor.c</td>
+<td>监视器功能的实现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u7B2C6_u6B65_uFF1A_u9605_u8BFB_u591A_u673A_u529F_u80FD_u7684_u5B9E_u73B0"><a href="#u7B2C6_u6B65_uFF1A_u9605_u8BFB_u591A_u673A_u529F_u80FD_u7684_u5B9E_u73B0" class="headerlink" title="第6步：阅读多机功能的实现"></a>第6步：阅读多机功能的实现</h2><p>在弄懂了 Redis 的单机服务器是怎样运作的之后，就可以开始阅读 Redis 多机功能的实现代码了， 和这些功能有关的文件为：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>replication.c</td>
+<td>复制功能的实现代码。</td>
+</tr>
+<tr>
+<td>sentinel.c</td>
+<td>Redis Sentinel 的实现代码。</td>
+</tr>
+<tr>
+<td>cluster.c</td>
+<td>Redis 集群的实现代码。</td>
+</tr>
+</tbody>
+</table>
+<p>注意， 因为 Redis Sentinel 用到了复制功能的代码，而集群又用到了复制和 Redis Sentinel 的代码，所以在阅读这三个模块的时候，记得先阅读复制模块，然后阅读 Sentinel 模块，最后才阅读集群模块， 这样理解起来就会更得心应手。</p>
+<p>如果你连这三个模块都读完了的话，那么恭喜你，你已经读完了 Redis 单机功能和多机功能的所有代码了！</p>
+<p>下图总结了本文介绍的阅读顺序：</p>
+<p>digraph { node [shape = plaintext] datastruct [label = “数据结构\n（sds、adlist、dict、t_zset、hyperloglog）”] encoding_datastruct [label = “内存编码数据结构\n（intset、ziplist）”] object [label = “数据类型\n（object、t_string、t_list、t_hash、t_set、t_zset、hyperloglog）”] db [label = “数据库相关\n（db、notify、rdb、aof）”] client_and_server [label = “客户端与服务器相关\n（ae、networking、redis）”] multi_server [label = “多机功能\n（replication、sentinel、cluster）”] // datastruct -&gt; encoding_datastruct -&gt; object -&gt; db -&gt; client_and_server -&gt; multi_server }</p>
+<h2 id="u7ED3_u8BED"><a href="#u7ED3_u8BED" class="headerlink" title="结语"></a>结语</h2><p>Redis 的设计非常简洁、优美、精巧和高效，任何人只要愿意去阅读它的代码的话，应该都会有所收获的。</p>
+<p>希望这篇文章能够给想要阅读 Redis 代码的朋友们带来一些帮助， 也欢迎各位随时和我讨论 Redis 源码方面的问题，或者跟我分享各位阅读 Redis 源码的心得和经验。</p>
+<p>另外 Redis 源码注释项目以及 《Redis 设计与实现》一书对于理解 Redis 的源代码应该也会有所帮助，有兴趣的朋友可以自行了解该项目/书本。</p>
+<p>黄健宏（huangz）<br>2014.7.28</p>
 
       
     </div>
@@ -266,15 +491,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/18/mysql_opti_rand/">
-                    MySQL_查询优化-2/2
+                <a href="/2016/01/17/mysql_join/">
+                    MySQL_JOIN
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/php_traverse_file/">
-                    php_遍历文件内容
+                <a href="/2016/01/17/mysql_innodb/">
+                    MySQL_innoDB
                 </a>
             </div>
         
@@ -286,7 +511,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql"><span class="toc-number">1.</span> <span class="toc-text">mysql</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C1_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7ED3_u6784_u5B9E_u73B0"><span class="toc-number">1.</span> <span class="toc-text">第1步：阅读数据结构实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C2_u6B65_uFF1A_u9605_u8BFB_u5185_u5B58_u7F16_u7801_u6570_u636E_u7ED3_u6784_u5B9E_u73B0"><span class="toc-number">2.</span> <span class="toc-text">第2步：阅读内存编码数据结构实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C3_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7C7B_u578B_u5B9E_u73B0"><span class="toc-number">3.</span> <span class="toc-text">第3步：阅读数据类型实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C4_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u5E93_u5B9E_u73B0_u76F8_u5173_u4EE3_u7801"><span class="toc-number">4.</span> <span class="toc-text">第4步：阅读数据库实现相关代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u9009_u8BFB"><span class="toc-number">4.1.</span> <span class="toc-text">选读</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C_5__u6B65_uFF1A_u9605_u8BFB_u5BA2_u6237_u7AEF_u548C_u670D_u52A1_u5668_u7684_u76F8_u5173_u4EE3_u7801"><span class="toc-number">5.</span> <span class="toc-text">第 5 步：阅读客户端和服务器的相关代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u9009_u8BFB-1"><span class="toc-number">5.1.</span> <span class="toc-text">选读</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C6_u6B65_uFF1A_u9605_u8BFB_u591A_u673A_u529F_u80FD_u7684_u5B9E_u73B0"><span class="toc-number">6.</span> <span class="toc-text">第6步：阅读多机功能的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u7ED3_u8BED"><span class="toc-number">7.</span> <span class="toc-text">结语</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -350,7 +575,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/useful/" data-title="有用的网站" data-url="http://ffeng.wang/2016/01/17/useful/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/17/redis_read_code/" data-title="如何阅读 Redis 源码" data-url="http://ffeng.wang/2016/01/17/redis_read_code/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -374,7 +599,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/18/mysql_opti_rand/" title="上一篇: MySQL_查询优化-2/2">
+            <a href="/2016/01/17/mysql_join/" title="上一篇: MySQL_JOIN">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -382,7 +607,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/php_traverse_file/" title="下一篇: php_遍历文件内容">
+            <a href="/2016/01/17/mysql_innodb/" title="下一篇: MySQL_innoDB">
                 <i class="fa fa-angle-right"></i>
             </a>
         
