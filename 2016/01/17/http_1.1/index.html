@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>HTTP 1.1 升级说明 | gitfeng-blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="http 1.1升级介绍, web 缓存机制解释，断点续传、片段下载实现方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP 1.1 升级说明">
+<meta property="og:url" content="http://ffeng.wang/2016/01/17/http_1.1/index.html">
+<meta property="og:site_name" content="gitfeng-blog">
+<meta property="og:description" content="http 1.1升级介绍, web 缓存机制解释，断点续传、片段下载实现方法">
+<meta property="og:updated_time" content="2016-02-20T17:18:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP 1.1 升级说明">
+<meta name="twitter:description" content="http 1.1升级介绍, web 缓存机制解释，断点续传、片段下载实现方法">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">gitfeng</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔">随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/git/" style="font-size: 16.67px;">git</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/http/" style="font-size: 13.33px;">http</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/科学/" style="font-size: 10px;">科学</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">来自 github 的 blog</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">gitfeng</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">gitfeng</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔">随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-http_1.1" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/17/http_1.1/" class="article-date">
+      <time datetime="2016-01-17T08:20:01.000Z" itemprop="datePublished">2016-01-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HTTP 1.1 升级说明
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/http/">http</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="HTTP/1-1__u4E0EHTTP/1-0_u7684_u533A_u522B"><a href="#HTTP/1-1__u4E0EHTTP/1-0_u7684_u533A_u522B" class="headerlink" title="HTTP/1.1 与HTTP/1.0的区别"></a>HTTP/1.1 与HTTP/1.0的区别</h2><h3 id="u53EF_u6269_u5C55_u6027"><a href="#u53EF_u6269_u5C55_u6027" class="headerlink" title="可扩展性"></a>可扩展性</h3><p>可扩展性的一个重要原则：如果HTTP的某个实现接收到了自身未定义的头域，将自动忽略它。</p>
+<ul>
+<li>在消息中增加版本号，用于兼容性判断。注意，版本号只能用来判断逐段（hop-by-hop）的兼容性，而无法判断端到端（end-to-end）的兼容性。<br>例如，一台HTTP/1.1的源服务器从使用HTTP/1.1的Proxy那儿接收到一条转发的消息，实际上源服务器并不知道终端客户使用的是HTTP/1.0还是HTTP/1.1。因此，HTTP/1.1定义Via头域，用来记录消息转发的路径，它记录了整个路径上所有发送方使用的版本号。</li>
+<li>HTTP/1.1增加了OPTIONS方法，它允许客户端获取一个服务器支持的方法列表。</li>
+<li>为了与未来的协议规范兼容，HTTP/1.1在请求消息中包含了Upgrade头域，通过该头域，客户端可以让服务器知道它能够支持的其它备用通信协议，服务器可以据此进行协议切换，使用备用协议与客户端进行通信。</li>
+</ul>
+<h3 id="u7F13_u5B58"><a href="#u7F13_u5B58" class="headerlink" title="缓存"></a>缓存</h3><p>在HTTP/1.0中，使用Expire头域来判断资源的fresh或stale，并使用条件请求（conditional request）来判断资源是否仍有效。例如，cache服务器通过If-Modified-Since头域向服务器验证资源的Last-Modefied头域是否有更新，源服务器可能返回304（Not Modified），则表明该对象仍有效；也可能返回200（OK）替换请求的Cache对象。<br>此外，HTTP/1.0中还定义了Pragma:no-cache头域，客户端使用该头域说明请求资源不能从cache中获取，而必须回源获取。<br>HTTP/1.1在1.0的基础上加入了一些cache的新特性，当缓存对象的Age超过Expire时变为stale对象，cache不需要直接抛弃stale对象，而是与源服务器进行重新激活（revalidation）。<br>HTTP/1.0中，If-Modified-Since头域使用的是绝对时间戳，精确到秒，但使用绝对时间会带来不同机器上的时钟同步问题。而HTTP/1.1中引入了一个ETag头域用于重激活机制，它的值entity tag可以用来唯一的描述一个资源。请求消息中可以使用If-None-Match头域来匹配资源的entitytag是否有变化。<br>为了使caching机制更加灵活，HTTP/1.1增加了Cache-Control头域（请求消息和响应消息都可使用），它支持一个可扩展的指令子集：例如max-age指令支持相对时间戳；private和no-store指令禁止对象被缓存；no-transform阻止Proxy进行任何改变响应的行为。<br>Cache使用关键字索引在磁盘中缓存的对象，在HTTP/1.0中使用资源的URL作为关键字。但可能存在不同的资源基于同一个URL的情况，要区别它们还需要客户端提供更多的信息，如Accept-Language和Accept-Charset头域。为了支持这种内容协商机制(content negotiation mechanism)，HTTP/1.1在响应消息中引入了Vary头域，该头域列出了请求消息中需要包含哪些头域用于内容协商。</p>
+<h3 id="u5E26_u5BBD_u4F18_u5316"><a href="#u5E26_u5BBD_u4F18_u5316" class="headerlink" title="带宽优化"></a>带宽优化</h3><p>HTTP/1.0中，存在一些浪费带宽的现象，例如客户端只是需要某个对象的一部分，而服务器却将整个对象送过来了。例如，客户端只需要显示一个文档的部分内容，又比如下载大文件时需要支持断点续传功能，而不是在发生断连后不得不重新下载完整的包。<br>HTTP/1.1中在请求消息中引入了range头域，它允许只请求资源的某个部分。在响应消息中Content-Range头域声明了返回的这部分对象的偏移值和长度。如果服务器相应地返回了对象所请求范围的内容，则响应码为206（Partial Content），它可以防止Cache将响应误以为是完整的一个对象。<br>另外一种情况是请求消息中如果包含比较大的实体内容，但不确定服务器是否能够接收该请求（如是否有权限），此时若贸然发出带实体的请求，如果被拒绝也会浪费带宽。<br>HTTP/1.1加入了一个新的状态码100（Continue）。客户端事先发送一个只带头域的请求，如果服务器因为权限拒绝了请求，就回送响应码401（Unauthorized）；如果服务器接收此请求就回送响应码100，客户端就可以继续发送带实体的完整请求了。注意，HTTP/1.0的客户端不支持100响应码。但可以让客户端在请求消息中加入Expect头域，并将它的值设置为100-continue。<br>节省带宽资源的一个非常有效的做法就是压缩要传送的数据。Content-Encoding是对消息进行端到端（end-to-end）的编码，它可能是资源在服务器上保存的固有格式（如jpeg图片格式）；在请求消息中加入Accept-Encoding头域，它可以告诉服务器客户端能够解码的编码方式。<br>而Transfer-Encoding是逐段式（hop-by-hop）的编码，如Chunked编码。在请求消息中加入TE头域用来告诉服务器能够接收的transfer-coding方式，</p>
+<h3 id="u957F_u8FDE_u63A5"><a href="#u957F_u8FDE_u63A5" class="headerlink" title="长连接"></a>长连接</h3><p>HTTP 1.0规定浏览器与服务器只保持短暂的连接，浏览器的每次请求都需要与服务器建立一个TCP连接，服务器完成请求处理后立即断开TCP连接，服务器不跟踪每个客户也不记录过去的请求。此外，由于大多数网页的流量都比较小，一次TCP连接很少能通过slow-start区，不利于提高带宽利用率。<br>HTTP 1.1支持长连接（PersistentConnection）和请求的流水线（Pipelining）处理，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟。例如：一个包含有许多图像的网页文件的多个请求和应答可以在一个连接中传输，但每个单独的网页文件的请求和应答仍然需要使用各自的连接。<br>HTTP 1.1还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求，但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容，这样也显著地减少了整个下载过程所需要的时间。<br>在HTTP/1.0中，要建立长连接，可以在请求消息中包含Connection: Keep-Alive头域，如果服务器愿意维持这条连接，在响应消息中也会包含一个Connection: Keep-Alive的头域。同时，可以加入一些指令描述该长连接的属性，如max，timeout等。<br>事实上，Connection头域可以携带三种不同类型的符号：<br>1、一个包含若干个头域名的列表，声明仅限于一次hop连接的头域信息；<br>2、任意值，本次连接的非标准选项，如Keep-Alive等；<br>3、close值，表示消息传送完成之后关闭长连接；</p>
+<p>客户端和源服务器之间的消息传递可能要经过很多中间节点的转发，这是一种逐跳传递（hop-by-hop）。HTTP/1.1相应地引入了hop-by-hop头域，这种头域仅作用于一次hop，而非整个传递路径。每一个中间节点（如Proxy，Gateway）接收到的消息中如果包含Connection头域，会查找Connection头域中的一个头域名列表，并在将消息转发给下一个节点之前先删除消息中这些头域。<br>通常，HTTP/1.0的Proxy不支持Connection头域，为了不让它们转发可能误导接收者的头域，协议规定所有出现在Connection头域中的头域名都将被忽略。</p>
+<h3 id="u6D88_u606F_u4F20_u9012"><a href="#u6D88_u606F_u4F20_u9012" class="headerlink" title="消息传递"></a>消息传递</h3><p>HTTP消息中可以包含任意长度的实体，通常它们使用Content-Length来给出消息结束标志。但是，对于很多动态产生的响应，只能通过缓冲完整的消息来判断消息的大小，但这样做会加大延迟。如果不使用长连接，还可以通过连接关闭的信号来判定一个消息的结束。<br>HTTP/1.1中引入了Chunkedtransfer-coding来解决上面这个问题，发送方将消息分割成若干个任意大小的数据块，每个数据块在发送时都会附上块的长度，最后用一个零长度的块作为消息结束的标志。这种方法允许发送方只缓冲消息的一个片段，避免缓冲整个消息带来的过载。<br>在HTTP/1.0中，有一个Content-MD5的头域，要计算这个头域需要发送方缓冲完整个消息后才能进行。而HTTP/1.1中，采用chunked分块传递的消息在最后一个块（零长度）结束之后会再传递一个拖尾（trailer），它包含一个或多个头域，这些头域是发送方在传递完所有块之后再计算出值的。发送方会在消息中包含一个Trailer头域告诉接收方这个拖尾的存在。</p>
+<h3 id="Host_u5934_u57DF"><a href="#Host_u5934_u57DF" class="headerlink" title="Host头域"></a>Host头域</h3><p>在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。<br>HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中如果没有Host头域会报告一个错误（400 Bad Request）。此外，服务器应该接受以绝对路径标记的资源请求。</p>
+<h3 id="u9519_u8BEF_u63D0_u793A"><a href="#u9519_u8BEF_u63D0_u793A" class="headerlink" title="错误提示"></a>错误提示</h3><p>HTTP/1.0中只定义了16个状态响应码，对错误或警告的提示不够具体。HTTP/1.1引入了一个Warning头域，增加对错误或警告信息的描述。<br>此外，在HTTP/1.1中新增了24个状态响应码，如409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。</p>
+<h3 id="u5185_u5BB9_u534F_u5546"><a href="#u5185_u5BB9_u534F_u5546" class="headerlink" title="内容协商"></a>内容协商</h3><p>为了满足互联网使用不同母语和字符集的用户，一些网络资源有不同的语言版本（如中文版、英文版）。HTTP/1.0定义了内容协商（contentnegotiation）的概念，也就是说客户端可以告诉服务器自己可以接收以何种语言（或字符集）表示的资源。例如如果服务器不能明确客户端需要何种类型的资源，会返回300（Multiple Choices），并包含一个列表，用来声明该资源的不同可用版本，然后客户端在请求消息中包含Accept-Language和Accept-Charset头域指定需要的版本。<br>就像有些人会说几门外语，但每种外语的流利程度并不相同。类似地，网络资源也可以有不同的表达形式，比如有母语版和各种翻译版本。HTTP引入了一个品质因子（quality values）的概念来表示不同版本的可用性，它的取值从0.0到1.0。例如一个母语是英语的人也能讲法语、甚至还学了点丹麦语，那么他的浏览器可用作如下配置：Accept-Language: en, fr;q=0.5, da;q=0.1。这时，服务器会优先选取品质因子高的值对应的资源版本作为响应。</p>
+<h2 id="web__u7F13_u5B58"><a href="#web__u7F13_u5B58" class="headerlink" title="web 缓存"></a>web 缓存</h2><h3 id="u4EC0_u4E48_u662F_web__u7F13_u5B58"><a href="#u4EC0_u4E48_u662F_web__u7F13_u5B58" class="headerlink" title="什么是 web 缓存"></a>什么是 web 缓存</h3><p>WEB缓存(cache)位于Web服务器和客户端之间。 缓存会根据请求保存输出内容的副本，例如html页面，图片，文件，当下一个请求来到的时候：如果是相同的URL，缓存直接使用副本响应访问请求，而不是向源服务器再次发送请求。 HTTP协议定义了相关的消息头来使WEB缓存尽可能好的工作。</p>
+<h3 id="u7F13_u5B58_u7684_u4F18_u70B9"><a href="#u7F13_u5B58_u7684_u4F18_u70B9" class="headerlink" title="缓存的优点"></a>缓存的优点</h3><p> 减少相应延迟：因为请求从缓存服务器（离客户端更近）而不是源服务器被相应，这个过程耗时更少，让web服务器看上去相应更快。减少网络带宽消耗：当副本被重用时会减低客户端的带宽消耗；客户可以节省带宽费用，控制带宽的需求的增长并更易于管理。</p>
+<h3 id="u4E0E_u7F13_u5B58_u76F8_u5173_u7684HTTP_u6269_u5C55_u6D88_u606F_u5934"><a href="#u4E0E_u7F13_u5B58_u76F8_u5173_u7684HTTP_u6269_u5C55_u6D88_u606F_u5934" class="headerlink" title="与缓存相关的HTTP扩展消息头"></a>与缓存相关的HTTP扩展消息头</h3><ul>
+<li>Expires：指示响应内容过期的时间，格林威治时间GMT</li>
+<li>Cache-Control：更细致的控制缓存的内容</li>
+<li>Last-Modified：响应中资源最后一次修改的时间</li>
+<li>Date：服务器的时间</li>
+<li>If-Modified-Since：客户端存取的该资源最后一次修改的时间，同Last-Modified。 - If-None-Match：客户端存取的该资源的检验值，同ETag。</li>
+</ul>
+<h3 id="u5BA2_u6237_u7AEF_u7F13_u5B58_u751F_u6548_u7684_u5E38_u89C1_u6D41_u7A0B"><a href="#u5BA2_u6237_u7AEF_u7F13_u5B58_u751F_u6548_u7684_u5E38_u89C1_u6D41_u7A0B" class="headerlink" title="客户端缓存生效的常见流程"></a>客户端缓存生效的常见流程</h3><p>服务器收到请求时，会在200OK中回送该资源的Last-Modified和ETag头，客户端将该资源保存在cache中，并记录这两个属性。当客户端需要发送相同的请求时，会在请求中携带If-Modified-Since和If-None-Match两个头。两个头的值分别是响应中Last-Modified和ETag头的值。服务器通过这两个头判断本地资源未发生变化，客户端不需要重新下载，返回304响应。</p>
+<h3 id="Web_u7F13_u5B58_u673A_u5236"><a href="#Web_u7F13_u5B58_u673A_u5236" class="headerlink" title="Web缓存机制"></a>Web缓存机制</h3><p>HTTP/1.1中缓存的目的是为了在很多情况下减少发送请求，同时在许多情况下可以不需要发送完整响应。前者减少了网络回路的数量；HTTP利用一个“过期（expiration）”机制来为此目的。后者减少了网络应用的带宽；HTTP用“验证（validation）”机制来为此目的。 HTTP定义了3种缓存机制：<br>1）Freshness：允许一个回应消息可以在源服务器不被重新检查，并且可以由服务器和客户端来控制。例如，Expires回应头给了一个文档不可用的时间。Cache-Control中的max-age标识指明了缓存的最长时间；</p>
+<p>2）Validation：用来检查以一个缓存的回应是否仍然可用。例如，如果一个回应有一个Last-Modified回应头，缓存能够使用If-Modified-Since来判断是否已改变，以便判断根据情况发送请求；</p>
+<p>3）Invalidation： 在另一个请求通过缓存的时候，常常有一个副作用。例如，如果一个URL关联到一个缓存回应，但是其后跟着POST、PUT和DELETE的请求的话，缓存就会过期。</p>
+<h2 id="u65AD_u70B9_u7EED_u4F20_u548C_u591A_u7EBF_u7A0B_u4E0B_u8F7D_u7684_u5B9E_u73B0_u539F_u7406"><a href="#u65AD_u70B9_u7EED_u4F20_u548C_u591A_u7EBF_u7A0B_u4E0B_u8F7D_u7684_u5B9E_u73B0_u539F_u7406" class="headerlink" title="断点续传和多线程下载的实现原理"></a>断点续传和多线程下载的实现原理</h2><p>HTTP协议的GET方法，支持只请求某个资源的某一部分；<br>Partial Content 部分内容响应；<br>Range 请求的资源范围；<br>Content-Range 响应的资源范围；</p>
+<p>在连接断开重连时，客户端只请求该资源未下载的部分，而不是重新请求整个资源，来实现断点续传。 分块请求资源实例：<br>Eg1：Range: bytes=306302- ：<br>请求这个资源从306302个字节到末尾的部分；<br>Eg2：Content-Range: bytes 306302-604047/604048：<br>响应中指示携带的是该资源的第306302-604047的字节，该资源共604048个字节；<br>客户端通过并发的请求相同资源的不同片段，来实现对某个资源的并发分块下载。从而达到快速下载的目的。目前流行的FlashGet和迅雷基本都是这个原理。</p>
+<p>多线程下载的原理：<br>下载工具开启多个发出HTTP请求的线程；<br>每个http请求只请求资源文件的一部分：Content-Range: bytes 20000-40000/47000；<br>合并每个线程下载的文件。</p>
+<h2 id="u53C2_u8003_u6587_u6863"><a href="#u53C2_u8003_u6587_u6863" class="headerlink" title="参考文档"></a>参考文档</h2><p>原文英文版<br>RFC 1945 - Hypertext Transfer Protocol – HTTP/1.0<br><a href="http://www.w3.org/Protocols/rfc1945/rfc1945" target="_blank" rel="external">http://www.w3.org/Protocols/rfc1945/rfc1945</a><br><a href="http://www.faqs.org/rfcs/rfc1945.html" target="_blank" rel="external">http://www.faqs.org/rfcs/rfc1945.html</a><br>RFC 2616 - Hypertext Transfer Protocol – HTTP/1.1<br><a href="http://www.w3.org/Protocols/rfc2616/rfc2616" target="_blank" rel="external">http://www.w3.org/Protocols/rfc2616/rfc2616</a><br><a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank" rel="external">http://www.w3.org/Protocols/rfc2616/rfc2616.html</a><br><a href="http://www.faqs.org/rfcs/rfc2616.html" target="_blank" rel="external">http://www.faqs.org/rfcs/rfc2616.html</a></p>
+<p>RFC 1945 - Hypertext Transfer Protocol – HTTP/1.0 中文版<br><a href="http://man.chinaunix.net/develop/rfc/RFC1945.txt" target="_blank" rel="external">http://man.chinaunix.net/develop/rfc/RFC1945.txt</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/17/useful/">
+                    有用的网站
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/17/php_traverse_file/">
+                    php_遍历文件内容
+                </a>
+            </div>
+        
+    </nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP/1-1__u4E0EHTTP/1-0_u7684_u533A_u522B"><span class="toc-number">1.</span> <span class="toc-text">HTTP/1.1 与HTTP/1.0的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u53EF_u6269_u5C55_u6027"><span class="toc-number">1.1.</span> <span class="toc-text">可扩展性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7F13_u5B58"><span class="toc-number">1.2.</span> <span class="toc-text">缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5E26_u5BBD_u4F18_u5316"><span class="toc-number">1.3.</span> <span class="toc-text">带宽优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u957F_u8FDE_u63A5"><span class="toc-number">1.4.</span> <span class="toc-text">长连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u6D88_u606F_u4F20_u9012"><span class="toc-number">1.5.</span> <span class="toc-text">消息传递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Host_u5934_u57DF"><span class="toc-number">1.6.</span> <span class="toc-text">Host头域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u9519_u8BEF_u63D0_u793A"><span class="toc-number">1.7.</span> <span class="toc-text">错误提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5185_u5BB9_u534F_u5546"><span class="toc-number">1.8.</span> <span class="toc-text">内容协商</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web__u7F13_u5B58"><span class="toc-number">2.</span> <span class="toc-text">web 缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4EC0_u4E48_u662F_web__u7F13_u5B58"><span class="toc-number">2.1.</span> <span class="toc-text">什么是 web 缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7F13_u5B58_u7684_u4F18_u70B9"><span class="toc-number">2.2.</span> <span class="toc-text">缓存的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E0E_u7F13_u5B58_u76F8_u5173_u7684HTTP_u6269_u5C55_u6D88_u606F_u5934"><span class="toc-number">2.3.</span> <span class="toc-text">与缓存相关的HTTP扩展消息头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5BA2_u6237_u7AEF_u7F13_u5B58_u751F_u6548_u7684_u5E38_u89C1_u6D41_u7A0B"><span class="toc-number">2.4.</span> <span class="toc-text">客户端缓存生效的常见流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web_u7F13_u5B58_u673A_u5236"><span class="toc-number">2.5.</span> <span class="toc-text">Web缓存机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u65AD_u70B9_u7EED_u4F20_u548C_u591A_u7EBF_u7A0B_u4E0B_u8F7D_u7684_u5B9E_u73B0_u539F_u7406"><span class="toc-number">3.</span> <span class="toc-text">断点续传和多线程下载的实现原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u53C2_u8003_u6587_u6863"><span class="toc-number">4.</span> <span class="toc-text">参考文档</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/01/17/http_1.1/" data-title="HTTP 1.1 升级说明" data-url="http://ffeng.wang/2016/01/17/http_1.1/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"gitfeng"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/01/17/useful/" title="上一篇: 有用的网站">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/17/php_traverse_file/" title="下一篇: php_遍历文件内容">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/http_base/">HTTP 协议</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/28/redis_read_code/">如何阅读 Redis 源码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/24/food_luzhu/">百年祖传秘方_君臣佐使_卤煮</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/24/read_tech_2016/">2015最美科学阅读：用20本科学图书，温暖这个寒冬</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/http_1.1/">HTTP 1.1 升级说明</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/17/hexo_theme/">hexo 配置及主题</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 gitfeng
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <style>
+        body {
+          background: lightgray;
+        }
+        #container .left-col {
+          background: white;
+        }
+        .article-inner {
+          background: white;
+          margin-bottom: 1em;
+        }
+        .post-nav-button {
+          background: #ececec;
+        }
+        #header .header-nav .social #GitHub {
+          background-color: #bfd3ec;
+        }
+        #post-nav-button a {
+          background: rgba(215, 216, 215, .2);
+        }
+        .post-list {
+          background: white;
+        }
+    </style>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
