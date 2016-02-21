@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MySQL_查询优化-2/2 | gitfeng-blog</title>
+  <title>Nginx 配置解释 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
+  <meta name="description" content="说明 nginx 的配置坑">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL_查询优化-2/2">
-<meta property="og:url" content="http://ffeng.wang/2016/01/18/mysql_opti_rand/index.html">
+<meta property="og:title" content="Nginx 配置解释">
+<meta property="og:url" content="http://ffeng.wang/2016/02/21/nginx_config/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
-<meta property="og:updated_time" content="2016-01-18T04:01:03.000Z">
+<meta property="og:description" content="说明 nginx 的配置坑">
+<meta property="og:updated_time" content="2016-02-21T14:55:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL_查询优化-2/2">
-<meta name="twitter:description" content="mysql使用过程中的一些优化注意事项,如&apos;大数据翻页&apos;，&apos;随机结果获取&apos;等">
+<meta name="twitter:title" content="Nginx 配置解释">
+<meta name="twitter:description" content="说明 nginx 的配置坑">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -200,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-mysql_opti_rand" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-nginx_config" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/18/mysql_opti_rand/" class="article-date">
-      <time datetime="2016-01-18T04:01:03.000Z" itemprop="datePublished">2016-01-18</time>
+      <a href="/2016/02/21/nginx_config/" class="article-date">
+      <time datetime="2016-02-21T08:20:01.000Z" itemprop="datePublished">2016-02-21</time>
 </a>
     </div>
   
@@ -217,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL_查询优化-2/2
+      Nginx 配置解释
     </h1>
   
 
@@ -232,7 +232,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/http/">http</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -242,51 +242,38 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="u968F_u673A_u7ED3_u679C_u83B7_u53D6"><a href="#u968F_u673A_u7ED3_u679C_u83B7_u53D6" class="headerlink" title="随机结果获取"></a>随机结果获取</h2><p>ref: <a href="http://imysql.com/2014/07/04/mysql-optimization-case-rand-optimize.shtml" target="_blank" rel="external">参考链接</a></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">RAND</span>() <span class="keyword">LIMIT</span> <span class="keyword">n</span>;</span></span><br></pre></td></tr></table></figure>
-<p>改造成下面这个：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> t1 <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> <span class="keyword">RAND</span>() * (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> <span class="keyword">table</span>) <span class="keyword">AS</span> nid) t2 <span class="keyword">ON</span> t1.<span class="keyword">id</span> &gt;</span><br><span class="line">t2.nid <span class="keyword">LIMIT</span> <span class="keyword">n</span>;</span></span><br></pre></td></tr></table></figure>
-<p>如果想要达到完全随机，还可以改成下面这种写法：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="keyword">table</span> t1 <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> <span class="keyword">round</span>(<span class="keyword">RAND</span>() * (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> <span class="keyword">table</span>)) <span class="keyword">AS</span> nid <span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="keyword">n</span>) t2 <span class="keyword">ON</span> t1.<span class="keyword">id</span> = t2.nid;</span></span><br></pre></td></tr></table></figure>
-<h2 id="u5927_u6570_u636E_u7FFB_u9875"><a href="#u5927_u6570_u636E_u7FFB_u9875" class="headerlink" title="大数据翻页"></a>大数据翻页</h2><h3 id="u4E0D_u5E26_where__u7684_u4F18_u5316"><a href="#u4E0D_u5E26_where__u7684_u4F18_u5316" class="headerlink" title="不带 where 的优化"></a>不带 where 的优化</h3><p>思路：</p>
-<ul>
-<li>消去limit $pn, $rn 的第一个参数， 即变成 limit $rn;</li>
-<li>条件转成主键索引</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">t</span> <span class="keyword">where</span> <span class="keyword">id</span> &gt; <span class="number">99</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">id</span> <span class="keyword">asc</span> <span class="keyword">limit</span> $page_size ;</span></span><br></pre></td></tr></table></figure>
-<h3 id="u5E26_where__u7684_u4F18_u5316"><a href="#u5E26_where__u7684_u4F18_u5316" class="headerlink" title="带 where 的优化"></a>带 where 的优化</h3><p>ref: <a href="http://imysql.com/2014/07/26/mysql-optimization-case-paging-optimize.shtml" target="_blank" rel="external">参考链接</a></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935500</span>, <span class="number">100</span></span></span><br></pre></td></tr></table></figure>
-<p>子查询优化：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 采用子查询的方式优化，在子查询里先从索引获取到最大id，然后倒序排，再取10行结果集</span></span><br><span class="line"><span class="comment">-- 注意这里采用了2次倒序排，因此在取LIMIT的start值时，比原来的值加了10，即935510，否则结果将和原来的不一致</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; ( <span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935510</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="number">10</span>) <span class="keyword">t</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure></p>
-<p>left-join 优化：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 采用INNER JOIN优化，JOIN子句里也优先从索引获取ID列表，然后直接关联查询获得最终结果，这里不需要加10</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; ( <span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> <span class="string">`t1`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">935510</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">LIMIT</span> <span class="number">10</span>) <span class="keyword">t</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure></p>
-<p>两种优化方式效果统计：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>大分页，带WHERE</th>
-<th>大分页，不带WHERE</th>
-<th>小分页，带WHERE</th>
-<th>小分页，不带WHERE</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>子查询优化</td>
-<td>28.20%</td>
-<td>10.60%</td>
-<td>24.90%</td>
-<td>554.40%</td>
-</tr>
-<tr>
-<td>INNER JOIN优化</td>
-<td>30.80%</td>
-<td>30.20%</td>
-<td>156.50%</td>
-<td>11.70%</td>
-</tr>
-</tbody>
-</table>
-
+        <h2 id="u914D_u7F6E_u7ED3_u6784"><a href="#u914D_u7F6E_u7ED3_u6784" class="headerlink" title="配置结构"></a>配置结构</h2><p>概览：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">|--main&#9;&#9;&#9;    nginx&#35774;&#32622;&#10;   |--http&#9;&#9;    http&#26381;&#21153;&#37197;&#32622;&#10;      |--server&#9;    &#34394;&#25311;&#20027;&#26426;&#37197;&#32622;&#10;         |--location   &#29305;&#23450;url&#30340;&#37197;&#32622;</span><br></pre></td></tr></table></figure></p>
+<p>main域配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  4;   #&#37197;&#32622;&#24037;&#20316;&#36827;&#31243;&#25968;&#37327;&#10;worker_cpu_affinity 1000 0100 0010 0001; #&#24182;&#32465;&#23450;&#33267;&#25351;&#23450;CPU&#10;&#10;#&#37197;&#32622;&#26085;&#24535;&#20301;&#32622;&#21644;pid&#25991;&#20214;&#20301;&#32622;&#10;error_log &#34;/home/iknow/log/webserver/error_log&#34; warn;&#10;pid       &#34;/home/iknow/log/nginx.pid&#34;;&#10;&#10;#&#37197;&#32622;I/O&#26041;&#24335;&#21644;&#25351;&#23450;&#24037;&#20316;&#36827;&#31243;&#21487;&#20351;&#29992;&#36830;&#25509;&#25968;&#10;events &#123;&#10;    use epoll;&#10;    worker_connections  204800;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>http 配置举例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http&#123;&#10;&#9;include&#9;&#9;&#9;mime.types;&#10;&#9;default_type&#9;&#9;application/octet-stream;&#10;&#9;sendfile&#9;&#9;&#9;on;&#10;&#9;keepalive_timeout&#9;65;&#10;&#10;&#9;server &#123;&#10;&#9;&#9;listen &#9;&#9;80;&#10;&#9;&#9;server_name &#9;*.baidu.com;&#10;&#9;&#9;error_page 400 404 500 http://zhidao.baidu.com/errot/html&#10;&#9;&#9;location / &#123;&#10;&#9;&#9;&#9;root &#9;&#9;&#9;/home/iknow/webroot;&#10;&#9;&#9;&#9;index &#9;&#9;index.php&#10;&#9;&#9;&#9;fastcgi_pass    unix:/var/php-cgi.sock;&#10;&#9;&#9;&#9;include &#9;&#9;vhost/dispatch.conf;&#10;&#9;&#9;&#125;&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="u914D_u7F6E_u6CE8_u610F_u4E8B_u9879"><a href="#u914D_u7F6E_u6CE8_u610F_u4E8B_u9879" class="headerlink" title="配置注意事项"></a>配置注意事项</h2><ol>
+<li><p>与lighttpd转发规则不同，rewrite只匹配path<br>rewrite ‘\^/submit(/[^\?]*)?$’ /submit/index.php$1 break;</p>
+</li>
+<li><p>如果需要匹配query_string，使用if加变量，注意这里的request<em>uri和arg</em>**</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ( $request_uri ~ &#34;^/q\?pt=([^=]*)$&#34; ) &#123;&#10;    rewrite &#34;^/+q&#34; /home/index.php?pt=$arg_pt break;&#10;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意rewrite规则中，break和last的区别，除非必要，请使用break。<br>使用last的一个good case：<br><a href="http://stackoverflow.com/questions/20470191/external-links-url-encoding-leads-to-3f-and-3d-on-nginx-server" target="_blank" rel="external">http://stackoverflow.com/questions/20470191/external-links-url-encoding-leads-to-3f-and-3d-on-nginx-server</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">last&#19982;break&#30340;&#21306;&#21035;&#22312;&#20110;&#65292;last&#24182;&#19981;&#20250;&#20572;&#27490;&#23545;&#19979;&#38754;location&#30340;&#21305;&#37197;&#12290;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>302重定向<br>rewrite “\^/submit/(wap)(.*)?” <a href="http://zhidao.baidu.com/error.html?" target="_blank" rel="external">http://zhidao.baidu.com/error.html?</a> redirect;</p>
+</li>
+<li><p>301重定向<br>if ( $request_uri ~ “\^/+q\?(.<em>)?(ct=17&amp;(.</em>)?tn=ikaslist)(&amp;.<em>)?$” ) {<br> rewrite “^.</em>$” <a href="http://zhidao.baidu.com/search" target="_blank" rel="external">http://zhidao.baidu.com/search</a> permanent;<br>}</p>
+</li>
+</ol>
+<h2 id="location__u7684_u5339_u914D_u987A_u5E8F"><a href="#location__u7684_u5339_u914D_u987A_u5E8F" class="headerlink" title="location 的匹配顺序"></a>location 的匹配顺序</h2><ol>
+<li><p>误区： location 的匹配顺序是“先匹配正则，再匹配普通”。<br>矫正： location 的匹配顺序其实是“先匹配普通，再匹配正则”。我这么说，大家一定会反驳我，因为按“先匹配普通，再匹配正则”解释不了大家平时习惯的按“先匹配正则，再匹配普通”的实践经验。这里我只能暂时解释下，造成这种误解的原因是：正则匹配会覆盖普通匹配（实际的规则，比这复杂，后面会详细解释）。</p>
+</li>
+<li><p>误区：location 的执行逻辑跟 location 的编辑顺序无关。<br>矫正：这句话不全对，“普通 location ”的匹配规则是“最大前缀”，因此“普通 location ”的确与 location 编辑顺序无关；但是“正则 location ”的匹配规则是“顺序匹配，且只要匹配到第一个就停止后面的匹配”；“普通location ”与“正则 location ”之间的匹配顺序是？先匹配普通 location ，再“考虑”匹配正则 location 。注意这里的“考虑”是“可能”的意思，也就是说匹配完“普通 location ”后，有的时候需要继续匹配“正则 location ”，有的时候则不需要继续匹配“正则 location ”。两种情况下，不需要继续匹配正则 location ：（ 1 ）当普通 location 前面指定了“ ^~ ”，特别告诉 Nginx 本条普通 location 一旦匹配上，则不需要继续正则匹配；（ 2 ）当普通location 恰好严格匹配上，不是最大前缀匹配，则不再继续匹配正则。</p>
+</li>
+<li><p>总结一句话：  “正则 location 匹配让步普通 location 的严格精确匹配结果；但覆盖普通 location 的最大前缀匹配结果”</p>
+</li>
+</ol>
+<p>——- 搜索顺序以及生效优先级 ——-<br>因为可以定义多个 Location 块，每个 Location 块可以有各自的 pattern 。因此就需要明白（不管是 Nginx 还是你），当 Nginx 收到一个请求时，它是如何去匹配 URI 并找到合适的 Location 的。<br>要注意的是，写在配置文件中每个 Server 块中的 Location 块的次序是不重要的，Nginx 会按 location modifier 的优先级来依次用 URI 去匹配 pattern ，顺序如下：</p>
+<pre><code>1. =
+2. (None)    如果 pattern 完全匹配 URI（不是只匹配 URI 的头部）
+3. ^~
+4. ~ 或 ~*
+5. (None)    pattern 匹配 URI 的头部
+</code></pre>
       
     </div>
     
@@ -303,16 +290,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/24/food_luzhu/">
-                    百年祖传秘方_君臣佐使_卤煮
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/useful/">
-                    有用的网站
+                <a href="/2016/02/20/http_1.1/">
+                    HTTP 1.1 升级说明
                 </a>
             </div>
         
@@ -324,7 +305,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u968F_u673A_u7ED3_u679C_u83B7_u53D6"><span class="toc-number">1.</span> <span class="toc-text">随机结果获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5927_u6570_u636E_u7FFB_u9875"><span class="toc-number">2.</span> <span class="toc-text">大数据翻页</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E0D_u5E26_where__u7684_u4F18_u5316"><span class="toc-number">2.1.</span> <span class="toc-text">不带 where 的优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5E26_where__u7684_u4F18_u5316"><span class="toc-number">2.2.</span> <span class="toc-text">带 where 的优化</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u914D_u7F6E_u7ED3_u6784"><span class="toc-number">1.</span> <span class="toc-text">配置结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u914D_u7F6E_u6CE8_u610F_u4E8B_u9879"><span class="toc-number">2.</span> <span class="toc-text">配置注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#location__u7684_u5339_u914D_u987A_u5E8F"><span class="toc-number">3.</span> <span class="toc-text">location 的匹配顺序</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -388,7 +369,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/18/mysql_opti_rand/" data-title="MySQL_查询优化-2/2" data-url="http://ffeng.wang/2016/01/18/mysql_opti_rand/"></div>
+    <div class="ds-thread" data-thread-key="2016/02/21/nginx_config/" data-title="Nginx 配置解释" data-url="http://ffeng.wang/2016/02/21/nginx_config/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -412,15 +393,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/24/food_luzhu/" title="上一篇: 百年祖传秘方_君臣佐使_卤煮">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/useful/" title="下一篇: 有用的网站">
+            <a href="/2016/02/20/http_1.1/" title="下一篇: HTTP 1.1 升级说明">
                 <i class="fa fa-angle-right"></i>
             </a>
         
