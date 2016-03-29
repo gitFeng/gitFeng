@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MySQL_存储优化-InnoDB表BLOB列 | gitfeng-blog</title>
+  <title>如何阅读 Redis 源码 | gitfeng-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="优化InnoDB表BLOB列的存储效率">
+  <meta name="description" content="redis源码各类文件功能说明，用于在起始阶段建议概念">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL_存储优化-InnoDB表BLOB列">
-<meta property="og:url" content="http://ffeng.wang/2016/01/17/mysql_opti_storage_blob/index.html">
+<meta property="og:title" content="如何阅读 Redis 源码">
+<meta property="og:url" content="http://ffeng.wang/2016/03/28/redis_code_list/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
-<meta property="og:description" content="优化InnoDB表BLOB列的存储效率">
-<meta property="og:updated_time" content="2016-01-19T06:04:36.000Z">
+<meta property="og:description" content="redis源码各类文件功能说明，用于在起始阶段建议概念">
+<meta property="og:updated_time" content="2016-03-29T06:28:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL_存储优化-InnoDB表BLOB列">
-<meta name="twitter:description" content="优化InnoDB表BLOB列的存储效率">
+<meta name="twitter:title" content="如何阅读 Redis 源码">
+<meta name="twitter:description" content="redis源码各类文件功能说明，用于在起始阶段建议概念">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -200,11 +200,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-mysql_opti_storage_blob" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-redis_code_list" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/17/mysql_opti_storage_blob/" class="article-date">
-      <time datetime="2016-01-17T07:21:00.000Z" itemprop="datePublished">2016-01-17</time>
+      <a href="/2016/03/28/redis_code_list/" class="article-date">
+      <time datetime="2016-03-28T07:01:00.000Z" itemprop="datePublished">2016-03-28</time>
 </a>
     </div>
   
@@ -217,7 +217,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQL_存储优化-InnoDB表BLOB列
+      如何阅读 Redis 源码
     </h1>
   
 
@@ -232,7 +232,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -242,29 +242,294 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>ref : <a href="http://imysql.com/2014/09/28/mysql-optimization-case-blob-stored-in-innodb-optimization.shtml" target="_blank" rel="external">优化InnoDB表BLOB列的存储效率</a></p>
-<h3 id="InnoDB_u5F15_u64CE_u5B58_u50A8_u683C_u5F0F_u7684_u51E0_u4E2A_u8981_u70B9_uFF1A"><a href="#InnoDB_u5F15_u64CE_u5B58_u50A8_u683C_u5F0F_u7684_u51E0_u4E2A_u8981_u70B9_uFF1A" class="headerlink" title="InnoDB引擎存储格式的几个要点："></a>InnoDB引擎存储格式的几个要点：</h3><ol>
-<li>InnoDB可以选择使用共享表空间或者是独立表空间方式，建议使用独立表空间，便于管理、维护。启用 innodb_file_per_table 选项，5.5以后可以在线动态修改生效，并且执行 ALTER TABLE xx ENGINE = InnoDB 将现有表转成独立表空间，早于5.5的版本，修改完这个选项后，需要重启才能生效；</li>
-<li>InnoDB的data page默认16KB，5.6版本以后，新增选项 innodb_page_size 可以修改，在5.6以前的版本，只能修改源码重新编译，但并不推荐修改这个配置，除非你非常清楚它有什么优缺点；</li>
-<li>InnoDB的data page在有新数据写入时，会预留1/16的空间，预留出来的空间可用于后续的新纪录写入，减少频繁的新增data page的开销；</li>
-<li>每个data page，至少需要存储2行记录。因此理论上行记录最大长度为8KB，但事实上应该更小，因为还有一些InnoDB内部数据结构要存储；</li>
-<li>受限于InnoDB存储方式，如果数据是顺序写入的话，最理想的情况下，data page的填充率是15/16，但一般没办法保证完全的顺序写入，因此，data page的填充率一般是1/2到15/16。因此每个InnoDB表都最好要有一个自增列作为主键，使得新纪录写入尽可能是顺序的；</li>
-<li>当data page填充率不足1/2时，InnoDB会进行收缩，释放空闲空间；</li>
-<li>MySQL 5.6版本的InnoDB引擎当前支持COMPACT. REDUNDANT、DYNAMIC、COMPRESSED四种格式，默认是COMPACT格式，COMPRESSED用的很少且不推荐（见下一条），如果需要用到压缩特性的话，可以直接考虑TokuDB引擎；</li>
-<li>COMPACT行格式相比REDUNDANT，大概能节省20%的存储空间，COMPRESSED相比COMPACT大概能节省50%的存储空间，但会导致TPS下降了90%。因此强烈不推荐使用COMPRESSED行格式；</li>
-<li>当行格式为DYNAMIC或COMPRESSED时，TEXT/BLOB之类的长列（long column，也有可能是其他较长的列，不一定只有TEXT/BLOB类型，看具体情况）会完全存储在一个独立的data page里，聚集索引页中只使用20字节的指针指向新的page，这就是所谓的off-page，类似ORACLE的行迁移，磁盘空间浪费较严重，且I/O性能也较差。因此，强烈不建议使用BLOB. TEXT、超过255长度的VARCHAR列类型；</li>
-<li>当InnoDB的文件格式（innodb_file_format）设置为Antelope，并且行格式为COMPACT 或 REDUNDANT 时，BLOB. TEXT或者长VARCHAR列只会将其前768字节存储在聚集索页中（最大768字节的作用是便于创建前缀索引/prefix index），其余更多的内容存储在额外的page里，哪怕只是多了一个字节。因此，所有列长度越短越好；</li>
-<li>在off-page中存储的BLOB、TEXT或者长VARCHAR列的page是独享的，不能共享。因此强烈不建议在一个表中使用多个长列。</li>
+        <p>ref: <a href="http://www.cnblogs.com/liping13599168/archive/2011/04/12/2013094.html" target="_blank" rel="external">http://www.cnblogs.com/liping13599168/archive/2011/04/12/2013094.html</a></p>
+<h2 id="u5F00_u59CB"><a href="#u5F00_u59CB" class="headerlink" title="开始"></a>开始</h2><p> redis是一个key-value存储系统。和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)和zset(有序集合)。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave(主从)同步。</p>
+<h2 id="u5404_u7C7B_u529F_u80FD_u8BF4_u660E"><a href="#u5404_u7C7B_u529F_u80FD_u8BF4_u660E" class="headerlink" title="各类功能说明"></a>各类功能说明</h2><table>
+<thead>
+<tr>
+<th>文件/类</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adlist.c</td>
+<td>用于对list的定义，它是个双向链表结构</td>
+</tr>
+<tr>
+<td>ae.c</td>
+<td>用于Redis的事件处理，包括句柄事件和超时事件。</td>
+</tr>
+<tr>
+<td>ae_epoll.c</td>
+<td>附录1</td>
+</tr>
+<tr>
+<td>ae_evport.c</td>
+<td>附录1</td>
+</tr>
+<tr>
+<td>ae_kqueue.c</td>
+<td>附录1</td>
+</tr>
+<tr>
+<td>ae_select.c</td>
+<td>附录1</td>
+</tr>
+<tr>
+<td>anet.c</td>
+<td>作为Server/Client通信的基础封装，包括anetTcpServer,anetTcpConnect,anetTcpAccept,anetRead,anetWrite等等方法。</td>
+</tr>
+<tr>
+<td>aof.c</td>
+<td>aof，全称为append only file，作用就是记录每次的写操作,在遇到断电等问题时可以用它来恢复数据库状态。但是他不是bin的,而是text的。一行一行,写得很规范.如果你是一台redis,那你也能人肉通过它恢复数据。</td>
+</tr>
+<tr>
+<td>asciilogo.h</td>
+<td></td>
+</tr>
+<tr>
+<td>bio.c</td>
+<td></td>
+</tr>
+<tr>
+<td>bitops.c</td>
+<td></td>
+</tr>
+<tr>
+<td>blocked.c</td>
+<td></td>
+</tr>
+<tr>
+<td>cluster.c</td>
+<td></td>
+</tr>
+<tr>
+<td>config.c</td>
+<td>用于将配置文件redis.conf文件中的配置读取出来的属性通过程序放到server对象中。在main函数（server服务主入口点处）可以发现里面调用loadServerConfig(char *filename)方法，这个方法就是使用config.c里面的方法实现。具体会在后面的系列中详细介绍。</td>
+</tr>
+<tr>
+<td>crc16.c</td>
+<td></td>
+</tr>
+<tr>
+<td>crc64.c</td>
+<td></td>
+</tr>
+<tr>
+<td>db.c</td>
+<td>对于Redis内存数据库的相关操作。</td>
+</tr>
+<tr>
+<td>debug.c</td>
+<td>用于调试使用。</td>
+</tr>
+<tr>
+<td>dict.c</td>
+<td>主要对于内存中的hash进行管理</td>
+</tr>
+<tr>
+<td>endianconv.c</td>
+<td></td>
+</tr>
+<tr>
+<td>fmacros.h</td>
+<td>用于Mac下的兼容性处理。</td>
+</tr>
+<tr>
+<td>help.h</td>
+<td>辅助于命令的提示信息，作用于redis-cli.exe可执行文件中。</td>
+</tr>
+<tr>
+<td>hyperloglog.c</td>
+<td></td>
+</tr>
+<tr>
+<td>intset.c</td>
+<td>整数范围内的使用set，并包含相关set操作。</td>
+</tr>
+<tr>
+<td>lzf.h</td>
+<td>附录2</td>
+</tr>
+<tr>
+<td>lzfP.h</td>
+<td>附录2</td>
+</tr>
+<tr>
+<td>lzf_c.c</td>
+<td>附录2</td>
+</tr>
+<tr>
+<td>lzf_d.c</td>
+<td>附录2</td>
+</tr>
+<tr>
+<td>memtest.c</td>
+<td></td>
+</tr>
+<tr>
+<td>mkreleasehdr.sh</td>
+<td></td>
+</tr>
+<tr>
+<td>multi.c</td>
+<td>用于事务处理操作。</td>
+</tr>
+<tr>
+<td>networking.c</td>
+<td>网络协议传输方法定义相关的都放在这个文件里面了。包括让Client连接上Server，让Slave挂接到Master，已经Server/Client之间的信息交互的实现等等。</td>
+</tr>
+<tr>
+<td>notify.c</td>
+<td></td>
+</tr>
+<tr>
+<td>object.c</td>
+<td>用于创建和释放redisObject对象</td>
+</tr>
+<tr>
+<td>pqsort.c</td>
+<td>关于排序算法，sort.c具体作为Redis场景下的排序实现。</td>
+</tr>
+<tr>
+<td>pubsub.c</td>
+<td>用于订阅模式的实现，有点类似于Client广播发送的方式。</td>
+</tr>
+<tr>
+<td>rand.c</td>
+<td></td>
+</tr>
+<tr>
+<td>rdb.c</td>
+<td>对于Redis本地数据库的相关操作，默认文件是dump.rdb（通过配置文件获得），包括的操作包括保存，移除，查询等等。</td>
+</tr>
+<tr>
+<td>redis-benchmark.c</td>
+<td>用于redis性能测试的实现。见附4</td>
+</tr>
+<tr>
+<td>redis-check-aof.c</td>
+<td>用于更新日志检查的实现。</td>
+</tr>
+<tr>
+<td>redis-check-dump.c</td>
+<td>用于本地数据库检查的实现。</td>
+</tr>
+<tr>
+<td>redis-cli.c</td>
+<td>客户端程序的实现。</td>
+</tr>
+<tr>
+<td>redis.c</td>
+<td>服务端程序的实现。</td>
+</tr>
+<tr>
+<td>redisassert.h</td>
+<td></td>
+</tr>
+<tr>
+<td>release.c</td>
+<td>用于发布使用。</td>
+</tr>
+<tr>
+<td>replication.c</td>
+<td>用于主从数据库的复制操作的实现。</td>
+</tr>
+<tr>
+<td>rio.c</td>
+<td></td>
+</tr>
+<tr>
+<td>scripting.c</td>
+<td></td>
+</tr>
+<tr>
+<td>sds.c</td>
+<td>用于对字符串的定义</td>
+</tr>
+<tr>
+<td>sentinel.c</td>
+<td></td>
+</tr>
+<tr>
+<td>setproctitle.c</td>
+<td></td>
+</tr>
+<tr>
+<td>sha1.c</td>
+<td>有关于sha算法的实现。</td>
+</tr>
+<tr>
+<td>slowlog.c</td>
+<td></td>
+</tr>
+<tr>
+<td>solarisfixes.h</td>
+<td>Solaris系统的兼容性实现。</td>
+</tr>
+<tr>
+<td>sort.c</td>
+<td>关于排序算法，sort.c具体作为Redis场景下的排序实现。</td>
+</tr>
+<tr>
+<td>syncio.c</td>
+<td>用于同步Socket和文件I/O操作。</td>
+</tr>
+<tr>
+<td>t_hash.c</td>
+<td>见附3</td>
+</tr>
+<tr>
+<td>t_list.c</td>
+<td>见附3</td>
+</tr>
+<tr>
+<td>t_set.c</td>
+<td>见附3</td>
+</tr>
+<tr>
+<td>t_string.c</td>
+<td>见附3</td>
+</tr>
+<tr>
+<td>t_zset.c</td>
+<td>见附3</td>
+</tr>
+<tr>
+<td>testhelp.h</td>
+<td>一个C风格的小型测试框架。</td>
+</tr>
+<tr>
+<td>util.c</td>
+<td>关于通用工具的方法实现。</td>
+</tr>
+<tr>
+<td>version.h</td>
+<td>Redis版本号定义。</td>
+</tr>
+<tr>
+<td>ziplist.c</td>
+<td>ziplist是一个类似于list的存储对象。它的原理类似于zipmap。</td>
+</tr>
+<tr>
+<td>zipmap.c</td>
+<td>zipmap是一个类似于hash的存储对象。在新建一个hash对象时开始是用zipmap（又称为small hash）来存储的。这个zipmap其实并不是hash table但是zipmap相比正常的hash实现可以节省不少hash本身需要的一些元数据存储开销，如果field或者value的大小超出一定限制后，redis会在内部自动将zipmap替换成正常的hash实现。</td>
+</tr>
+<tr>
+<td>zmalloc.c</td>
+<td>关于Redis的内存分配的封装实现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="u9644_u5F55"><a href="#u9644_u5F55" class="headerlink" title="附录"></a>附录</h2><ol>
+<li>在网络相关操作中，定义了一组公共操作接口：aeApiCreate，aeApiFree，aeApiAddEvent，aeApiDelEvent，aeApiPoll，aeApiName方法。在ae_epoll.c、ae_kqueue.c和ae_select.c中，分别实现了基于epoll/kqueue和select系统调用的接口。系统调用的选择顺序依次为epoll，kqueue，select。</li>
+<li>对于本地数据库的保存，使用的是LZF压缩算法，很神奇，算法只有200-300行的代码。</li>
+<li>hash，list，set，string，zset在Server/Client中的应答操作。主要通过redisObject进行类型转换。</li>
+<li>用于redis性能测试的实现。请看main方法以下设置：</li>
 </ol>
-<h3 id="u5EFA_u8BAE"><a href="#u5EFA_u8BAE" class="headerlink" title="建议"></a>建议</h3><p>综上，如果在实际业务中，确实需要在InnoDB表中存储BLOB、TEXT、长VARCHAR列时，有下面几点建议：</p>
-<ol>
-<li>尽可能将所有数据序列化、压缩之后，存储在同一个列里，避免发生多次off-page；</li>
-<li>实际最大存储长度低于255的列，转成VARCHAR或者CHAR类型（如果是变长数据二者没区别，如果是定长数据，则使用CHAR类型）；</li>
-<li>如果无法将所有列整合到一个列，可以退而求其次，根据每个列最大长度进行排列组合后拆分成多个子表，尽量是的每个子表的总行长度小于8KB，减少发生off-page的频率；</li>
-<li>上述建议是在data page为默认的16KB前提下，如果修改成8KB或者其他大小，请自行根据上述理论进行测试，找到最合适的值；</li>
-<li>字符型列长度小于255时，无论采用CHAR还是VARCHAR来存储，或者把VARCHAR列长度定义为255，都不会导致实际表空间增大；</li>
-<li>一般在游戏领域会用到比较多的BLOB列类型，游戏界同行可以关注下。</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.debug = 0;&#10;config.numclients = 50;&#10;config.requests = 10000;&#10;config.liveclients = 0;&#10;config.el = aeCreateEventLoop();&#10;aeCreateTimeEvent(config.el,1,showThroughput,NULL,NULL);&#10;config.keepalive = 1;&#10;config.donerequests = 0;&#10;config.datasize = 3;&#10;config.randomkeys = 0;&#10;config.randomkeys_keyspacelen = 0;&#10;config.quiet = 0;&#10;config.loop = 0;&#10;config.idlemode = 0;&#10;config.latency = NULL;&#10;config.clients = listCreate();&#10;config.hostip = &#34;127.0.0.1&#34;;&#10;config.hostport = 6379;&#10;config.hostsocket = NULL;&#10; &#10;parseOptions(argc,argv);&#10;config.latency = zmalloc(sizeof(long long)*config.requests);</span><br></pre></td></tr></table></figure>
+<p>默认性能测试中的客户端数量为50个，并行发送的请求有10000条，你也可以通过redis-benchmark命令行参数进行设置。</p>
 
       
     </div>
@@ -282,16 +547,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/17/mysql_concurrency/">
-                    MySQL_并发控制
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/17/mysql_opti_misc/">
-                    MySQL_查询优化-1/2
+                <a href="/2016/03/20/redis_struct/">
+                    Redis 数据结构
                 </a>
             </div>
         
@@ -303,7 +562,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#InnoDB_u5F15_u64CE_u5B58_u50A8_u683C_u5F0F_u7684_u51E0_u4E2A_u8981_u70B9_uFF1A"><span class="toc-number">1.</span> <span class="toc-text">InnoDB引擎存储格式的几个要点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5EFA_u8BAE"><span class="toc-number">2.</span> <span class="toc-text">建议</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#u5F00_u59CB"><span class="toc-number">1.</span> <span class="toc-text">开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5404_u7C7B_u529F_u80FD_u8BF4_u660E"><span class="toc-number">2.</span> <span class="toc-text">各类功能说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u9644_u5F55"><span class="toc-number">3.</span> <span class="toc-text">附录</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -367,7 +626,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/17/mysql_opti_storage_blob/" data-title="MySQL_存储优化-InnoDB表BLOB列" data-url="http://ffeng.wang/2016/01/17/mysql_opti_storage_blob/"></div>
+    <div class="ds-thread" data-thread-key="2016/03/28/redis_code_list/" data-title="如何阅读 Redis 源码" data-url="http://ffeng.wang/2016/03/28/redis_code_list/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -391,15 +650,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/17/mysql_concurrency/" title="上一篇: MySQL_并发控制">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/17/mysql_opti_misc/" title="下一篇: MySQL_查询优化-1/2">
+            <a href="/2016/03/20/redis_struct/" title="下一篇: Redis 数据结构">
                 <i class="fa fa-angle-right"></i>
             </a>
         
