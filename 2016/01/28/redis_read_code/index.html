@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://ffeng.wang/2016/01/28/redis_read_code/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="较合理的 Redis 源码阅读顺序，希望可以给对 Redis 有兴趣并打算阅读 Redis 源码的朋友带来一点帮助。">
-<meta property="og:updated_time" content="2016-01-31T15:27:38.000Z">
+<meta property="og:updated_time" content="2016-03-30T09:11:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何阅读 Redis 源码">
 <meta name="twitter:description" content="较合理的 Redis 源码阅读顺序，希望可以给对 Redis 有兴趣并打算阅读 Redis 源码的朋友带来一点帮助。">
@@ -243,6 +243,8 @@
       
           
         <p>ref: <a href="http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html" target="_blank" rel="external">http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html</a></p>
+<p>ref: <a href="http://redisdoc.com/" target="_blank" rel="external">http://redisdoc.com/</a></p>
+<p>ref: <a href="http://redisbook.com/" target="_blank" rel="external">http://redisbook.com/</a></p>
 <h2 id="u7B2C1_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7ED3_u6784_u5B9E_u73B0"><a href="#u7B2C1_u6B65_uFF1A_u9605_u8BFB_u6570_u636E_u7ED3_u6784_u5B9E_u73B0" class="headerlink" title="第1步：阅读数据结构实现"></a>第1步：阅读数据结构实现</h2><p>刚开始阅读 Redis 源码的时候，最好从数据结构的相关文件开始读起，因为这些文件和 Redis 中的其他部分耦合最少，并且这些文件所实现的数据结构在大部分算法书上都可以了解到，所以从这些文件开始读是最轻松的、难度也是最低的。</p>
 <p>下表列出了 Redis 源码中， 各个数据结构的实现文件：</p>
 <table>
