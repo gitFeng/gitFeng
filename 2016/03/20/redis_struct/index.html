@@ -11,7 +11,9 @@
 <meta property="og:url" content="http://ffeng.wang/2016/03/20/redis_struct/index.html">
 <meta property="og:site_name" content="gitfeng-blog">
 <meta property="og:description" content="本章主要介绍 redis 的关键数据结构的设计与实现。">
-<meta property="og:updated_time" content="2016-03-31T04:35:09.000Z">
+<meta property="og:image" content="http://www.spongeliu.com/wp-content/uploads/2010/09/1.png">
+<meta property="og:image" content="http://www.spongeliu.com/wp-content/uploads/2010/09/2.png">
+<meta property="og:updated_time" content="2016-04-02T16:36:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis 数据结构">
 <meta name="twitter:description" content="本章主要介绍 redis 的关键数据结构的设计与实现。">
@@ -242,7 +244,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>ref: <a href="http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html" target="_blank" rel="external">http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html</a></p>
+        <p>ref: <a href="http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html" target="_blank" rel="external">http://blog.huangz.me/diary/2014/how-to-read-redis-source-code.html</a><br>ref: <a href="http://redisbook.com/" target="_blank" rel="external">http://redisbook.com/</a></p>
 <h2 id="redis__u5B57_u7B26_u4E32_-_sds"><a href="#redis__u5B57_u7B26_u4E32_-_sds" class="headerlink" title="redis 字符串 - sds"></a>redis 字符串 - sds</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * 类型别名，用于指向 sdshdr 的 buf 属性</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> *sds;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span><br><span class="line"> * 保存字符串对象的结构</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">struct</span> sdshdr &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// buf 中已占用空间的长度</span></span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// buf 中剩余可用空间的长度</span></span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 数据空间</span></span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="u51FD_u6570_-__u83B7_u53D6_u957F_u5EA6"><a href="#u51FD_u6570_-__u83B7_u53D6_u957F_u5EA6" class="headerlink" title="函数 - 获取长度"></a>函数 - 获取长度</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * 返回 sds 实际保存的字符串的长度</span><br><span class="line"> *</span><br><span class="line"> * T = O(1)</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> size_t <span class="title">sdslen</span><span class="params">(<span class="keyword">const</span> sds s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">struct</span> sdshdr *sh = (<span class="keyword">void</span>*)(s-(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> sdshdr)));</span><br><span class="line">    <span class="keyword">return</span> sh-&gt;len;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="u4E0E_C_string__u6BD4_u8F83"><a href="#u4E0E_C_string__u6BD4_u8F83" class="headerlink" title="与 C string 比较"></a>与 C string 比较</h3><table>
@@ -301,7 +303,249 @@
 </ol>
 <p>根据 BGSAVE 命令或 BGREWRITEAOF 命令是否正在执行， 服务器执行扩展操作所需的负载因子并不相同， 这是因为在执行 BGSAVE 命令或 BGREWRITEAOF 命令的过程中， Redis 需要创建当前服务器进程的子进程， 而大多数操作系统都采用写时复制（copy-on-write）技术来优化子进程的使用效率， 所以在子进程存在期间， 服务器会提高执行扩展操作所需的负载因子， 从而尽可能地避免在子进程存在期间进行哈希表扩展操作， 这可以避免不必要的内存写入操作， 最大限度地节约内存。</p>
 <p>负载因子小于0.1时，程序自动对哈希表进行收紧操作。</p>
-<h3 id="u6E10_u8FDB_u5F0F_rehash"><a href="#u6E10_u8FDB_u5F0F_rehash" class="headerlink" title="渐进式 rehash"></a>渐进式 rehash</h3>
+<h3 id="u6E10_u8FDB_u5F0F_rehash"><a href="#u6E10_u8FDB_u5F0F_rehash" class="headerlink" title="渐进式 rehash"></a>渐进式 rehash</h3><p>以下是哈希表渐进式 rehash 的详细步骤：</p>
+<ol>
+<li>为 ht[1] 分配空间， 让字典同时持有 ht[0] 和 ht[1] 两个哈希表。</li>
+<li>在字典中维持一个索引计数器变量 rehashidx ， 并将它的值设置为 0 ， 表示 rehash 工作正式开始。</li>
+<li>在 rehash 进行期间， 每次对字典执行添加、删除、查找或者更新操作时， 程序除了执行指定的操作以外， 还会顺带将 ht[0] 哈希表在 rehashidx 索引上的所有键值对 rehash 到 ht[1] ， 当 rehash 工作完成之后， 程序将 rehashidx 属性的值增一。</li>
+<li>随着字典操作的不断执行， 最终在某个时间点上， ht[0] 的所有键值对都会被 rehash 至 ht[1] ， 这时程序将 rehashidx 属性的值设为 -1 ， 表示 rehash 操作已完成。</li>
+</ol>
+<p>渐进式 rehash 的好处在于它采取分而治之的方式， 将 rehash 键值对所需的计算工作均滩到对字典的每个添加、删除、查找和更新操作上， 从而避免了集中式 rehash 而带来的庞大计算量。</p>
+<h2 id="u8DF3_u8DC3_u8868"><a href="#u8DF3_u8DC3_u8868" class="headerlink" title="跳跃表"></a>跳跃表</h2><p>redis.h/zskiplistNode, redis.h/zskiplist,<br>应用场景：有序集合键，集群节点中用作内部数据结构。</p>
+<p>单链表<br><img src="http://www.spongeliu.com/wp-content/uploads/2010/09/1.png" alt=""><br>跳跃表示意图：<br><img src="http://www.spongeliu.com/wp-content/uploads/2010/09/2.png" alt=""></p>
+<p>图片备份：<br><a href="http://e.hiphotos.baidu.com/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=a4971c320ef3d7ca18fb37249376d56c/cdbf6c81800a19d8808bdf0931fa828ba61e4635.jpg" target="_blank" rel="external">http://e.hiphotos.baidu.com/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=a4971c320ef3d7ca18fb37249376d56c/cdbf6c81800a19d8808bdf0931fa828ba61e4635.jpg</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ZSETs use a specialized version of Skiplists */</span></span><br><span class="line"><span class="comment">/*</span><br><span class="line"> * 跳跃表节点</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zskiplistNode &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 成员对象</span></span><br><span class="line">    robj *obj;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分值</span></span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 后退指针</span></span><br><span class="line">    <span class="keyword">struct</span> zskiplistNode *backward;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 层</span></span><br><span class="line">    <span class="keyword">struct</span> zskiplistLevel &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 前进指针</span></span><br><span class="line">        <span class="keyword">struct</span> zskiplistNode *forward;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 跨度</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> span;</span><br><span class="line"></span><br><span class="line">    &#125; level[];</span><br><span class="line"></span><br><span class="line">&#125; zskiplistNode;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span><br><span class="line"> * 跳跃表</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zskiplist &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表头节点和表尾节点</span></span><br><span class="line">    <span class="keyword">struct</span> zskiplistNode *header, *tail;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表中节点的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> length;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表中层数最大的节点的层数</span></span><br><span class="line">    <span class="keyword">int</span> level;</span><br><span class="line"></span><br><span class="line">&#125; zskiplist;</span><br></pre></td></tr></table></figure>
+<p>生成节点 level 的函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Returns a random level for the new skiplist node we are going to create.</span><br><span class="line"> *</span><br><span class="line"> * 返回一个随机值，用作新跳跃表节点的层数。</span><br><span class="line"> *</span><br><span class="line"> * The return value of this function is between 1 and ZSKIPLIST_MAXLEVEL</span><br><span class="line"> * (both inclusive), with a powerlaw-alike distribution where higher</span><br><span class="line"> * levels are less likely to be returned. </span><br><span class="line"> *</span><br><span class="line"> * 返回值介乎 1 和 ZSKIPLIST_MAXLEVEL 之间（包含 ZSKIPLIST_MAXLEVEL），</span><br><span class="line"> * 根据随机算法所使用的幂次定律，越大的值生成的几率越小。</span><br><span class="line"> *</span><br><span class="line"> * T = O(N)</span><br><span class="line"> *</span><br><span class="line"> * redis.h:303:#define ZSKIPLIST_MAXLEVEL 32</span><br><span class="line"> * redis.h:304:#define ZSKIPLIST_P 0.25</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">zslRandomLevel</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> ((random()&amp;<span class="number">0xFFFF</span>) &lt; (ZSKIPLIST_P * <span class="number">0xFFFF</span>))</span><br><span class="line">        level += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (level&lt;ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u6574_u6570_u96C6_u5408"><a href="#u6574_u6570_u96C6_u5408" class="headerlink" title="整数集合"></a>整数集合</h2><p>集合键的底层实现之一，当集合键只包含整数值元素，且元素个数不多时，Redis 会使用整数集合作为集合键的底层实现。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * intset 的编码方式</span><br><span class="line"> */</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INTSET_ENC_INT16 (sizeof(int16_t))</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INTSET_ENC_INT32 (sizeof(int32_t))</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> INTSET_ENC_INT64 (sizeof(int64_t))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> intset &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 编码方式</span></span><br><span class="line">    <span class="keyword">uint32_t</span> encoding;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 集合包含的元素数量</span></span><br><span class="line">    <span class="keyword">uint32_t</span> length;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 保存元素的数组</span></span><br><span class="line">    <span class="keyword">int8_t</span> contents[];</span><br><span class="line"></span><br><span class="line">&#125; intset;</span><br></pre></td></tr></table></figure>
+<h2 id="u538B_u7F29_u5217_u8868"><a href="#u538B_u7F29_u5217_u8868" class="headerlink" title="压缩列表"></a>压缩列表</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span><br><span class="line">* 以下是 ziplist 的一般布局：</span><br><span class="line">*</span><br><span class="line">* &lt;zlbytes&gt;&lt;zltail&gt;&lt;zllen&gt;&lt;entry&gt;&lt;entry&gt;&lt;zlend&gt;</span><br><span class="line">*/</span></span><br></pre></td></tr></table></figure>
+<p>压缩列表各个组成部分的详细说明</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>长度</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>zlbytes</td>
+<td>uint32_t</td>
+<td>4字节</td>
+<td>记录整个压缩列表占用的内存字节数：在对压缩列表进行内存重分配， 或者计算 zlend 的位置时使用。</td>
+</tr>
+<tr>
+<td>zltail</td>
+<td>uint32_t</td>
+<td>4字节</td>
+<td>记录压缩列表表尾节点距离压缩列表的起始地址有多少字节： 通过这个偏移量，程序无须遍历整个压缩列表就可以确定表尾节点的地址。</td>
+</tr>
+<tr>
+<td>zllen</td>
+<td>uint16_t</td>
+<td>2字节</td>
+<td>记录了压缩列表包含的节点数量： 当这个属性的值小于 UINT16_MAX （65535）时， 这个属性的值就是压缩列表包含节点的数量； 当这个值等于 UINT16_MAX 时， 节点的真实数量需要遍历整个压缩列表才能计算得出。</td>
+</tr>
+<tr>
+<td>entryX</td>
+<td>列表节点</td>
+<td>不定</td>
+<td>压缩列表包含的各个节点，节点的长度由节点保存的内容决定。</td>
+</tr>
+<tr>
+<td>zlend</td>
+<td>uint8_t</td>
+<td>1字节</td>
+<td>特殊值 0xFF （十进制 255 ），用于标记压缩列表的末端。</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/*</span><br><span class="line"> * 保存 ziplist 节点信息的结构</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zlentry &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// prevrawlen ：前置节点的长度</span></span><br><span class="line">    <span class="comment">// prevrawlensize ：编码 prevrawlen 所需的字节大小</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> prevrawlensize, prevrawlen;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// len ：当前节点值的长度</span></span><br><span class="line">    <span class="comment">// lensize ：编码 len 所需的字节大小</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> lensize, len;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当前节点 header 的大小</span></span><br><span class="line">    <span class="comment">// 等于 prevrawlensize + lensize</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> headersize;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当前节点值所使用的编码类型</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> encoding;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指向当前节点的指针</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *p;</span><br><span class="line"></span><br><span class="line">&#125; zlentry;</span><br></pre></td></tr></table></figure>
+<h2 id="u6709_u5E8F_u96C6_u5408"><a href="#u6709_u5E8F_u96C6_u5408" class="headerlink" title="有序集合"></a>有序集合</h2><p>redis.h/zset</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * 有序集合</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zset &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 字典，键为成员，值为分值</span></span><br><span class="line">    <span class="comment">// 用于支持 O(1) 复杂度的按成员取分值操作</span></span><br><span class="line">    dict *dict;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 跳跃表，按分值排序成员</span></span><br><span class="line">    <span class="comment">// 用于支持平均复杂度为 O(log N) 的按分值定位成员操作</span></span><br><span class="line">    <span class="comment">// 以及范围操作</span></span><br><span class="line">    zskiplist *zsl;</span><br><span class="line"></span><br><span class="line">&#125; zset;</span><br></pre></td></tr></table></figure>
+<h2 id="u5BF9_u8C61"><a href="#u5BF9_u8C61" class="headerlink" title="对象"></a>对象</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> redisObject &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 类型</span></span><br><span class="line">    <span class="keyword">unsigned</span> type:<span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 编码</span></span><br><span class="line">    <span class="keyword">unsigned</span> encoding:<span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指向底层实现数据结构的指针</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">&#125; robj;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>对象 type 属性的值</th>
+<th>TYPE 命令的输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符串对象</td>
+<td>REDIS_STRING</td>
+<td>“string”</td>
+</tr>
+<tr>
+<td>列表对象</td>
+<td>REDIS_LIST</td>
+<td>“list”</td>
+</tr>
+<tr>
+<td>哈希对象</td>
+<td>REDIS_HASH</td>
+<td>“hash”</td>
+</tr>
+<tr>
+<td>集合对象</td>
+<td>REDIS_SET</td>
+<td>“set”</td>
+</tr>
+<tr>
+<td>有序集合对象</td>
+<td>REDIS_ZSET</td>
+<td>“zset”</td>
+</tr>
+</tbody>
+</table>
+<p>对象的编码</p>
+<table>
+<thead>
+<tr>
+<th>对象所使用的底层数据结构</th>
+<th>编码常量</th>
+<th>OBJECT ENCODING 命令输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>整数</td>
+<td>REDIS_ENCODING_INT</td>
+<td>“int”</td>
+</tr>
+<tr>
+<td>embstr 编码的简单动态字符串（SDS）</td>
+<td>REDIS_ENCODING_EMBSTR</td>
+<td>“embstr”</td>
+</tr>
+<tr>
+<td>简单动态字符串</td>
+<td>REDIS_ENCODING_RAW</td>
+<td>“raw”</td>
+</tr>
+<tr>
+<td>字典</td>
+<td>REDIS_ENCODING_HT</td>
+<td>“hashtable”</td>
+</tr>
+<tr>
+<td>双端链表</td>
+<td>REDIS_ENCODING_LINKEDLIST</td>
+<td>“linkedlist”</td>
+</tr>
+<tr>
+<td>压缩列表</td>
+<td>REDIS_ENCODING_ZIPLIST</td>
+<td>“ziplist”</td>
+</tr>
+<tr>
+<td>整数集合</td>
+<td>REDIS_ENCODING_INTSET</td>
+<td>“intset”</td>
+</tr>
+<tr>
+<td>跳跃表和字典</td>
+<td>REDIS_ENCODING_SKIPLIST</td>
+<td>“skiplist”</td>
+</tr>
+</tbody>
+</table>
+<p>不同类型和编码的对象</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>编码</th>
+<th>对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REDIS_STRING</td>
+<td>REDIS_ENCODING_INT</td>
+<td>使用整数值实现的字符串对象。</td>
+</tr>
+<tr>
+<td>REDIS_STRING</td>
+<td>REDIS_ENCODING_EMBSTR</td>
+<td>使用 embstr 编码的简单动态字符串实现的字符串对象。</td>
+</tr>
+<tr>
+<td>REDIS_STRING</td>
+<td>REDIS_ENCODING_RAW</td>
+<td>使用简单动态字符串实现的字符串对象。</td>
+</tr>
+<tr>
+<td>REDIS_LIST</td>
+<td>REDIS_ENCODING_ZIPLIST</td>
+<td>使用压缩列表实现的列表对象。</td>
+</tr>
+<tr>
+<td>REDIS_LIST</td>
+<td>REDIS_ENCODING_LINKEDLIST</td>
+<td>使用双端链表实现的列表对象。</td>
+</tr>
+<tr>
+<td>REDIS_HASH</td>
+<td>REDIS_ENCODING_ZIPLIST</td>
+<td>使用压缩列表实现的哈希对象。</td>
+</tr>
+<tr>
+<td>REDIS_HASH</td>
+<td>REDIS_ENCODING_HT</td>
+<td>使用字典实现的哈希对象。</td>
+</tr>
+<tr>
+<td>REDIS_SET</td>
+<td>REDIS_ENCODING_INTSET</td>
+<td>使用整数集合实现的集合对象。</td>
+</tr>
+<tr>
+<td>REDIS_SET</td>
+<td>REDIS_ENCODING_HT</td>
+<td>使用字典实现的集合对象。</td>
+</tr>
+<tr>
+<td>REDIS_ZSET</td>
+<td>REDIS_ENCODING_ZIPLIST</td>
+<td>使用压缩列表实现的有序集合对象。</td>
+</tr>
+<tr>
+<td>REDIS_ZSET</td>
+<td>REDIS_ENCODING_SKIPLIST</td>
+<td>使用跳跃表和字典实现的有序集合对象。</td>
+</tr>
+</tbody>
+</table>
+<p>不同编码的使用场景：</p>
+<ul>
+<li>因为压缩列表比双端链表更节约内存，并且在元素数量较少时， 在内存中以连续块方式保存的压缩列表比起双端链表可以更快被载入到缓存中；</li>
+<li>随着列表对象包含的元素越来越多，使用压缩列表来保存元素的优势逐渐消失时，对象就会将底层实现从压缩列表转向功能更强、也更适合保存大量元素的双端链表上面；</li>
+</ul>
+<h3 id="u5217_u8868_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><a href="#u5217_u8868_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362" class="headerlink" title="列表对象编码转换"></a>列表对象编码转换</h3><p>列表类结构的实现：压缩列表和双端列表的选择；<br>当列表对象可以同时满足以下两个条件时，列表对象使用 ziplist 编码：</p>
+<ul>
+<li>列表对象保存的所有字符串元素的长度都小于 64 字节；</li>
+<li>列表对象保存的元素数量小于 512 个；</li>
+</ul>
+<p>不能满足这两个条件的列表对象需要使用 linkedlist 编码。</p>
+<h3 id="u54C8_u5E0C_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><a href="#u54C8_u5E0C_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362" class="headerlink" title="哈希对象编码转换"></a>哈希对象编码转换</h3><p>当哈希对象可以同时满足以下两个条件时， 哈希对象使用 ziplist 编码：</p>
+<ul>
+<li>哈希对象保存的所有键值对的键和值的字符串长度都小于 64 字节；</li>
+<li>哈希对象保存的键值对数量小于 512 个；</li>
+</ul>
+<p>不能满足这两个条件的哈希对象需要使用 hashtable 编码。</p>
+<h3 id="u96C6_u5408_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><a href="#u96C6_u5408_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362" class="headerlink" title="集合对象编码转换"></a>集合对象编码转换</h3><p>当集合对象可以同时满足以下两个条件时， 对象使用 intset 编码：</p>
+<ul>
+<li>集合对象保存的所有元素都是整数值；</li>
+<li>集合对象保存的元素数量不超过 512 个；</li>
+</ul>
+<p>不能满足这两个条件的集合对象需要使用 hashtable 编码。</p>
+
       
     </div>
     
@@ -339,7 +583,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u5B57_u7B26_u4E32_-_sds"><span class="toc-number">1.</span> <span class="toc-text">redis 字符串 - sds</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u51FD_u6570_-__u83B7_u53D6_u957F_u5EA6"><span class="toc-number">1.1.</span> <span class="toc-text">函数 - 获取长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E0E_C_string__u6BD4_u8F83"><span class="toc-number">1.2.</span> <span class="toc-text">与 C string 比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u94FE_u8868_-_adlist"><span class="toc-number">2.</span> <span class="toc-text">redis 链表 - adlist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u54C8_u5E0C_-_dict"><span class="toc-number">3.</span> <span class="toc-text">redis 哈希 - dict</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u54C8_u5E0C_u7B97_u6CD5"><span class="toc-number">3.1.</span> <span class="toc-text">哈希算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u54C8_u5E0C_u51B2_u7A81_u89E3_u51B3"><span class="toc-number">3.2.</span> <span class="toc-text">哈希冲突解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rehash"><span class="toc-number">3.3.</span> <span class="toc-text">rehash</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u6267_u884C_u6D41_u7A0B"><span class="toc-number">3.3.1.</span> <span class="toc-text">执行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u89E6_u53D1_u6761_u4EF6"><span class="toc-number">3.3.2.</span> <span class="toc-text">触发条件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u6E10_u8FDB_u5F0F_rehash"><span class="toc-number">3.4.</span> <span class="toc-text">渐进式 rehash</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u5B57_u7B26_u4E32_-_sds"><span class="toc-number">1.</span> <span class="toc-text">redis 字符串 - sds</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u51FD_u6570_-__u83B7_u53D6_u957F_u5EA6"><span class="toc-number">1.1.</span> <span class="toc-text">函数 - 获取长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u4E0E_C_string__u6BD4_u8F83"><span class="toc-number">1.2.</span> <span class="toc-text">与 C string 比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u94FE_u8868_-_adlist"><span class="toc-number">2.</span> <span class="toc-text">redis 链表 - adlist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis__u54C8_u5E0C_-_dict"><span class="toc-number">3.</span> <span class="toc-text">redis 哈希 - dict</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u54C8_u5E0C_u7B97_u6CD5"><span class="toc-number">3.1.</span> <span class="toc-text">哈希算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u54C8_u5E0C_u51B2_u7A81_u89E3_u51B3"><span class="toc-number">3.2.</span> <span class="toc-text">哈希冲突解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rehash"><span class="toc-number">3.3.</span> <span class="toc-text">rehash</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u6267_u884C_u6D41_u7A0B"><span class="toc-number">3.3.1.</span> <span class="toc-text">执行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#u89E6_u53D1_u6761_u4EF6"><span class="toc-number">3.3.2.</span> <span class="toc-text">触发条件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u6E10_u8FDB_u5F0F_rehash"><span class="toc-number">3.4.</span> <span class="toc-text">渐进式 rehash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u8DF3_u8DC3_u8868"><span class="toc-number">4.</span> <span class="toc-text">跳跃表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6574_u6570_u96C6_u5408"><span class="toc-number">5.</span> <span class="toc-text">整数集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u538B_u7F29_u5217_u8868"><span class="toc-number">6.</span> <span class="toc-text">压缩列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6709_u5E8F_u96C6_u5408"><span class="toc-number">7.</span> <span class="toc-text">有序集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5BF9_u8C61"><span class="toc-number">8.</span> <span class="toc-text">对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#u5217_u8868_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><span class="toc-number">8.1.</span> <span class="toc-text">列表对象编码转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u54C8_u5E0C_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><span class="toc-number">8.2.</span> <span class="toc-text">哈希对象编码转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u96C6_u5408_u5BF9_u8C61_u7F16_u7801_u8F6C_u6362"><span class="toc-number">8.3.</span> <span class="toc-text">集合对象编码转换</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
