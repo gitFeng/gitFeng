@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>sublime,vim 配置 | gitfeng-blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="sublime,vim 配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sublime,vim 配置">
+<meta property="og:url" content="http://ffeng.wang/2016/04/30/tools_editor/index.html">
+<meta property="og:site_name" content="gitfeng-blog">
+<meta property="og:description" content="sublime,vim 配置">
+<meta property="og:updated_time" content="2016-04-30T07:56:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sublime,vim 配置">
+<meta name="twitter:description" content="sublime,vim 配置">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">gitfeng</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔">随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/chrome/" style="font-size: 10px;">chrome</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/科学/" style="font-size: 10px;">科学</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">来自 github 的 blog</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">gitfeng</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">gitfeng</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔">随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-tools_editor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/30/tools_editor/" class="article-date">
+      <time datetime="2016-04-30T07:31:00.000Z" itemprop="datePublished">2016-04-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      sublime,vim 配置
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="submlime"><a href="#submlime" class="headerlink" title="submlime"></a>submlime</h2><p>ref: <a href="https://segmentfault.com/a/1190000002596724" target="_blank" rel="external">https://segmentfault.com/a/1190000002596724</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#10; &#34;bold_folder_labels&#34;: true,&#10; &#34;caret_extra_width&#34;: 1,&#10; &#34;caret_style&#34;: &#34;phase&#34;,&#10; &#34;close_windows_when_empty&#34;: false,&#10; &#34;color_scheme&#34;: &#34;Packages/Color Scheme - Default/Zenburnesque.tmTheme&#34;,&#10; &#34;copy_with_empty_selection&#34;: false,&#10; &#34;drag_text&#34;: false,&#10; &#34;draw_white_space&#34;: &#34;all&#34;,&#10; &#34;findreplace_small&#34;: true,&#10; &#34;font_face&#34;: &#34;&#24494;&#36719;&#38597;&#40657;&#34;,&#10; &#34;font_size&#34;: 12,&#10; &#34;highlight_line&#34;: true,&#10; &#34;ignored_packages&#34;:&#10; [&#10;  &#34;Vintage&#34;&#10; ],&#10; &#34;match_brackets_content&#34;: false,&#10; &#34;match_selection&#34;: false,&#10; &#34;match_tags&#34;: false,&#10; &#34;open_files_in_new_window&#34;: false,&#10; &#34;preview_on_click&#34;: false,&#10; &#34;rulers&#34;:&#10; [&#10;  80&#10; ],&#10; &#34;shift_tab_unindent&#34;: true,&#10; &#34;show_encoding&#34;: true,&#10; &#34;show_full_path&#34;: true,&#10; &#34;tab_size&#34;: 4,&#10; &#34;tabs_small&#34;: true,&#10; &#34;theme&#34;: &#34;Soda Dark.sublime-theme&#34;,&#10; &#34;translate_tabs_to_spaces&#34;: true,&#10; &#34;trim_trailing_white_space_on_save&#34;: true,&#10; &#34;word_wrap&#34;: false&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>ref:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; by Amix - http://amix.dk/&#10;&#34;&#10;&#34; Maintainer: redguardtoo &#60;chb_sh@hotmail.com&#62;, Amir Salihefendic &#60;amix3k at gmail.com&#62;&#10;&#34; Version: 2.1&#10;&#34; Last Change: 21/03/08 23:00:01&#10;&#34; fix some performance issue and syntax bug&#10;&#34; Last Change: 12/08/06 13:39:28&#10;&#34; Fixed (win32 compatible) by: redguardtoo &#60;chb_sh at gmail.com&#62;&#10;&#34; This vimrc file is tested on platforms like win32,linux, cygwin,mingw&#10;&#34; and vim7.0, vim6.4, vim6.1, vim5.8.9 by redguardtoo&#10;&#34;&#10;&#34;&#10;&#34; Tip:&#10;&#34; If you find anything that you can&#39;t understand than do this:&#10;&#34; help keyword OR helpgrep keyword&#10;&#34; Example:&#10;&#34; Go into command-line mode and type helpgrep nocompatible, ie.&#10;&#34; :helpgrep nocompatible&#10;&#34; then press &#60;leader&#62;c to see the results, or :botright cw&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; User configuration&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; turn off nice effect on status bar title&#10;let performance_mode=1&#10;let use_plugins_i_donot_use=0&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; General&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Get out of VI&#39;s compatible mode..&#10;&#10;set nocompatible&#10;&#10;function! MySys()&#10;    if has(&#34;win32&#34;)&#10;        return &#34;win32&#34;&#10;    elseif has(&#34;unix&#34;)&#10;        return &#34;unix&#34;&#10;    else&#10;        return &#34;mac&#34;&#10;    endif&#10;endfunction&#10;&#34;Set shell to be bash&#10;if MySys() == &#34;unix&#34; || MySys() == &#34;mac&#34;&#10;    set shell=bash&#10;else&#10;    &#34;I have to run win32 python without cygwin&#10;    &#34;set shell=E:cygwininsh&#10;endif&#10;&#10;&#34;Sets how many lines of history VIM har to remember&#10;set history=400&#10;&#10;&#34;Enable filetype plugin&#10;filetype on&#10;if has(&#34;eval&#34;) &#38;&#38; v:version&#62;=600&#10;    filetype plugin on&#10;    filetype indent on&#10;endif&#10;&#10;&#34;Set to auto read when a file is changed from the outside&#10;if exists(&#34;&#38;autoread&#34;)&#10;    set autoread&#10;endif&#10;&#10;&#34;Have the mouse enabled all the time:&#10;&#34;if exists(&#34;&#38;mouse&#34;)&#10;&#34;    set mouse=a&#10;&#34;endif&#10;&#10;&#34;Set mapleader&#10;let mapleader = &#34;,&#34;&#10;let g:mapleader = &#34;,&#34;&#10;&#10;&#34;Fast saving&#10;nmap &#60;leader&#62;x :xa!&#60;cr&#62;&#10;nmap &#60;leader&#62;w :w!&#60;cr&#62;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Colors and Font&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Enable syntax hl&#10;if MySys()==&#34;unix&#34;&#10;    if v:version&#60;600&#10;        if filereadable(expand(&#34;$VIM/syntax/syntax.vim&#34;))&#10;            syntax on&#10;        endif&#10;    else&#10;        syntax on&#10;    endif&#10;else&#10;    syntax on&#10;endif&#10;&#10;&#34;internationalization&#10;&#34;I only work in Win2k Chinese version&#10;if has(&#34;multi_byte&#34;)&#10;    &#34;set bomb&#10;    set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,latin1&#10;    &#34; CJK environment detection and corresponding setting&#10;    if v:lang =~ &#34;^zh_CN&#34;&#10;        &#34; Use cp936 to support GBK, euc-cn == gb2312&#10;        set encoding=cp936&#10;        set termencoding=cp936&#10;        set fileencoding=cp936&#10;    elseif v:lang =~ &#34;^zh_TW&#34;&#10;        &#34; cp950, big5 or euc-tw&#10;        &#34; Are they equal to each other?&#10;        set encoding=big5&#10;        set termencoding=big5&#10;        set fileencoding=big5&#10;    elseif v:lang =~ &#34;^ko&#34;&#10;        &#34; Copied from someone&#39;s dotfile, untested&#10;        set encoding=euc-kr&#10;        set termencoding=euc-kr&#10;        set fileencoding=euc-kr&#10;    elseif v:lang =~ &#34;^ja_JP&#34;&#10;        &#34; Copied from someone&#39;s dotfile, untested&#10;        set encoding=euc-jp&#10;        set termencoding=euc-jp&#10;        set fileencoding=euc-jp&#10;    endif&#10;    &#34; Detect UTF-8 locale, and replace CJK setting if needed&#10;    if v:lang =~ &#34;utf8$&#34; || v:lang =~ &#34;UTF-8$&#34;&#10;        set encoding=utf-8&#10;        set termencoding=utf-8&#10;        set fileencoding=utf-8&#10;    endif&#10;endif&#10;&#10;&#34;if you use vim in tty,&#10;&#34;&#39;uxterm -cjk&#39; or putty with option &#39;Treat CJK ambiguous characters as wide&#39; on&#10;if exists(&#34;&#38;ambiwidth&#34;)&#10;    set ambiwidth=double&#10;endif&#10;&#10;if has(&#34;gui_running&#34;)&#10;    set guioptions-=m&#10;    set guioptions-=T&#10;    set guioptions-=l&#10;    set guioptions-=L&#10;    set guioptions-=r&#10;    set guioptions-=R&#10;&#10;    if MySys()==&#34;win32&#34;&#10;        &#34;start gvim maximized&#10;        if has(&#34;autocmd&#34;)&#10;            au GUIEnter * simalt ~x&#10;        endif&#10;    endif&#10;    &#34;let psc_style=&#39;cool&#39;&#10;    if v:version &#62; 601&#10;        &#34;colorscheme ps_color&#10;        &#34;colorscheme default&#10;        colorscheme elflord&#10;    endif&#10;else&#10;    if v:version &#62; 601&#10;        &#34;set background=dark&#10;        &#34;colorscheme default&#10;        colorscheme elflord&#10;    endif&#10;endif&#10;&#10;&#34;Some nice mapping to switch syntax (useful if one mixes different languages in one file)&#10;map &#60;leader&#62;1 :set syntax=cheetah&#60;cr&#62;&#10;map &#60;leader&#62;2 :set syntax=xhtml&#60;cr&#62;&#10;map &#60;leader&#62;3 :set syntax=python&#60;cr&#62;&#10;map &#60;leader&#62;4 :set ft=javascript&#60;cr&#62;&#10;map &#60;leader&#62;$ :syntax sync fromstart&#60;cr&#62;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Fileformat&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Favorite filetype&#10;set ffs=unix,dos,mac&#10;&#10;nmap &#60;leader&#62;fd :se ff=dos&#60;cr&#62;&#10;nmap &#60;leader&#62;fu :se ff=unix&#60;cr&#62;&#10;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; VIM userinterface&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Set 7 lines to the curors - when moving vertical..&#10;set so=7&#10;&#10;&#34;Turn on WiLd menu&#10;set wildmenu&#10;&#10;&#34;Always show current position&#10;set ruler&#10;&#10;&#34;The commandbar is 2 high&#10;set cmdheight=2&#10;&#10;&#34;Show line number&#10;set nu&#10;&#10;&#34;Do not redraw, when running macros.. lazyredraw&#10;set lz&#10;&#10;&#34;Change buffer - without saving&#10;set hid&#10;&#10;&#34;Set backspace&#10;set backspace=eol,start,indent&#10;&#10;&#34;Bbackspace and cursor keys wrap to&#10;set whichwrap+=&#60;,&#62;,h,l&#10;&#10;&#34;Ignore case when searching&#10;&#34;set ignorecase&#10;set incsearch&#10;&#10;&#34;Set magic on&#10;set magic&#10;&#10;&#34;No sound on errors.&#10;set noerrorbell&#10;set novisualbell&#10;set t_vb=&#10;&#10;&#34;show matching bracet&#10;set showmatch&#10;&#10;&#34;How many tenths of a second to blink&#10;set mat=8&#10;&#10;&#34;Highlight search thing&#10;set hlsearch&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Statusline&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Format the statusline&#10;&#34; Nice statusbar&#10;function! CurDir()&#10;    let curdir = substitute(getcwd(), $HOME, &#34;~&#34;, &#34;g&#34;)&#10;    return curdir&#10;endfunction&#10;&#10;&#10;if performance_mode&#10;    set laststatus=2&#10;    &#34;&#9;set statusline=[%n]\ %m%f%r%h\ \|\ \ pwd:\ %&#123;CurDir()&#125;\ \ \|%=\|\ %l,%c\ %L\ %p%%\ \|\ ascii=%b,hex=%b%&#123;((&#38;fenc==\&#34;\&#34;)?\&#34;\&#34;:\&#34;\ \|\ \&#34;.&#38;fenc)&#125;\ \|\ %Y\@\ %&#123;&#38;ff&#125;\&#10;    set statusline=[%n]\ %m%f%r%h\ \|\ \ pwd:\ %&#123;CurDir()&#125;\ \ \|%=\|\ %l,%c\ %L\%&#123;((&#38;fenc==\&#34;\&#34;)?\&#34;\&#34;:\&#34;\ \|\ \&#34;.&#38;fenc)&#125;\ \|\ %Y\@\ %&#123;&#38;ff&#125;\&#10;else&#10;    set laststatus=2&#10;    set statusline=&#10;    set statusline+=%2*%-3.3n%0*/ &#34; buffer number&#10;    set statusline+=%f/ &#34; file name&#10;    set statusline+=%h%1*%m%r%w%0* &#34; flag&#10;    set statusline+=[&#10;    if v:version &#62;= 600&#10;        set statusline+=%&#123;strlen(&#38;ft)?&#38;ft:&#39;none&#39;&#125;, &#34; filetype&#10;        set statusline+=%&#123;&#38;encoding&#125;, &#34; encoding&#10;    endif&#10;    set statusline+=%&#123;&#38;fileformat&#125;] &#34; file format&#10;    if filereadable(expand(&#34;$VIM/vimfiles/plugin/vimbuddy.vim&#34;))&#10;        set statusline+=/ %&#123;VimBuddy()&#125; &#34; vim buddy&#10;    endif&#10;    set statusline+=%= &#34; right align&#10;    set statusline+=%2*0x%-8B/ &#34; current char&#10;    set statusline+=%-14.(%l,%c%V%)/ %&#60;%p%% &#34; offset&#10;&#10;    &#34; special statusbar for special window&#10;    if has(&#34;autocmd&#34;)&#10;        au FileType qf&#10;        / if &#38;buftype == &#34;quickfix&#34; |&#10;        / setlocal statusline=%2*%-3.3n%0* |&#10;        / setlocal statusline+=/ /[Compiler/ Messages/] |&#10;        / setlocal statusline+=%=%2*/ %-P%% |&#10;        / endif&#10;&#10;        fun! FixMiniBufExplorerTitle()&#10;            if &#34;-MiniBufExplorer-&#34; == bufname(&#34;%&#34;)&#10;                setlocal statusline=%2*%-3.3n%0*&#10;                setlocal statusline+=/[Buffers/]&#10;                setlocal statusline+=%=%2*/ %&#60;%P&#10;            endif&#10;        endfun&#10;&#10;        if v:version&#62;=600&#10;            au BufWinEnter *&#10;            / let oldwinnr=winnr() |&#10;            / windo call FixMiniBufExplorerTitle() |&#10;            / exec oldwinnr . &#34; wincmd w&#34;&#10;        endif&#10;    endif&#10;&#10;    &#34; Nice window title&#10;    &#34; if has(&#39;title&#39;) &#38;&#38; (has(&#39;gui_running&#39;) || &#38;title)&#10;    &#34;    set titlestring=&#10;    &#34;    set titlestring+=%f/ &#34; file name&#10;    &#34;    set titlestring+=%h%m%r%w &#34; flag&#10;    &#34;    set titlestring+=/ -/ %&#123;v:progname&#125; &#34; program name&#10;    &#34; endif&#10;endif&#10;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Moving around and tab&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Map space to / and c-space to ?&#10;map &#60;space&#62; /&#10;&#10;&#34;Smart way to move btw. window&#10;map &#60;C-j&#62; &#60;C-W&#62;j&#10;map &#60;C-k&#62; &#60;C-W&#62;k&#10;map &#60;C-h&#62; &#60;C-W&#62;h&#10;map &#60;C-l&#62; &#60;C-W&#62;l&#10;&#10;&#10;&#34;Tab configuration&#10;map &#60;leader&#62;tn :tabnew %&#60;cr&#62;&#10;map &#60;leader&#62;tc :tabclose&#60;cr&#62;&#10;map &#60;leader&#62;tm :tabmove&#10;&#10;if v:version&#62;=700&#10;    set switchbuf=usetab&#10;endif&#10;&#10;if exists(&#34;&#38;showtabline&#34;)&#10;    set stal=2&#10;endif&#10;&#10;&#34;Moving fast to front, back and 2 sides ;)&#10;imap &#60;m-$&#62; &#60;esc&#62;$a&#10;imap &#60;m-0&#62; &#60;esc&#62;0i&#10;imap &#60;D-$&#62; &#60;esc&#62;$a&#10;imap &#60;D-0&#62; &#60;esc&#62;0i&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; General Autocommand&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Switch to current dir&#10;map &#60;leader&#62;cd :cd %:p:h&#60;cr&#62;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Parenthesis/bracket expanding&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;vnoremap $1 &#60;esc&#62;`&#62;a)&#60;esc&#62;`&#60;i(&#60;esc&#62;&#10;&#34;)&#10;vnoremap $2 &#60;esc&#62;`&#62;a]&#60;esc&#62;`&#60;i[&#60;esc&#62;&#10;vnoremap $3 &#60;esc&#62;`&#62;a&#125;&#60;esc&#62;`&#60;i&#123;&#60;esc&#62;&#10;vnoremap $$ &#60;esc&#62;`&#62;a&#34;&#60;esc&#62;`&#60;i&#34;&#60;esc&#62;&#10;vnoremap $q &#60;esc&#62;`&#62;a&#39;&#60;esc&#62;`&#60;i&#39;&#60;esc&#62;&#10;vnoremap $w &#60;esc&#62;`&#62;a&#34;&#60;esc&#62;`&#60;i&#34;&#60;esc&#62;&#10;&#10;&#34;Map auto complete of (, &#34;, &#39;, [&#10;&#34;http://www.vim.org/tips/tip.php?tip_id=153&#10;&#34;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; General Abbrev&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Comment for C like language&#10;if has(&#34;autocmd&#34;)&#10;    au BufNewFile,BufRead *.js,*.htc,*.c,*.tmpl,*.css ino $c /**&#60;cr&#62; **/&#60;esc&#62;O&#10;endif&#10;&#10;&#34;My information&#10;ia xdate &#60;c-r&#62;=strftime(&#34;%d/%m/%y %H:%M:%S&#34;)&#60;cr&#62;&#10;&#34;iab xname Amir Salihefendic&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Editing mappings etc.&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Remap VIM 0&#10;&#34;map 0 ^&#10;&#10;&#34;Move a line of text using control&#10;nmap &#60;M-j&#62; mz:m+&#60;cr&#62;`z&#10;nmap &#60;M-k&#62; mz:m-2&#60;cr&#62;`z&#10;vmap &#60;M-j&#62; :m&#39;&#62;+&#60;cr&#62;`&#60;my`&#62;mzgv`yo`z&#10;vmap &#60;M-k&#62; :m&#39;&#60;-2&#60;cr&#62;`&#62;my`&#60;mzgv`yo`z&#10;&#10;if MySys() == &#34;mac&#34;&#10;    nmap &#60;D-j&#62; &#60;M-j&#62;&#10;    nmap &#60;D-k&#62; &#60;M-k&#62;&#10;    vmap &#60;D-j&#62; &#60;M-j&#62;&#10;    vmap &#60;D-k&#62; &#60;M-k&#62;&#10;endif&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Command-line config&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;func! Cwd()&#10;    let cwd = getcwd()&#10;    return &#34;e &#34; . cwd&#10;endfunc&#10;&#10;func! DeleteTillSlash()&#10;    let g:cmd = getcmdline()&#10;    if MySys() == &#34;unix&#34; || MySys() == &#34;mac&#34;&#10;        let g:cmd_edited = substitute(g:cmd, &#34;(.*[/]).*&#34;, &#34;&#1;&#34;, &#34;&#34;)&#10;    else&#10;        let g:cmd_edited = substitute(g:cmd, &#34;(.*[/]).*&#34;, &#34;&#1;&#34;, &#34;&#34;)&#10;    endif&#10;    if g:cmd == g:cmd_edited&#10;        if MySys() == &#34;unix&#34; || MySys() == &#34;mac&#34;&#10;            let g:cmd_edited = substitute(g:cmd, &#34;(.*[/]).*/&#34;, &#34;&#1;&#34;, &#34;&#34;)&#10;        else&#10;            let g:cmd_edited = substitute(g:cmd, &#34;(.*[/]).*[/]&#34;, &#34;&#1;&#34;, &#34;&#34;)&#10;        endif&#10;    endif&#10;    return g:cmd_edited&#10;endfunc&#10;&#10;func! CurrentFileDir(cmd)&#10;    return a:cmd . &#34; &#34; . expand(&#34;%:p:h&#34;) . &#34;/&#34;&#10;endfunc&#10;&#10;&#34;cno $q &#60;C-&#62;eDeleteTillSlash()&#60;cr&#62;&#10;&#34;cno $c e &#60;C-&#62;eCurrentFileDir(&#34;e&#34;)&#60;cr&#62;&#10;&#34;cno $tc &#60;C-&#62;eCurrentFileDir(&#34;tabnew&#34;)&#60;cr&#62;&#10;cno $th tabnew ~/&#10;cno $td tabnew ~/Desktop/&#10;&#10;&#34;Bash like&#10;cno &#60;C-A&#62; &#60;Home&#62;&#10;cno &#60;C-E&#62; &#60;End&#62;&#10;cno &#60;C-K&#62; &#60;C-U&#62;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34; =&#62; Buffer realted&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34;Fast open a buffer by search for a name&#10;&#34;&#34;map &#60;c-q&#62; :sb&#10;&#34;&#10;&#34;&#34;Open a dummy buffer for paste&#10;&#34;map &#60;leader&#62;q :e ~/buffer&#60;cr&#62;&#10;&#34;&#10;&#34;&#34;Restore cursor to file position in previous editing session&#10;&#34;set viminfo=&#39;10,&#34;100,:20,%,n~/.viminfo&#10;&#34;&#10;&#34;&#34; Buffer - reverse everything ... :)&#10;&#34;map &#60;F9&#62; ggVGg?&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Files and backup&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Turn backup off&#10;set nobackup&#10;set nowb&#10;&#34;set noswapfile&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Folding&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Enable folding, I find it very useful&#10;if exists(&#34;&#38;foldenable&#34;)&#10;    set fen&#10;endif&#10;&#10;if exists(&#34;&#38;foldlevel&#34;)&#10;    set fdl=0&#10;endif&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Text option&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; python script&#10;set expandtab&#10;set shiftwidth=4&#10;set softtabstop=4&#10;set tabstop=4&#10;set tw=100&#10;&#34;set backspace=2&#10;set smarttab&#10;set lbr&#10;&#34;set tw=500&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Indent&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Auto indent&#10;set ai&#10;&#10;&#34;Smart indet&#10;set si&#10;&#10;&#34;C-style indenting&#10;if has(&#34;cindent&#34;)&#10;    set cindent&#10;endif&#10;&#10;&#34;Wrap line&#10;set wrap&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Spell checking&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;map &#60;leader&#62;sn ]&#10;map &#60;leader&#62;sp [&#10;map &#60;leader&#62;sa zg&#10;map &#60;leader&#62;s? z=&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Plugin configuration&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Yank Ring&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;if use_plugins_i_donot_use&#10;    map &#60;leader&#62;y :YRShow&#60;cr&#62;&#10;&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    &#34; =&#62; File explorer&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    &#34;Split vertically&#10;    let g:explVertical=1&#10;&#10;    &#34;Window size&#10;    let g:explWinSize=35&#10;&#10;    let g:explSplitLeft=1&#10;    let g:explSplitBelow=1&#10;&#10;    &#34;Hide some file&#10;    let g:explHideFiles=&#39;^.,.*.class$,.*.swp$,.*.pyc$,.*.swo$,.DS_Store$&#39;&#10;&#10;    &#34;Hide the help thing..&#10;    let g:explDetailedHelp=0&#10;&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    &#34; =&#62; Minibuffer&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    let g:miniBufExplModSelTarget = 1&#10;    let g:miniBufExplorerMoreThanOne = 0&#10;    let g:miniBufExplModSelTarget = 0&#10;    let g:miniBufExplUseSingleClick = 1&#10;    let g:miniBufExplMapWindowNavVim = 1&#10;    let g:miniBufExplVSplit = 25&#10;    let g:miniBufExplSplitBelow=1&#10;&#10;    &#34;WindowZ&#10;    map &#60;c-w&#62;&#60;c-t&#62; :WMToggle&#60;cr&#62;&#10;    let g:bufExplorerSortBy = &#34;name&#34;&#10;&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    &#34; =&#62; LaTeX Suite thing&#10;    &#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;    &#34;set grepprg=grep -r -s -n&#10;    let g:Tex_DefaultTargetFormat=&#34;pdf&#34;&#10;    let g:Tex_ViewRule_pdf=&#39;xpdf&#39;&#10;&#10;    if has(&#34;autocmd&#34;)&#10;        &#34;Binding&#10;        au BufRead *.tex map &#60;silent&#62;&#60;leader&#62;&#60;space&#62; :w!&#60;cr&#62; :silent! call Tex_RunLaTeX()&#60;cr&#62;&#10;&#10;        &#34;Auto complete some things ;)&#10;        au BufRead *.tex ino &#60;buffer&#62; $i indent&#10;        au BufRead *.tex ino &#60;buffer&#62; $* cdot&#10;        au BufRead *.tex ino &#60;buffer&#62; $i item&#10;        au BufRead *.tex ino &#60;buffer&#62; $m [&#60;cr&#62;]&#60;esc&#62;O&#10;    endif&#10;&#10;endif&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Tag list (ctags) - not used&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;let Tlist_Ctags_Cmd = &#34;/sw/bin/ctags-exuberant&#34;&#10;&#34;let Tlist_Sort_Type = &#34;name&#34;&#10;&#34;let Tlist_Show_Menu = 1&#10;&#34;map &#60;leader&#62;t :Tlist&#60;cr&#62;&#10;&#34;map &#60;F3&#62; :Tlist&#60;cr&#62;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Filetype generic&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Todo&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;au BufNewFile,BufRead *.todo so ~/vim_local/syntax/amido.vim&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; VIM&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;if has(&#34;autocmd&#34;) &#38;&#38; v:version&#62;600&#10;    au BufRead,BufNew *.vim map &#60;buffer&#62; &#60;leader&#62;&#60;space&#62; :w!&#60;cr&#62;:source %&#60;cr&#62;&#10;endif&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; HTML related&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; HTML entities - used by xml edit plugin&#10;let xml_use_xhtml = 1&#10;&#34;let xml_no_auto_nesting = 1&#10;&#10;&#34;To HTML&#10;let html_use_css = 0&#10;let html_number_lines = 0&#10;let use_xhtml = 1&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Ruby &#38; PHP section&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Python section&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;&#34;Run the current buffer in python - ie. on leader+space&#10;&#34;au BufNewFile,BufRead *.py so ~/vim_local/syntax/python.vim&#10;&#34;au BufNewFile,BufRead *.py map &#60;buffer&#62; &#60;leader&#62;&#60;space&#62; :w!&#60;cr&#62;:!python %&#60;cr&#62;&#10;&#34;au BufNewFile,BufRead *.py so ~/vim_local/plugin/python_fold.vim&#10;&#10;&#34;&#34;Set some bindings up for &#39;compile&#39; of python&#10;&#34;au BufNewFile,BufRead *.py set makeprg=python -c &#34;import py_compile,sys; sys.stderr=sys.stdout; py_compile.compile(r&#39;%&#39;)&#34;&#10;&#34;au BufNewFile,BufRead *.py set efm=%C %.%#,%A File &#34;%f&#34;, line %l%.%#,%Z%[%^ ]%@=%m&#10;&#34;au BufNewFile,BufRead *.py nmap &#60;buffer&#62; &#60;F8&#62; :w!&#60;cr&#62;:make&#60;cr&#62;&#10;&#10;&#34;&#34;Python iMap&#10;&#34;au BufNewFile,BufRead *.py set cindent&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $r return&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $s self&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $c ##&#60;cr&#62;#&#60;space&#62;&#60;cr&#62;#&#60;esc&#62;kla&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $i import&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $p print&#10;&#34;au BufNewFile,BufRead *.py ino &#60;buffer&#62; $d &#34;&#34;&#34;&#60;cr&#62;&#34;&#34;&#34;&#60;esc&#62;O&#10;&#10;&#34;&#34;Run in the Python interpreter&#10;&#34;function! Python_Eval_VSplit() range&#10;&#34; let src = tempname()&#10;&#34; let dst = tempname()&#10;&#34; execute &#34;: &#34; . a:firstline . &#34;,&#34; . a:lastline . &#34;w &#34; . src&#10;&#34; execute &#34;:!python &#34; . src . &#34; &#62; &#34; . dst&#10;&#34; execute &#34;:pedit! &#34; . dst&#10;&#34;endfunction&#10;&#34;au BufNewFile,BufRead *.py vmap &#60;F7&#62; :call Python_Eval_VSplit()&#60;cr&#62;&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Cheetah section&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; Java section&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; JavaScript section&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;au BufNewFile,BufRead *.js so ~/vim_local/syntax/javascript.vim&#10;&#34;function! JavaScriptFold()&#10;&#34; set foldmethod=marker&#10;&#34; set foldmarker=&#123;,&#125;&#10;&#34; set foldtext=getline(v:foldstart)&#10;&#34;endfunction&#10;&#34;au BufNewFile,BufRead *.js call JavaScriptFold()&#10;&#34;au BufNewFile,BufRead *.js imap &#60;c-t&#62; console.log();&#60;esc&#62;hi&#10;&#34;au BufNewFile,BufRead *.js imap &#60;c-a&#62; alert();&#60;esc&#62;hi&#10;&#34;au BufNewFile,BufRead *.js set nocindent&#10;&#34;au BufNewFile,BufRead *.js ino &#60;buffer&#62; $r return&#10;&#10;&#34;au BufNewFile,BufRead *.js ino &#60;buffer&#62; $d //&#60;cr&#62;//&#60;cr&#62;//&#60;esc&#62;ka&#60;space&#62;&#10;&#34;au BufNewFile,BufRead *.js ino &#60;buffer&#62; $c /**&#60;cr&#62;&#60;space&#62;&#60;cr&#62;**/&#60;esc&#62;ka&#10;&#10;&#10;if has(&#34;eval&#34;) &#38;&#38; has(&#34;autocmd&#34;)&#10;    &#34;vim 5.8.9 on mingw donot know what is &#60;SID&#62;, so I avoid to use function&#10;    &#34;c/cpp&#10;    fun! Abbrev_cpp()&#10;        ia &#60;buffer&#62; cci const_iterator&#10;        ia &#60;buffer&#62; ccl cla&#10;        ia &#60;buffer&#62; cco const&#10;        ia &#60;buffer&#62; cdb bug&#10;        ia &#60;buffer&#62; cde throw&#10;        ia &#60;buffer&#62; cdf /** file&#60;CR&#62;&#60;CR&#62;/&#60;Up&#62;&#10;        ia &#60;buffer&#62; cdg ingroup&#10;        ia &#60;buffer&#62; cdn /** Namespace &#60;namespace&#60;CR&#62;&#60;CR&#62;/&#60;Up&#62;&#10;        ia &#60;buffer&#62; cdp param&#10;        ia &#60;buffer&#62; cdt test&#10;        ia &#60;buffer&#62; cdx /**&#60;CR&#62;&#60;CR&#62;/&#60;Up&#62;&#10;        ia &#60;buffer&#62; cit iterator&#10;        ia &#60;buffer&#62; cns Namespace ianamespace&#10;        ia &#60;buffer&#62; cpr protected&#10;        ia &#60;buffer&#62; cpu public&#10;        ia &#60;buffer&#62; cpv private&#10;        ia &#60;buffer&#62; csl std::list&#10;        ia &#60;buffer&#62; csm std::map&#10;        ia &#60;buffer&#62; css std::string&#10;        ia &#60;buffer&#62; csv std::vector&#10;        ia &#60;buffer&#62; cty typedef&#10;        ia &#60;buffer&#62; cun using Namespace ianamespace&#10;        ia &#60;buffer&#62; cvi virtual&#10;        ia &#60;buffer&#62; #i #include&#10;        ia &#60;buffer&#62; #d #define&#10;    endfunction&#10;&#10;    fun! Abbrev_java()&#10;        ia &#60;buffer&#62; #i import&#10;        ia &#60;buffer&#62; #p System.out.println&#10;        ia &#60;buffer&#62; #m public static void main(String[] args)&#10;    endfunction&#10;&#10;    fun! Abbrev_python()&#10;        ia &#60;buffer&#62; #i import&#10;        ia &#60;buffer&#62; #p print&#10;        ia &#60;buffer&#62; #m if __name__==&#34;__main__&#34;:&#10;    endfunction&#10;&#10;    fun! Abbrev_aspvbs()&#10;        ia &#60;buffer&#62; #r Response.Write&#10;        ia &#60;buffer&#62; #q Request.QueryString&#10;        ia &#60;buffer&#62; #f Request.Form&#10;    endfunction&#10;&#10;    fun! Abbrev_js()&#10;        ia &#60;buffer&#62; #a if(!0)&#123;throw Error(callStackInfo());&#125;&#10;    endfunction&#10;&#10;    augroup abbreviation&#10;        au!&#10;        au FileType javascript :call Abbrev_js()&#10;        au FileType cpp,c :call Abbrev_cpp()&#10;        au FileType java :call Abbrev_java()&#10;        au FileType python :call Abbrev_python()&#10;        au FileType aspvbs :call Abbrev_aspvbs()&#10;    augroup END&#10;endif&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34; =&#62; MISC&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;Remove the Windows ^M&#10;noremap &#60;leader&#62;m :%s//r//g&#60;CR&#62;&#10;&#10;&#34;Paste toggle - when pasting something in, don&#39;t indent.&#10;&#34;set pastetoggle=&#60;F3&#62;&#10;&#10;&#34;Remove indenting on empty line&#10;map &#60;F2&#62; :%s/s*$//g&#60;cr&#62;:noh&#60;cr&#62;&#39;&#39;&#10;&#10;&#34;Super paste&#10;ino &#60;C-v&#62; &#60;esc&#62;:set paste&#60;cr&#62;mui&#60;C-R&#62;+&#60;esc&#62;mv&#39;uV&#39;v=:set nopaste&#60;cr&#62;&#10;&#10;&#34;clipboard with xclip&#10;if MySys() == &#34;unix&#34;&#10;    vmap &#60;F6&#62; :!xclip -sel c&#60;CR&#62;&#10;    map &#60;F7&#62; :-1r!xclip -o -seln c&#60;CR&#62;&#39;z&#10;endif&#10;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;&#34;add by wonly&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#10;set ignorecase&#10;set enc=UTF-8&#10;set fenc=UTF-8&#10;set fencs=UTF-8,chinese&#10;&#10;map &#60;right&#62; :tabnext&#60;cr&#62;&#10;map &#60;left&#62; :tabprev&#60;cr&#62;&#10;&#10;let s:PlugWinSize = 20&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;NERD tree&#10;&#34;let NERDTreeShowHidden = 1&#10;&#34;let NERDTreeWinPos = &#34;left&#34;&#10;&#34;let NERDTreeAutoCenter = 1&#10;&#34;let NERDTreeWinSize = s:PlugWinSize&#10;&#34;let NERDTreeMouseMode = 2&#10;&#34;nnoremap nt :NERDTreeToggle&#60;cr&#62;&#10;&#34;map &#60;F3&#62; :NERDTreeToggle&#60;cr&#62;&#10;&#10;&#34;Ctaglist&#10;map &#60;leader&#62;tl :TlistToggle&#60;cr&#62;&#10;map &#60;F12&#62; :TlistToggle&#60;cr&#62;&#10;let Tlist_Use_Right_Window = 1&#10;let Tlist_Exit_OnlyWindow = 1&#10;let Tlist_Show_One_File = 1&#10;let Tlist_File_Auto_Close = 1&#10;let Tlist_max_Tag_length = 16&#10;&#34;authorinfo&#10;&#34;http://www.vim.org/scripts/script.php?script_id=2902&#10;&#34;need nerdcommenter&#10;&#34;http://www.vim.org/scripts/script.php?script_id=1218&#10;let g:vimrc_author=&#39;wangfengfeng&#39;&#10;let g:vimrc_homepage=&#39;&#39;&#10;let g:vimrc_email =&#39;wangfengfeng@baidu.com&#39;&#10;nmap &#60;leader&#62;auth :AuthorInfoDetect&#60;cr&#62;&#10;&#10;function! TabPos_ActivateBuffer(num)&#10;    let s:count = a:num&#10;    exe &#34;tabfirst&#34;&#10;    exe &#34;tabnext&#34; s:count&#10;endfunction&#10;&#10;function! TabPos_Initialize()&#10;    for i in range(1, 9)&#10;        exe &#34;map &#60;M-&#34; . i . &#34;&#62; :call TabPos_ActivateBuffer(&#34; . i . &#34;)&#60;CR&#62;&#34;&#10;    endfor&#10;    exe &#34;map &#60;M-0&#62; :call TabPos_ActivateBuffer(10)&#60;CR&#62;&#34;&#10;endfunction&#10;&#10;autocmd VimEnter * call TabPos_Initialize()&#10;&#10;&#34;for php develop, add by wonly&#10;au FileType php setlocal dict+=~/.vim/plugin/php_funclist.txt&#10;if !exists(&#39;g:AutoComplPop_Behavior&#39;)&#10;    let g:AutoComplPop_Behavior = &#123;&#125;&#10;    let g:AutoComplPop_Behavior[&#39;php&#39;] = []&#10;    call add(g:AutoComplPop_Behavior[&#39;php&#39;], &#123;&#10;                \   &#39;command&#39;   : &#34;\&#60;C-x&#62;\&#60;C-o&#62;&#34;,&#10;                \   &#39;pattern&#39;   : printf(&#39;\(-&#62;\|::\|\$\)\k\&#123;%d,&#125;$&#39;, 0),&#10;                \   &#39;repeat&#39;    : 0,&#10;                \&#125;)&#10;endif&#10;&#10;:inoremap ( ()&#60;ESC&#62;i&#10;:inoremap ) &#60;c-r&#62;=ClosePair(&#39;)&#39;)&#60;CR&#62;&#10;:inoremap &#123; &#123;&#125;&#60;ESC&#62;i&#10;:inoremap &#125; &#60;c-r&#62;=ClosePair(&#39;&#125;&#39;)&#60;CR&#62;&#10;:inoremap [ []&#60;ESC&#62;i&#10;:inoremap ] &#60;c-r&#62;=ClosePair(&#39;]&#39;)&#60;CR&#62;&#10;:inoremap &#60; &#60;&#62;&#60;ESC&#62;i&#10;:inoremap &#62; &#60;c-r&#62;=ClosePair(&#39;&#62;&#39;)&#60;CR&#62;&#10;&#10;function ClosePair(char)&#10;    if getline(&#39;.&#39;)[col(&#39;.&#39;) - 1] == a:char&#10;        return &#34;\&#60;Right&#62;&#34;&#10;    else&#10;        return a:char&#10;    endif&#10;endf&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;set list show char&#10;set listchars=tab:&#62;\ ,trail:~&#10;set list&#10;&#34;set Highlight cursorline&#10;set cursorline&#10;&#10;&#34;hotkey list,start &#38; end tag is &#39;=&#39;&#10;&#34;&#60;leader&#62; is char &#39;,&#39;&#10;&#34;=,ff= format js indent, relay on vimdir/plugin/jsbeautify.vim&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;23~24&#34892;&#23545;&#40784;&#123;string&#125;&#37096;&#20998;&#10;&#34;23,24Align &#123;string&#125;&#10;&#34;&#10;&#10;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;&#34;bundle&#10;&#34;&#20195;&#30721;&#22312;vimscript&#19978;&#65292;&#20351;&#29992;&#25554;&#20214;&#21517;&#31216;&#65292;&#25554;&#20214;&#21517;&#23383;&#21487;&#20197;&#22312;&#10;&#34;http://vim-scripts.org/vim/scripts.html&#39029;&#38754;&#20013;&#26597;&#25214;&#65292;&#20363;&#22914;&#65306;&#10;&#34;&#38750;github&#30340;&#25554;&#20214;&#65292;&#20351;&#29992;&#20854;git&#22320;&#22336;&#65292;&#20363;&#22914;&#65306;&#10;&#34;Bundle &#39;git://git.wincent.com/command-t.git&#39;&#10;&#34;:BundleList - list configured bundle&#10;&#34;:BundleInstall(!) - install(update) bundle&#10;&#34;:BundleSearch(!) foo - search(or refresh cache first) for foo&#10;&#34;:BundleClean(!) - &#21024;&#38500;&#25554;&#20214;&#39318;&#20808;&#35201;&#22312;.vimrc&#20013;&#27880;&#37322;&#25481;&#25554;&#20214;&#30456;&#24212;&#30340;&#34892;&#65292;&#20877;&#36816;&#34892;&#35813;&#21629;&#20196;&#10;Bundle &#39;gmarik/vundle&#39;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/29/linux_shell_awk/">
+                    Linux_命令-awk
+                </a>
+            </div>
+        
+    </nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#submlime"><span class="toc-number">1.</span> <span class="toc-text">submlime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vim"><span class="toc-number">2.</span> <span class="toc-text">vim</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/04/30/tools_editor/" data-title="sublime,vim 配置" data-url="http://ffeng.wang/2016/04/30/tools_editor/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"gitfeng"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/29/linux_shell_awk/" title="下一篇: Linux_命令-awk">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/30/tools_editor/">sublime,vim 配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/29/linux_shell_awk/">Linux_命令-awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/28/redis_code_list/">Redis 类功能 list</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/20/redis_struct/">Redis 数据结构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/21/nginx_config/">Nginx 配置解释</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/http_1.1/">HTTP 1.1 升级说明</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/20/http_base/">HTTP 协议</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/28/redis_read_code/">如何阅读 Redis 源码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/24/food_luzhu/">百年祖传秘方_君臣佐使_卤煮</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/24/read_tech_2016/">2015最美科学阅读：用20本科学图书，温暖这个寒冬</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/18/mysql_opti_rand/">MySQL_查询优化-2/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/useful/">有用的网站</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/php_traverse_file/">php_遍历文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_write/">MySQL_写入优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_concurrency/">MySQL_并发控制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_storage_blob/">MySQL_存储优化-InnoDB表BLOB列</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_opti_misc/">MySQL_查询优化-1/2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_join/">MySQL_JOIN</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_innodb/">MySQL_innoDB</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_explain/">MySQL_explain 的使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/mysql_5.7_new/">MySQL_5.7部分新特性</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/chrome_plugin/">常用 chrome 插件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/github_hexo/">GitHub+hexo 搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/16/FirstPage/">Hello Hexo</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/17/hexo_theme/">hexo 配置及主题</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 gitfeng
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <style>
+        body {
+          background: lightgray;
+        }
+        #container .left-col {
+          background: white;
+        }
+        .article-inner {
+          background: white;
+          margin-bottom: 1em;
+        }
+        .post-nav-button {
+          background: #ececec;
+        }
+        #header .header-nav .social #GitHub {
+          background-color: #bfd3ec;
+        }
+        #post-nav-button a {
+          background: rgba(215, 216, 215, .2);
+        }
+        .post-list {
+          background: white;
+        }
+    </style>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
